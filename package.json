@@ -1,0 +1,24 @@
+{
+    "name": "root",
+    "private": true,
+    "version": "1.0.0",
+    "description": "monorepo",
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "dev": "concurrently \"npm run dev --workspace=client\" \"npm run dev --workspace=server\"",
+        "build": "npm run build --workspace=client",
+        "lint": "npm run lint --workspace=client"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.36.0",
+        "@types/node": "^24.6.0",
+        "concurrently": "^9.2.1",
+        "eslint": "^9.36.0",
+        "globals": "^16.4.0",
+        "typescript": "~5.9.3",
+        "typescript-eslint": "^8.45.0"
+    }
+}
