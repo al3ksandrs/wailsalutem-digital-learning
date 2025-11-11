@@ -1,17 +1,17 @@
-# wailsalutem digital learning
-monorepo setup bla bla bla install bla bla bla
+# WailSalutem Digital Learning
+Monorepo setup
 
-root install:
+Root install:
 ```
 npm install
 ```
 
-starts client (http://localhost:5173/) and server (port 3000):
+Starts local client (http://localhost:5173/) and server (port 3000):
 
 ```
 npm run dev
 ```
 
-terminal shows status of client and server
+The terminal shows status and logs of client and server
 
-/common/ is used for shared stuff between client and server like types and constants or logic in the future
+/common/ is used for shared code between client and server like types and constants or logic in the future
