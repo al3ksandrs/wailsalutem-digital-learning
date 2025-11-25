@@ -16,6 +16,11 @@ To run the wiki locally:
 npm run wiki
 ```
 
+To update online wiki with local version:
+```
+npm run wiki:deploy
+```
+
 Starts local client (http://localhost:5173/) and server (port 3000):
 ```
 npm run dev
