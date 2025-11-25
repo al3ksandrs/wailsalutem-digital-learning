@@ -6,8 +6,12 @@ Root install:
 npm install
 ```
 
-Starts local client (http://localhost:5173/) and server (port 3000):
+To edit/compile the wiki you need to install MkDocs. Having Python installed is a prerequisite for this.
+```
+pip install mkdocs
+```
 
+Starts local client (http://localhost:5173/) and server (port 3000):
 ```
 npm run dev
 ```
