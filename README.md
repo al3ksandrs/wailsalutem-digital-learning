@@ -11,6 +11,11 @@ To edit/compile the wiki you need to install MkDocs. Having Python installed is 
 pip install mkdocs
 ```
 
+To run the wiki locally:
+```
+npm run wiki
+```
+
 Starts local client (http://localhost:5173/) and server (port 3000):
 ```
 npm run dev

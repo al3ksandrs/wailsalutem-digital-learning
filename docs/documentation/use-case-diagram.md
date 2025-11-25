@@ -1,0 +1,1 @@
+![Use case diagram](../img/USE-CASE-DIAGRAM.png)
