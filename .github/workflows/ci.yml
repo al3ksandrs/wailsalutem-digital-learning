@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    # If we in the future want CI to run on every branch. This will require more runner minutes!
+    # branches: ["development", "main", "feat/*", "fix/*", "test/*", "refactor/*"]
+    branches: ["development", "main"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Required for SonarQube analysis
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Installs package manager
+      - name: Install NPM
+        uses: npm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: npm ci
+
+      # We will run tests here later (Jest and React testing framework)
+
+
+
+      # SonarCloud scan (SonarQube on their cloud)
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
