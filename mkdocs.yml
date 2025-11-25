@@ -1,0 +1,14 @@
+theme:
+  name: material
+
+site_name: WailSalutem Digital learning wiki
+
+nav:
+  - Home: index.md
+  - Documentation:
+    - Cooperation agreement: documentation/cooperation-agreement.md
+    - Use Case diagram: documentation/use-case-diagram.md
+    - Interviews:
+      - Interview questions: documentation/interviews/interview-questions.md
+  - Developers:
+    - Working with Git: developers/working-with-git.md

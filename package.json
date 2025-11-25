@@ -10,7 +10,10 @@
     "scripts": {
         "dev": "concurrently \"npm run dev --workspace=client\" \"npm run dev --workspace=server\"",
         "build": "npm run build --workspace=client",
-        "lint": "npm run lint --workspace=client"
+        "lint": "npm run lint --workspace=client",
+        "wiki": "mkdocs serve",
+        "wiki:build": "mkdocs build",
+        "wiki:deploy": "mkdocs gh-deploy"
     },
     "devDependencies": {
         "@eslint/js": "^9.36.0",
