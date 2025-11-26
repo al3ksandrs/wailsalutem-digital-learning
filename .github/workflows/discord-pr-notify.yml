@@ -1,0 +1,27 @@
+# Improves team organisation! or atleast I would like to think it does.
+# We can delete this before handing the whole project over at the end of Sprint 4.
+name: Notify our Discord server of new PRs
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord PR notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+        run: |
+          MESSAGE=$(printf "**Pull Request opened!**\n**%s**\nOpened by: **%s**\n%s" "$PR_TITLE" "$PR_USER" "$PR_URL")
+
+          PAYLOAD=$(jq -n --arg content "$MESSAGE" '{content: $content}')
+
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK"
