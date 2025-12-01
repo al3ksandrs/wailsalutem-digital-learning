@@ -11,6 +11,11 @@ To edit/compile the wiki you need to install MkDocs. Having Python installed is 
 pip install mkdocs
 ```
 
+To install the theme used by MkDocs:
+```
+pip install mkdocs-material
+```
+
 To run the wiki locally:
 ```
 npm run wiki
