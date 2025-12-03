@@ -1,0 +1,1240 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../use-case-diagram/">
+      
+      
+        <link rel="next" href="../interviews/interview-questions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Functional/NonFunctional requirements - WailSalutem Digital learning wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#software-requirements-specification-srs" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="WailSalutem Digital learning wiki" class="md-header__button md-logo" aria-label="WailSalutem Digital learning wiki" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            WailSalutem Digital learning wiki
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Functional/NonFunctional requirements
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="WailSalutem Digital learning wiki" class="md-nav__button md-logo" aria-label="WailSalutem Digital learning wiki" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    WailSalutem Digital learning wiki
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cooperation-agreement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cooperation agreement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uml-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UML Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-case-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Case diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Functional/NonFunctional requirements
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Functional/NonFunctional requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-actors-and-user-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Actors and User Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-functional-requirements-fr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Functional Requirements (FR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Functional Requirements (FR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-authentication-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Authentication &amp; Registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-administrator-dashboard-god-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Administrator Dashboard ("God Mode")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-student-parent-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Student / Parent Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-teacher-features-approved-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. Teacher Features (Approved Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-non-functional-requirements-nfr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Non-Functional Requirements (NFR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Non-Functional Requirements (NFR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-security-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Security &amp; Privacy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-user-interface-uiux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. User Interface (UI/UX)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-system-logic-ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. System Logic &amp; AI Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Interviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interviews/interview-questions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interview Questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interviews/interview-answers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interview Answers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developers/working-with-git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Git
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-actors-and-user-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Actors and User Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-functional-requirements-fr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Functional Requirements (FR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Functional Requirements (FR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-authentication-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1. Authentication &amp; Registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-administrator-dashboard-god-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2. Administrator Dashboard ("God Mode")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-student-parent-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3. Student / Parent Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-teacher-features-approved-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4. Teacher Features (Approved Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5. Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-non-functional-requirements-nfr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Non-Functional Requirements (NFR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Non-Functional Requirements (NFR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-security-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1. Security &amp; Privacy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-user-interface-uiux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2. User Interface (UI/UX)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3. Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-system-logic-ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. System Logic &amp; AI Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="software-requirements-specification-srs">Software Requirements Specification (SRS)</h1>
+<p><strong>Project Name:</strong> LeerMatch
+<strong>Version:</strong> 6.0</p>
+<h2 id="1-introduction">1. Introduction</h2>
+<p><strong>1.1 Purpose</strong>
+The purpose of the LeerMatch system is to facilitate academic connections between students/parents and teachers. The platform utilizes a hybrid matching system (Algorithmic Tags + LLM Semantic Analysis) to pair users effectively.</p>
+<p>The scheduling logic is designed primarily for <strong>one-off appointments</strong>, with the technical possibility to extend these into recurring weekly meetings based on <strong>Microsoft Teams planning functions</strong>.</p>
+<p><strong>1.2 Scope &amp; Safety Priority</strong>
+The system prioritizes <strong>child safety</strong>. Consequently, the Teacher workflow includes a mandatory "Holding State" where an Administrator must verify the user before they are granted access to student data or communication tools. The Administrator holds absolute authority ("God Mode") over all system data and connections.</p>
+<ul>
+<li><strong>Design Reference:</strong> All wireflows and visual hierarchy details are located in the <a href="https://www.figma.com/design/ELI2vvbAyvQdbZh6M9sQqM/Wail-Salutem-Design?node-id=0-1&amp;p=f&amp;t=H23ITwqDcjI4iMrU-0">Project Figma</a>.</li>
+<li><strong>Documentation:</strong> Full project requirements are maintained on the Project Wiki.</li>
+</ul>
+<hr />
+<h2 id="2-actors-and-user-roles">2. Actors and User Roles</h2>
+<ol>
+<li><strong>Student / Parent:</strong><ul>
+<li>Can be a parent registering a Primary School child.</li>
+<li>Can be a Student in High School (HAVO/VWO) or Higher Education (HBO/Uni).</li>
+<li><em>Need:</em> Immediate access to post help requests.</li>
+</ul>
+</li>
+<li><strong>Teacher:</strong> The service provider.<ul>
+<li><strong>Unverified Teacher:</strong> Registered but pending Admin approval. Has <strong>zero</strong> access to data.</li>
+<li><strong>Approved Teacher:</strong> Approved by Admin for access, but provided no CV. Can match and teach, but has no badge.</li>
+<li><strong>Verified Teacher (Badged):</strong> Approved by Admin <strong>AND</strong> has submitted a valid CV. Has a "Verified" badge to increase trust.</li>
+</ul>
+</li>
+<li><strong>Administrator:</strong> The super-user with full CRUD (Create, Read, Update, Delete) rights over users, connections, and content.</li>
+</ol>
+<hr />
+<h2 id="3-functional-requirements-fr">3. Functional Requirements (FR)</h2>
+<h3 id="31-authentication-registration">3.1. Authentication &amp; Registration</h3>
+<ul>
+<li><strong>FR-01 Unified Login:</strong><ul>
+<li>Email/Password authentication.</li>
+<li>"Forgot Password" recovery flow.</li>
+<li>Toggle between "Login" and "Register" modes.</li>
+</ul>
+</li>
+<li><strong>FR-02 Student Registration (Dynamic Profile):</strong><ul>
+<li><strong>Step 1:</strong> Credentials (Name, Email, Password).</li>
+<li><strong>Step 2: Education Level Logic:</strong> The system shall adapt the form based on the selected Level:<ul>
+<li><em>If Primary School:</em> Hide "Year" and "Profile" fields.</li>
+<li><em>If High School (VMBO/HAVO/VWO/Gymnasium):</em> Show "Year" (1-6) and "Profile" dropdowns (C&amp;M, N&amp;T, etc.).</li>
+<li><em>If Higher Education (MBO/HBO/WO):</em> Replace "Profile" dropdown with a <strong>Free-Text/Tag Field</strong> for "Study Name/Major" (since these are not fixed).</li>
+</ul>
+</li>
+<li><strong>Step 3:</strong> Subject Needs.</li>
+</ul>
+</li>
+<li><strong>FR-03 Teacher Registration (Optional CV):</strong><ul>
+<li><strong>Step 1-3:</strong> Credentials, Expertise (Level/Institution), Subjects Taught (Multi-select + Custom entry).</li>
+<li><strong>Step 4:</strong> Bio &amp; CV Upload.</li>
+<li><strong>CV Constraint:</strong> Upload is <strong>Optional</strong>.</li>
+<li><strong>Note to User:</strong> UI must state "Upload a CV to earn a Verified Badge."</li>
+<li><strong>File Handling:</strong> System must allow deleting/replacing the file before submission.</li>
+</ul>
+</li>
+<li><strong>FR-04 Teacher Verification State:</strong><ul>
+<li>Upon completing registration, the Teacher account is set to <strong>"Pending."</strong></li>
+<li>If a "Pending" Teacher logs in, they see a status screen ("Awaiting Approval") and <strong>cannot</strong> access the main dashboard.</li>
+</ul>
+</li>
+<li><strong>FR-05 Self-Service Profile Updates:</strong><ul>
+<li>Users can edit their own Profile (Level, Year, Subjects, Bio) at any time.</li>
+<li><strong>Constraint:</strong> Updates do not trigger re-approval, <em>unless</em> a Teacher modifies their CV (which flags the account for Admin review).</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-administrator-dashboard-god-mode">3.2. Administrator Dashboard ("God Mode")</h3>
+<ul>
+<li><strong>FR-06 Teacher Access Control:</strong><ul>
+<li>Admins view the "Pending Teachers" queue.</li>
+<li><strong>Decision 1 (Access):</strong> Admin can "Approve Access" (allow login) or "Reject" (ban). This is independent of the CV.</li>
+<li><strong>Decision 2 (Badge):</strong> If a CV is present, Admin can toggle the <strong>"Verified Badge"</strong> status on.</li>
+<li><em>Constraint:</em> Only Teachers can receive badges.</li>
+</ul>
+</li>
+<li><strong>FR-07 Absolute User Management:</strong><ul>
+<li>Admins can Edit, Ban, or Delete <em>any</em> user account immediately.</li>
+<li>Banning a user must instantly invalidate their session (force logout).</li>
+</ul>
+</li>
+<li><strong>FR-08 Connection Override:</strong><ul>
+<li>Admins can view all open Help Requests.</li>
+<li>Admins can <strong>Force Match</strong> a specific Teacher to a Student request.</li>
+<li>Admins can <strong>Terminate</strong> an existing connection/match manually.</li>
+</ul>
+</li>
+<li><strong>FR-09 Chat Moderation:</strong><ul>
+<li>Admins have access to chat logs to investigate safety disputes.</li>
+</ul>
+</li>
+<li><strong>FR-10 System Analytics:</strong><ul>
+<li>View metrics on total users, active matches, and completed sessions.</li>
+</ul>
+</li>
+</ul>
+<h3 id="33-student-parent-features">3.3. Student / Parent Features</h3>
+<ul>
+<li><strong>FR-11 Dashboard:</strong> Displays counts for Pending Requests, Matches, and Connections.</li>
+<li><strong>FR-12 Create Help Request:</strong><ul>
+<li>Modal form collecting: Subject, Education Level, Location, Description.</li>
+<li><strong>Education Logic:</strong> If Student Profile is "Primary School," the request form hides the "Year" field.</li>
+<li><strong>Availability Input:</strong> Day toggles + Time Range Sliders.</li>
+</ul>
+</li>
+<li><strong>FR-13 Manage Requests:</strong><ul>
+<li>Edit existing request details or Delete requests.</li>
+</ul>
+</li>
+<li><strong>FR-14 Match Interaction:</strong><ul>
+<li>View algorithmic matches (Teacher Cards with Star Rating/Bio).</li>
+<li>"Connect" or "Accept" a match.</li>
+</ul>
+</li>
+<li><strong>FR-15 Review System:</strong><ul>
+<li><strong>Review Modal:</strong> A pop-up dialog that interrupts the user flow specifically for rating a Teacher (1-5 Stars + Text) after a session loop.</li>
+<li><strong>Notification Center:</strong> A distinct list (Bell icon) for system alerts (e.g., "Request Accepted").</li>
+</ul>
+</li>
+</ul>
+<h3 id="34-teacher-features-approved-only">3.4. Teacher Features (Approved Only)</h3>
+<ul>
+<li><strong>FR-16 Verified Badge:</strong><ul>
+<li>If the Admin has enabled the Badge, it must appear on the Teacher's Profile Card, Chat interface, and Search Results.</li>
+</ul>
+</li>
+<li><strong>FR-17 Dashboard:</strong> Displays Help Requests, Potential Matches, and Active Student Roster.</li>
+<li><strong>FR-18 Manage Availability (Scheduling):</strong><ul>
+<li>Interface to select Days of Week.</li>
+<li>Dual-handle sliders to define specific "Available Hours."</li>
+<li><em>Context:</em> Availability allows for one-off appointments, with logic supporting recurring patterns (mimicking MS Teams planning).</li>
+</ul>
+</li>
+<li><strong>FR-19 Handle Requests:</strong><ul>
+<li>View detailed incoming requests.</li>
+<li><strong>Action:</strong> "Accept" or "Decline" buttons.</li>
+<li>Accepting updates the Calendar and opens the Chat.</li>
+</ul>
+</li>
+<li><strong>FR-20 Student Roster:</strong><ul>
+<li>View list of active students with quick links to Profile and Chat.</li>
+</ul>
+</li>
+</ul>
+<h3 id="35-communication">3.5. Communication</h3>
+<ul>
+<li><strong>FR-21 Real-Time Chat:</strong><ul>
+<li>1-to-1 messaging between connected users.</li>
+<li><strong>Media Sharing:</strong> Upload images (homework/notes) directly in chat.</li>
+</ul>
+</li>
+<li><strong>FR-22 Calendar:</strong><ul>
+<li>Weekly view showing confirmed sessions as colored blocks.</li>
+<li>Clicking a block shows "Meeting Details."</li>
+<li>Visual distinction between "Available Slots" and "Booked Sessions."</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="4-non-functional-requirements-nfr">4. Non-Functional Requirements (NFR)</h2>
+<h3 id="41-security-privacy">4.1. Security &amp; Privacy</h3>
+<ul>
+<li><strong>NFR-01 Security Gate:</strong> The architecture must enforce that <code>role: teacher</code> + <code>status: pending</code> = <strong>No API Access</strong> to student data.</li>
+<li><strong>NFR-02 CV Protection:</strong> Teacher CVs are viewable <strong>only</strong> by Administrators and the uploading Teacher. They are never exposed to Students.</li>
+<li><strong>NFR-03 Malware Scanning:</strong> All file uploads (CVs, Chat Images) must be scanned before storage.</li>
+</ul>
+<h3 id="42-user-interface-uiux">4.2. User Interface (UI/UX)</h3>
+<ul>
+<li><strong>NFR-04 Localization:</strong> The system defaults to Dutch educational terminology (HAVO, VWO, Gymnasium, etc.).</li>
+<li><strong>NFR-05 Feedback Loops:</strong> Critical actions (Accept/Decline) must provide immediate visual feedback (button state change) to prevent double-clicks.</li>
+<li><strong>NFR-06 Notification Visibility:</strong> New Matches and Reviews must trigger prominent modals (pop-ups), whereas status updates trigger standard notifications.</li>
+<li><strong>NFR-07 Dynamic Forms:</strong> Registration and Edit forms must use conditional rendering (Show/Hide fields) to handle the complexity of the Dutch education system without cluttering the UI.</li>
+</ul>
+<h3 id="43-performance">4.3. Performance</h3>
+<ul>
+<li><strong>NFR-08 Chat Latency:</strong> Messages should be delivered in under 2 seconds.</li>
+<li><strong>NFR-09 Image Optimization:</strong> Images shared in chat should be compressed for speed but maintain high enough resolution to read handwriting.</li>
+</ul>
+<hr />
+<h2 id="5-system-logic-ai-integration">5. System Logic &amp; AI Integration</h2>
+<ul>
+<li><strong>SL-01 Hybrid Matching Algorithm:</strong><ul>
+<li><strong>Layer 1 (Hard Filters):</strong> The system filters matches based on strict criteria: <em>Availability Overlap</em> AND <em>Subject Match</em>.</li>
+<li><strong>Layer 2 (LLM Enhancement):</strong> The system shall utilize a Large Language Model (LLM) to calculate a <strong>"Compatibility Score."</strong><ul>
+<li><em>Input A:</em> Student's Help Request Description (e.g., "I struggle with algebra word problems").</li>
+<li><em>Input B:</em> Teacher's Bio/Experience (e.g., "I specialize in making math stories understandable").</li>
+<li><em>Process:</em> The LLM compares semantic meaning to suggest the best "Soft Skill" match.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>SL-02 Ranking Logic:</strong><ul>
+<li>Results are displayed to the Student ranked by:<ol>
+<li><strong>Verified Badge Status</strong> (Badged teachers appear higher).</li>
+<li><strong>LLM Compatibility Score</strong>.</li>
+<li><strong>Star Rating</strong>.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
