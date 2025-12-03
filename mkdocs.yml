@@ -9,8 +9,10 @@ nav:
     - Cooperation agreement: documentation/cooperation-agreement.md
     - UML Diagram: documentation/uml-diagram.md
     - Use Case diagram: documentation/use-case-diagram.md
+    - Functional/NonFunctional requirements: documentation/functional-nonfunctional-requirements.md
     - Interviews:
-      - Interview questions: documentation/interviews/interview-questions.md
+      - Interview Questions: documentation/interviews/interview-questions.md
+      - Interview Answers: documentation/interviews/interview-answers.md
   - Developers:
     - Working with Git: developers/working-with-git.md
     - UI Components: developers/components.md
