@@ -1,0 +1,29 @@
+.auth-toggle-container {
+  display: flex;
+  background-color: #E8E8E8;
+  border-radius: 20px;
+  padding: 4px;
+  margin: 0 auto 2.5rem auto;
+}
+
+.auth-toggle-item {
+  flex: 1;
+  background: none;
+  border: none;
+  font-family: inherit;
+  
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #7A7A7A;
+  transition: all 0.3s ease;
+}
+
+.auth-toggle-item.active {
+  background-color: white;
+  color: #000000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}

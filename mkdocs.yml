@@ -13,3 +13,4 @@ nav:
       - Interview questions: documentation/interviews/interview-questions.md
   - Developers:
     - Working with Git: developers/working-with-git.md
+    - UI Components: developers/components.md
