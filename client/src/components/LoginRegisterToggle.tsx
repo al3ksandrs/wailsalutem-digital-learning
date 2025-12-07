@@ -16,7 +16,7 @@ const LoginRegisterToggle: React.FC<LoginRegisterToggleProps> = ({ activeTab, on
         className={`auth-toggle-item ${activeTab === 'login' ? 'active' : ''}`}
         onClick={() => onToggle('login')}
       >
-        Login
+        Inloggen
       </button>
       <button 
         type="button"
@@ -25,7 +25,7 @@ const LoginRegisterToggle: React.FC<LoginRegisterToggleProps> = ({ activeTab, on
         className={`auth-toggle-item ${activeTab === 'register' ? 'active' : ''}`}
         onClick={() => onToggle('register')}
       >
-        Register
+        Registreren
       </button>
     </div>
   );
