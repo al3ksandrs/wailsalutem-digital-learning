@@ -1,6 +1,6 @@
 import React from 'react';
 import ScreenLayout from '../components/ScreenLayout';
-import NotificationButton from '../components/NotificationButton';
+import Notifications from '../components/notifications/NotificationParent';
 import '../css/student-main.css';
 
 const StudentMainPage: React.FC = () => {
@@ -16,7 +16,7 @@ const StudentMainPage: React.FC = () => {
             rightContent={
                 <div className="student-page-placeholder">
                     <div>
-                         <NotificationButton count={2} darkMode={false} />
+                         <Notifications />
                     </div>
 
                     Hello world :D
