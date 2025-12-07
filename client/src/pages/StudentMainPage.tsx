@@ -2,8 +2,11 @@ import React from 'react';
 import ScreenLayout from '../components/ScreenLayout';
 import Notifications from '../components/notifications/NotificationParent';
 import '../css/student-main.css';
+import SubjectTags from '..//components/SubjectTags';
 
 const StudentMainPage: React.FC = () => {
+    const Subjects = ['Wiskunde B', 'Natuurkunde', 'Scheikunde', 'Biologie', 'Informatica', 'Engels'];
+
     return (
         <ScreenLayout
             greeting="Goedenavond, Hendrik"
@@ -16,7 +19,7 @@ const StudentMainPage: React.FC = () => {
             rightContent={
                 <div className="student-page-placeholder">
                     <div>
-                         <Notifications />
+                        <Notifications />
                     </div>
 
                     Hello world :D
@@ -53,6 +56,12 @@ const StudentMainPage: React.FC = () => {
                         Hello world :D
                         Hello world :D
                     </div>
+                    <SubjectTags
+                        items={Subjects}
+                        maxItems={3}
+                        direction="horizontal"
+                        showDropdown={true}
+                    />
                 </div>
             }
         />

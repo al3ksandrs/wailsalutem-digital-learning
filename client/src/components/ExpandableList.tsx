@@ -46,7 +46,7 @@ const ExpandableList = <T,>({
             <div className="expandable-list-scroll-area">
                 {items.length === 0 ? (
                     <div className="expandable-list-empty">
-                        Lijst is leeg...
+                        Voeg jouw expertise toe door op het plusje (+) te klikken.
                     </div>
                 ) : (
                     items.map((item, index) => (
