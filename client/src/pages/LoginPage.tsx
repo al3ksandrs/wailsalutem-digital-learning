@@ -4,7 +4,7 @@ import Logo from '../components/Logo';
 import LoginRegisterToggle from '../components/LoginRegisterToggle';
 import InputField from '../components/InputField';
 import WSButton from '../components/WSButton';
-import '../css/login-page.css';
+import '../css/authentication-screens.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,6 +18,14 @@ const LoginPage = () => {
     navigate('/student');
   };
 
+  const handleToggle = (tab: 'login' | 'register') => {
+    if (tab === 'register') {
+      navigate('/register-teacher-2');
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
   return (
     <div className="page-wrapper bg-auth">
       <div className="auth-wrapper">
@@ -25,7 +33,7 @@ const LoginPage = () => {
         <div className="login-card">
           <LoginRegisterToggle
             activeTab={activeTab}
-            onToggle={setActiveTab}
+            onToggle={handleToggle}
           />
           <form onSubmit={handleLogin}>
             <div className="mb-5">

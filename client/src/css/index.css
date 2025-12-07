@@ -26,6 +26,26 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Scrollbar styling (Webkit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7E97C8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
 /* Ensures the app takes up the full screen height */
 #root {
   min-height: 100vh;

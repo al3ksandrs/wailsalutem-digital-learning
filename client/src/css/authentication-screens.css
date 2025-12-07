@@ -1,3 +1,9 @@
+.auth-step-indicator {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
 .login-card {
   width: 100%;
   max-width: 480px;

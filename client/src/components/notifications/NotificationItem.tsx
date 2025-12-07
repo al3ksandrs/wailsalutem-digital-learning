@@ -1,6 +1,6 @@
 import React from 'react';
 import WSButton from '../WSButton';
-import '../../css/notification-item.css';
+import '../../css/notifications/notification-item.css';
 
 export interface NotificationItemProps {
     id: number;
