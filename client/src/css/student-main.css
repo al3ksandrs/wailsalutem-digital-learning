@@ -6,3 +6,10 @@
     color: var(--color-text-main);
     height: 100%;
 }
+
+@media (max-width: 1000px) {
+    .student-page-placeholder {
+        height: auto;
+        min-height: 200px;
+    }
+}

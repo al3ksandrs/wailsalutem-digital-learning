@@ -22,3 +22,14 @@
   align-items: center;
   padding: 1rem;
 }
+
+@media (max-width: 1000px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .auth-wrapper {
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+}
