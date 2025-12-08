@@ -8,7 +8,10 @@ nav:
   - Documentation:
     - Cooperation agreement: documentation/cooperation-agreement.md
     - UML Diagram: documentation/uml-diagram.md
-    - Use Case diagram: documentation/use-case-diagram.md
+    - Class Diagram: documentation/use-case-diagram.md
+    - Entity Relationship Diagram: documentation/erd.md
+    - Figma Designs:
+      - Week 1: documentation/figma/wk1.md
     - Functional/NonFunctional requirements: documentation/functional-nonfunctional-requirements.md
     - Interviews:
       - Interview Questions: documentation/interviews/interview-questions.md
