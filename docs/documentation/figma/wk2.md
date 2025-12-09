@@ -1,4 +1,4 @@
-# Week 1
+# Week 2
 
 ## Desktop
 
@@ -10,19 +10,19 @@
 
 ![Registration Student 1](../../img/figma/desktop/wk1-s-reg-1.png)
 
-![Registration Student 2](../../img/figma/desktop/wk1-s-reg-2.png)
+![Registration Student 2](../../img/figma/desktop/wk2-s-reg-2.png)
 
-![Registration Student 3](../../img/figma/desktop/wk1-s-reg-3.png)
+![Registration Student 3](../../img/figma/desktop/wk2-s-reg-3.png)
 
-![Suggested Matches Student](../../img/figma/desktop/wk1-s-sug.png)
+![Suggested Matches Student](../../img/figma/desktop/wk2-s-sug.png)
 
-![Requests Student](../../img/figma/desktop/wk1-s-req.png)
+![Requests Student](../../img/figma/desktop/wk2-s-req.png)
 
-![Sumbit Help Request Student](../../img/figma/desktop/wk1-s-submit.png)
+![Sumbit Help Request Student](../../img/figma/desktop/wk2-s-submit.png)
 
-![Connections Student](../../img/figma/desktop/wk1-s-con.png)
+![Connections Student](../../img/figma/desktop/wk2-s-con.png)
 
-![Chat with Teacher](../../img/figma/desktop/wk1-s-chat.png)
+![Chat with Teacher](../../img/figma/desktop/wk2-s-chat.png)
 
 ### Teacher Flow
 
@@ -30,14 +30,33 @@
 
 ![Registration Teacher 2](../../img/figma/desktop/wk1-t-req-2.png)
 
-![Registration Student 3](../../img/figma/desktop/wk1-t-req-3.png)
+![Registration Teacher 3](../../img/figma/desktop/wk1-t-req-3.png)
 
-![Registration Student 4](../../img/figma/desktop/wk1-t-req-4.png)
+![Registration Teacher 4](../../img/figma/desktop/wk2-t-reg-4.png)
+
+![Registration Teacher 5](../../img/figma/desktop/wk2-t-reg-5.png)
+
+![Registration Teacher 6](../../img/figma/desktop/wk2-t-reg-6.png)
+
+![Fill in Availability Teacher](../../img/figma/desktop/wk2-t-fia.png)
+
+![Availability Teacher](../../img/figma/desktop/wk2-t-availability.png)
+
+![Requests Teacher](../../img/figma/desktop/wk2-t-sug.png)
+
+![Help Requests Teacher](../../img/figma/desktop/wk2-t-hr.png)
+
+![Students Teacher](../../img/figma/desktop/wk2-t-students.png)
+
+![Chat with Student](../../img/figma/desktop/wk2-t-chat.png)
+
 
 
 ### Admin
 
-![Admin Dashboard](../../img/figma/admin/wk1-admin.png)
+![User Management Dashboard](../../img/figma/admin/wk2-user.png)
+
+![Matches Dashboard](../../img/figma/admin/wk2-matches.png)
 
 ## Mobile
 
