@@ -47,3 +47,42 @@
     margin: 0 0 0.5rem 0;
     color: var(--color-text-main);
 }
+
+@media (max-width: 1000px) {
+    .layout-container {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        gap: 1.5rem;
+    }
+
+    .layout-header {
+        grid-column: auto;
+        grid-row: auto;
+        order: 1;
+        margin-bottom: 0.5rem;
+    }
+
+    .layout-left {
+        grid-column: auto;
+        grid-row: auto;
+        order: 2;
+        width: 100%;
+        height: auto;
+    }
+
+    .layout-right-title {
+        grid-column: auto;
+        grid-row: auto;
+        align-self: auto;
+        order: 3;
+        margin-top: 0.5rem;
+    }
+
+    .layout-right {
+        grid-column: auto;
+        grid-row: auto;
+        order: 4;
+        width: 100%;
+    }
+}

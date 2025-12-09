@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../css/notification-button.css';
+import '../../css/notifications/notification-button.css';
 
 interface NotificationButtonProps {
     count?: number;

@@ -85,3 +85,52 @@
   color: #9A9A9A;
   font-weight: 500;
 }
+
+span.codicon.codicon-check {
+  font-size: 1.2rem;
+  color: black;
+  font-weight: bold;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.8rem;
+  text-align: left;
+  user-select: none;
+}
+
+.checkbox-wrapper:hover .checkbox-indicator {
+  opacity: 0.8;
+}
+
+.checkbox-native-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-indicator {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 30%;
+  background-color: #E8E8E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox-indicator.is-checked {
+  background-color: #E8E8E8;
+}
+
+.checkbox-label-text {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  color: var(--color-text-main);
+  font-weight: 500;
+}

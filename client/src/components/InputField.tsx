@@ -17,18 +17,20 @@ export type InputFieldType =
   | 'date' 
   | 'time'
   | 'textarea' 
-  | 'select';
+  | 'select'
+  | 'checkbox';
 
 interface InputFieldProps {
   label: string;
   type?: InputFieldType;
   placeholder?: string;
   value?: string | number;
+  checked?: boolean; 
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   className?: string;
   autoComplete?: string;
-  options?: Option[]; // Used when type="select"
-  rows?: number;      // Used when type="textarea"
+  options?: Option[]; 
+  rows?: number;     
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -36,6 +38,7 @@ const InputField: React.FC<InputFieldProps> = ({
   type = 'text',
   placeholder,
   value,
+  checked,
   onChange,
   className = '',
   autoComplete,
@@ -43,6 +46,29 @@ const InputField: React.FC<InputFieldProps> = ({
   rows = 4,
 }) => {
   
+  // Checkbox
+  if (type === 'checkbox') {
+    return (
+      <div className={`field ${className}`}>
+        <label className="checkbox-wrapper">
+
+          <input 
+            type="checkbox"
+            className="checkbox-native-input"
+            checked={checked}
+            onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+          />
+
+          <div className={`checkbox-indicator ${checked ? 'is-checked' : ''}`}>
+             {checked && <span className="codicon codicon-check"></span>}
+          </div>
+
+          <span className="checkbox-label-text">{label}</span>
+        </label>
+      </div>
+    );
+  }
+
   const renderInput = () => {
     // Text area
     if (type === 'textarea') {

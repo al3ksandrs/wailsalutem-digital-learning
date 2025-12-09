@@ -89,3 +89,10 @@
     font-size: 20px !important;
     font-weight: bold;
 }
+
+@media (max-width: 1000px) {
+    .notification-item {
+        width: 100%;
+        max-width: 100%;
+    }
+}

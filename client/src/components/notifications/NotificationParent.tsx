@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NotificationButton from './NotificationButton';
 import NotificationItem from './NotificationItem';
-import '../../css/notification-parent.css';
+import '../../css/notifications/notification-parent.css';
 import { useNavigate } from 'react-router-dom';
 
 // hardcoded for demonstration purposes but will use a service here later

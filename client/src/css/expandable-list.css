@@ -1,0 +1,86 @@
+.expandable-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.expandable-list-scroll-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.expandable-list-empty {
+    text-align: center;
+    color: #9A9A9A;
+    font-style: italic;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.expandable-item-wrapper {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    align-items: flex-end;
+    padding-left: 2px;
+}
+
+.expandable-item-content {
+    flex-grow: 1;
+}
+
+.expandable-item-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    height: 3rem; 
+    margin-bottom: 2px;
+}
+
+.expandable-item-delete .codicon {
+    font-size: 24px !important;
+    color: #9A9A9A;
+    transition: all 0.2s ease;
+}
+
+.expandable-item-delete:hover .codicon {
+    color: #D6330F;
+    transform: scale(1.15); 
+    font-weight: bold;
+}
+
+.expandable-list-add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    padding-top: 0.5rem;
+}
+
+.expandable-list-add-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-main);
+    padding: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.expandable-list-add-btn .codicon {
+    font-size: 24px !important;
+}
+
+.expandable-list-add-btn:hover {
+    transform: scale(1.1);
+    color: var(--color-main);
+}

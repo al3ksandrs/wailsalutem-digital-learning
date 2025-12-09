@@ -7,9 +7,12 @@ import LogoutButton from '../components/LogoutButton';
 import AvailabilitySlider from '../components/AvailabilitySlider';
 import Modal from '../components/Modal';
 import '../css/student-main.css';
+import SubjectTags from '..//components/SubjectTags';
 
 const StudentMainPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const Subjects = ['Wiskunde B', 'Natuurkunde', 'Scheikunde', 'Biologie', 'Informatica', 'Engels'];
 
     return (
         <><Header></Header>
@@ -67,7 +70,13 @@ const StudentMainPage: React.FC = () => {
                                     onChange={(val) => console.log('Maandag availability:', val)}
                                 />
                         </div>
-                    </div>
+                        <SubjectTags
+                        items={Subjects}
+                        maxItems={3}
+                        direction="horizontal"
+                        showDropdown={true}
+                    />
+                </div>
                 }
             />
             <Modal
