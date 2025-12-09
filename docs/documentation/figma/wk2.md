@@ -51,7 +51,6 @@
 ![Chat with Student](../../img/figma/desktop/wk2-t-chat.png)
 
 
-
 ### Admin
 
 ![User Management Dashboard](../../img/figma/admin/wk2-user.png)
@@ -84,7 +83,6 @@
 
 ![Chat](../../img/figma/mobile/wk1-s-chat.png)
 
-
 ### Teacher Flow
 
 ![Registration Teacher 1](../../img/figma/mobile/wk1-t-reg-1.png)
@@ -94,3 +92,19 @@
 ![Registration Teacher 3](../../img/figma/mobile/wk1-t-reg-3.png)
 
 ![Registration Teacher 4](../../img/figma/mobile/wk1-t-reg-4.png)
+
+![Registration Teacher 5](../../img/figma/mobile/wk2-t-reg-5.png)
+
+![Registration Teacher 6](../../img/figma/mobile/wk2-t-reg-6.png)
+
+![Fill in Availability Teacher](../../img/figma/mobile/wk2-t-sug.png)
+
+![Notifications Teacher](../../img/figma/mobile/wk2-t-note.png)
+
+![Availability Teacher](../../img/figma/mobile/wk2-t-availability.png)
+
+![Help Requests Teacher](../../img/figma/mobile/wk2-t-hr.png)
+
+![Students Teacher](../../img/figma/mobile/wk2-t-students.png)
+
+![Chat with Student](../../img/figma/mobile/wk2-t-chat.png)
