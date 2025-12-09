@@ -1,0 +1,58 @@
+.availability-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px; /* slider will grow up to 600px */
+}
+
+.day-label {
+  width: 70px;
+  font-weight: 600;
+  color: #2b2b2b;
+}
+
+.slider-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1; /* slider stretches */
+  gap: 8px;
+}
+
+.selected-time {
+  min-width: 70px;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #2b2b2b;
+}
+
+.availability-slider {
+  height: 8px;
+  flex: 1;
+}
+
+.availability-slider .MuiSlider-thumb {
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  outline-color: #6680b2;
+}
+
+.availability-slider .MuiSlider-track {
+  background-color: #6680b2;
+  height: 12px;
+}
+
+.availability-slider .MuiSlider-rail {
+  background-color: #555555;
+  height: 12px;
+}
+
+.availability-slider .MuiSlider-thumb.Mui-active {
+  box-shadow: 0 0 0 8px rgba(50, 115, 220, 0.16);
+}
+
+.availability-slider .MuiSlider-valueLabel {
+  background-color: #6680b2;
+  color: white;
+}
