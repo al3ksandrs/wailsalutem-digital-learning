@@ -1,21 +1,24 @@
 import React from 'react';
-import NotificationButton from './notifications/NotificationButton';
 import LogoutButton from './LogoutButton';
 import HamburgerMenu from './HamburgerMenu';
 import logo from '../assets/graduation-cap-white.png';
+import Notifications from './notifications/NotificationParent';
 import '../css/header.css';
 
 interface HeaderProps {
     onLogout?: () => void;
-    onNotificationClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogout, onNotificationClick }) => {
+const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     return (
         <header className="topbar">
+
+            {/* MOBILE LEFT: Hamburger */}
             <div className="mobile-left">
                 <HamburgerMenu />
             </div>
+
+            {/* DESKTOP LEFT: Logo + tabs */}
             <div className="topbar-left desktop-left">
                 <img src={logo} alt="Logo" className="topbar-logo" />
                 <nav className="topbar-tabs">
@@ -24,19 +27,15 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onNotificationClick }) => {
                     <button className="topbar-tab">Connecties</button>
                 </nav>
             </div>
+
+            {/* MOBILE RIGHT: Notifications */}
             <div className="mobile-right">
-                <NotificationButton
-                    count={5}
-                    onClick={onNotificationClick}
-                    darkMode={false}
-                />
+                <Notifications />
             </div>
+
+            {/* DESKTOP RIGHT: Notifications + Logout */}
             <div className="topbar-right desktop-right">
-                <NotificationButton
-                    count={5}
-                    onClick={onNotificationClick}
-                    darkMode={true}
-                />
+                <Notifications />
                 <LogoutButton onClick={onLogout} />
             </div>
 
