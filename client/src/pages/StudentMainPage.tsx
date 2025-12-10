@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import ScreenLayout from '../components/ScreenLayout';
-import Notifications from '../components/notifications/NotificationParent';
 import MainInfoPanel from '../components/MainInfoPanel';
 import AvailabilitySlider from '../components/AvailabilitySlider';
 import Modal from '../components/Modal';
@@ -33,7 +32,6 @@ const StudentMainPage: React.FC = () => {
                 }
                 rightContent={
                     <div className="student-page-placeholder">
-                        <Notifications />
                         <div>
                             <AvailabilitySlider 
                                 day="Maandag"
