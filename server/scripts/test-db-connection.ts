@@ -1,15 +1,21 @@
 import { Client } from 'pg';
 import dotenv from 'dotenv';
 
-console.log("SCRIPT IS STARTING...");
+console.log(" DEBUG SCRIPT STARTED...");
 
+// 1. Load Environment Variables
 dotenv.config();
 
-// Safety Check: Did the .env load?
-if (!process.env.DB_USER) {
-  console.error("ERROR: Could not find .env variables!");
-  console.error("  Make sure you are running this command from the 'server' folder.");
-  process.exit(1);
+// 2. Print what we loaded (to catch typos)
+console.log("-----------------------------------------");
+console.log(`TARGET HOST: ${process.env.DB_HOST}`);
+console.log(`TARGET PORT: ${process.env.DB_PORT}`);
+console.log(`USER:        ${process.env.DB_USER}`);
+console.log(`DATABASE:    ${process.env.DB_NAME}`);
+console.log("-----------------------------------------");
+
+if (!process.env.DB_HOST || process.env.DB_HOST !== 'localhost') {
+    console.log("  WARNING: DB_HOST is NOT 'localhost'. If you are testing locally, this might be why it hangs.");
 }
 
 const client = new Client({
@@ -22,23 +28,33 @@ const client = new Client({
 
 const testConnection = async () => {
   try {
-    console.log(`Attempting to connect to database: ${process.env.DB_NAME}...`);
-    
-    await client.connect();
-    
-    console.log('Connection Successful!');
-    
-    const res = await client.query('SELECT NOW() as current_time, version();');
-    
-    console.log('------------------------------------------------');
-    console.log('Server Time:', res.rows[0].current_time);
-    console.log('Postgres Version:', res.rows[0].version);
-    console.log('------------------------------------------------');
-    console.log('EVERYTHING IS WORKING CORRECTLY');
+    console.log("Attempting to connect (Timeout set to 5s)...");
 
-  } catch (err) {
-    console.error('Connection Failed.');
-    console.error(err);
+    // Create a generic timeout promise that fails after 5 seconds
+    const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('TIMEOUT: Database did not respond in 5 seconds. Check Docker!')), 5000)
+    );
+
+    // Race the connection against the timeout
+    await Promise.race([client.connect(), timeout]);
+
+    console.log("CONNECTED SUCCESSFULLY!");
+    
+    // Run a quick query
+    const res = await client.query('SELECT NOW() as time, version();');
+    console.log(` Database Time: ${res.rows[0].time}`);
+    console.log(` Version:       ${res.rows[0].version}`);
+
+  } catch (err: any) {
+    console.error("\n CONNECTION FAILED:");
+    console.error(err.message);
+    
+    if (err.message.includes('ECONNREFUSED')) {
+        console.error(" HINT: Docker is not running or port 5432 is not mapped.");
+    }
+    if (err.message.includes('password authentication failed')) {
+        console.error(" HINT: Check DB_PASSWORD in your .env file.");
+    }
   } finally {
     await client.end();
   }

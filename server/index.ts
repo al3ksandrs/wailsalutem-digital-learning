@@ -2,7 +2,7 @@ import Fastify from 'fastify';
 import fastifyPostgres from '@fastify/postgres';
 import dotenv from 'dotenv';
 
-// 1. Load the .env file immediately
+// Load the .env file 
 dotenv.config();
 
 const fastify = Fastify({
@@ -19,26 +19,42 @@ fastify.get('/', async (request, reply) => {
   return { wrld: 'wrld' };
 });
 
-// New Route: Test Database Connection
+//Test Database Connection
 fastify.get('/db-check', async (request, reply) => {
-  const client = await fastify.pg.connect();
-  
+  let client;
+
   try {
+    client = await fastify.pg.connect();
     const { rows } = await client.query('SELECT NOW() as time, version()');
+
     return { 
       status: 'Database Connected!', 
       time: rows[0].time,
       version: rows[0].version 
     };
+
+} catch (err) {
+    request.log.error(err);
+    
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+
+    return reply.code(500).send({ 
+      status: 'Database Connection Failed', 
+      error: errorMessage
+    });
+
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 });
 
 // Runs the server
 const start = async () => {
   try {
-    // Note: host: '0.0.0.0' is important for Docker/VPS later
+    //host: '0.0.0.0' is important for Docker/VPS
+    //this tells the server to listen on all available network interfaces.
     await fastify.listen({ port: 3000, host: '0.0.0.0' });
     fastify.log.info(`server listening on port 3000`);
   } catch (err) {

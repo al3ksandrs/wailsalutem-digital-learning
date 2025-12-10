@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: pg18
+    container_name: LeerMatch
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
