@@ -4,74 +4,43 @@
 
 ### Login
 
-![Login Desktop](../../img/figma/desktop/wk1-login.png)
+![](../../img/figma/Week%201/Desktop/login.png)
 
 ### Student Flow
 
-![Registration Student 1](../../img/figma/desktop/wk1-s-reg-1.png)
-
-![Registration Student 2](../../img/figma/desktop/wk1-s-reg-2.png)
-
-![Registration Student 3](../../img/figma/desktop/wk1-s-reg-3.png)
-
-![Suggested Matches Student](../../img/figma/desktop/wk1-s-sug.png)
-
-![Requests Student](../../img/figma/desktop/wk1-s-req.png)
-
-![Sumbit Help Request Student](../../img/figma/desktop/wk1-s-submit.png)
-
-![Connections Student](../../img/figma/desktop/wk1-s-con.png)
-
-![Chat with Teacher](../../img/figma/desktop/wk1-s-chat.png)
+![](../../img/figma/Week%201/Desktop/Student/reg-1.png)
+![](../../img/figma/Week%201/Desktop/Student/reg-2.png)
+![](../../img/figma/Week%201/Desktop/Student/reg-3.png)
+![](../../img/figma/Week%201/Desktop/Student/suggestion.png)
+![](../../img/figma/Week%201/Desktop/Student/submit.png)
+![](../../img/figma/Week%201/Desktop/Student/request.png)
+![](../../img/figma/Week%201/Desktop/Student/connections.png)
+![](../../img/figma/Week%201/Desktop/Student/chat.png)
 
 ### Teacher Flow
 
-![Registration Student 1](../../img/figma/desktop/wk1-t-req-1.png)
-
-![Registration Teacher 2](../../img/figma/desktop/wk1-t-req-2.png)
-
-![Registration Student 3](../../img/figma/desktop/wk1-t-req-3.png)
-
-![Registration Student 4](../../img/figma/desktop/wk1-t-req-4.png)
-
+![](../../img/figma/Week%201/Desktop/Teacher/reg-1.png)
+![](../../img/figma/Week%201/Desktop/Teacher/reg-2.png)
+![](../../img/figma/Week%201/Desktop/Teacher/reg-3.png)
+![](../../img/figma/Week%201/Desktop/Teacher/reg-4.png)
 
 ### Admin
-
-![Admin Dashboard](../../img/figma/admin/wk1-admin.png)
+![](../../img/figma/Week%201/Desktop/Admin/admin.png)
 
 ## Mobile
 
-### Login
-
-![Login](../../img/figma/mobile/wk1-login.png)
-
 ### Student Flow
-
-![Registration Student 1](../../img/figma/mobile/wk1-s-reg-1.png)
-
-![Registration Student 2](../../img/figma/mobile/wk1-s-reg-2.png)
-
-![Registration Student 3](../../img/figma/mobile/wk1-s-reg-3.png)
-
-![Suggested Matches Student](../../img/figma/mobile/wk1-s-sug.png)
-
-![Sumbit Help Requests Student](../../img/figma/mobile/wk1-s-submit.png)
-
-![Requests Student 3](../../img/figma/mobile/wk1-s-req.png)
-
-![Connections Student](../../img/figma/mobile/wk1-s-con.png)
-
-![Contact Teacher](../../img/figma/mobile/wk1-s-contact.png)
-
-![Chat](../../img/figma/mobile/wk1-s-chat.png)
-
+![](../../img/figma/Week%201/Mobile/Student/reg-1.png)
+![](../../img/figma/Week%201/Mobile/Student/reg-2.png)
+![](../../img/figma/Week%201/Mobile/Student/reg-3.png)
+![](../../img/figma/Week%201/Mobile/Student/suggestion.png)
+![](../../img/figma/Week%201/Mobile/Student/submit.png)
+![](../../img/figma/Week%201/Mobile/Student/request.png)
+![](../../img/figma/Week%201/Mobile/Student/connections.png)
+![](../../img/figma/Week%201/Mobile/Student/chat.png)
 
 ### Teacher Flow
-
-![Registration Teacher 1](../../img/figma/mobile/wk1-t-reg-1.png)
-
-![Registration Teacher 2](../../img/figma/mobile/wk1-t-reg-2.png)
-
-![Registration Teacher 3](../../img/figma/mobile/wk1-t-reg-3.png)
-
-![Registration Teacher 4](../../img/figma/mobile/wk1-t-reg-4.png)
+![](../../img/figma/Week%201/Mobile/Teacher/reg-1.png)
+![](../../img/figma/Week%201/Mobile/Teacher/reg-2.png)
+![](../../img/figma/Week%201/Mobile/Teacher/reg-3.png)
+![](../../img/figma/Week%201/Mobile/Teacher/reg-4.png)

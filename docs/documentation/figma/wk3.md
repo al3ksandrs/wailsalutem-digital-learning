@@ -1,4 +1,4 @@
-# Week 2
+# Week 3
 
 ## Desktop
 
@@ -44,12 +44,10 @@
 ![](../../img/figma/Week%201/Mobile/Student/reg-2.png)
 ![](../../img/figma/Week%201/Mobile/Student/reg-3.png)
 ![](../../img/figma/Week%202/Mobile/Student/suggestion.png)
-![](../../img/figma/Week%202/Mobile/Student/note.png)
 ![](../../img/figma/Week%202/Mobile/Student/submit.png)
 ![](../../img/figma/Week%202/Mobile/Student/request.png)
 ![](../../img/figma/Week%202/Mobile/Student/connections.png)
 ![](../../img/figma/Week%202/Mobile/Student/chat.png)
-![](../../img/figma/Week%202/Mobile/Student/calendar.png)
 
 ### Teacher Flow
 ![](../../img/figma/Week%201/Mobile/Teacher/reg-1.png)
