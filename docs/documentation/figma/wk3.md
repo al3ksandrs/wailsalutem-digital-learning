@@ -27,15 +27,16 @@
 ![](../../img/figma/Week%202/Desktop/Teacher/reg-6.png)
 ![](../../img/figma/Week%202/Desktop/Teacher/fia.png)
 ![](../../img/figma/Week%202/Desktop/Teacher/availability.png)
-![](../../img/figma/Week%202/Desktop/Teacher/suggestion.png)
+![](../../img/figma/Week%203/Desktop/Teacher/suggestion.png)
 ![](../../img/figma/Week%202/Desktop/Teacher/hr.png)
 ![](../../img/figma/Week%202/Desktop/Teacher/students.png)
 ![](../../img/figma/Week%202/Desktop/Teacher/chat.png)
 
 ### Admin
-![](../../img/figma/Week%202/Desktop/Admin/user.png)
-![](../../img/figma/Week%202/Desktop/Admin/hr.png)
-![](../../img/figma/Week%202/Desktop/Admin/matches.png)
+![](../../img/figma/Week%203/Desktop/Admin/user.png)
+![](../../img/figma/Week%203/Desktop/Admin/hr.png)
+![](../../img/figma/Week%203/Desktop/Admin/pending.png)
+![](../../img/figma/Week%203/Desktop/Admin/accept.png)
 
 ## Mobile
 
@@ -46,7 +47,7 @@
 ![](../../img/figma/Week%202/Mobile/Student/suggestion.png)
 ![](../../img/figma/Week%202/Mobile/Student/submit.png)
 ![](../../img/figma/Week%202/Mobile/Student/request.png)
-![](../../img/figma/Week%202/Mobile/Student/connections.png)
+![](../../img/figma/Week%202/Mobile/Student/connection.png)
 ![](../../img/figma/Week%202/Mobile/Student/chat.png)
 
 ### Teacher Flow

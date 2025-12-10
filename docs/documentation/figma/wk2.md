@@ -47,7 +47,7 @@
 ![](../../img/figma/Week%202/Mobile/Student/note.png)
 ![](../../img/figma/Week%202/Mobile/Student/submit.png)
 ![](../../img/figma/Week%202/Mobile/Student/request.png)
-![](../../img/figma/Week%202/Mobile/Student/connections.png)
+![](../../img/figma/Week%202/Mobile/Student/connection.png)
 ![](../../img/figma/Week%202/Mobile/Student/chat.png)
 ![](../../img/figma/Week%202/Mobile/Student/calendar.png)
 
