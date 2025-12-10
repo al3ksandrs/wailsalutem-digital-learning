@@ -8,6 +8,7 @@ import AvailabilitySlider from '../components/AvailabilitySlider';
 import Modal from '../components/Modal';
 import '../css/student-main.css';
 import SubjectTags from '..//components/SubjectTags';
+import HamburgerMenu from '../components/HamburgerMenu';
 
 const StudentMainPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,6 +77,8 @@ const StudentMainPage: React.FC = () => {
                         direction="horizontal"
                         showDropdown={true}
                     />
+                    <div><HamburgerMenu />
+                    </div>
                 </div>
                 }
             />
