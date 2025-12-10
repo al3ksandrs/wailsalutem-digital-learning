@@ -9,6 +9,9 @@ import Modal from '../components/Modal';
 import '../css/student-main.css';
 import SubjectTags from '..//components/SubjectTags';
 import HamburgerMenu from '../components/HamburgerMenu';
+import Achievement from '../components/Achievement';
+import BlueCheck from '../assets/badges/blue-check.png';
+
 
 const StudentMainPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,6 +82,14 @@ const StudentMainPage: React.FC = () => {
                     />
                     <div><HamburgerMenu />
                     </div>
+                        <div>
+                            <Achievement
+                            title="Verified Teacher"
+                            description="Verified by a resume."
+                            badgeSrc={BlueCheck}
+                            progress={45}
+                            />
+                        </div>
                 </div>
                 }
             />
