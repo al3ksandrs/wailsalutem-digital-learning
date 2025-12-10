@@ -55,6 +55,7 @@
 ![](../../img/figma/Week%202/Mobile/Student/request.png)
 ![](../../img/figma/Week%202/Mobile/Student/connection.png)
 ![](../../img/figma/Week%203/Mobile/Student/rate.png)
+![](../../img/figma/Week%204/Mobile/Student/badge.png)
 ![](../../img/figma/Week%202/Mobile/Student/chat.png)
 ![](../../img/figma/Week%202/Mobile/Student/calendar.png)
 
