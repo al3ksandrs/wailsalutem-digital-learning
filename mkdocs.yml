@@ -7,9 +7,12 @@ nav:
   - Home: index.md
   - Documentation:
     - Cooperation agreement: documentation/cooperation-agreement.md
-    - Class Diagram: documentation/uml-diagram.md
-    - Use Case Diagram: documentation/use-case-diagram.md
-    - Entity Relationship Diagram: documentation/erd.md
+    - UML's:
+      - Class Diagram: documentation/uml-diagram.md
+      - Use Case Diagram: documentation/use-case-diagram.md
+      - Entity Relationship Diagram: documentation/erd.md
+    - M&T's:
+      - M&T Sprint 1-2: documentation/mt-sprint-1-2.md
     - Figma Designs:
       - Week 1: documentation/figma/wk1.md
       - Week 2: documentation/figma/wk2.md
