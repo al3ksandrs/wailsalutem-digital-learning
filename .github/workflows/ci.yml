@@ -26,9 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # We will run tests here later (Jest and React testing framework)
+      # Runs tests to see coverage
+      - name: Run Client Tests with Coverage
+        run: npm run test:coverage --workspace=client
 
-
+      # Vitest thinks files are in 'src/', but Sonar needs to know they are in 'client/src/'
+      - name: Fix Coverage Paths
+        run: |
+          sed -i 's|SF:src/|SF:client/src/|g' client/coverage/lcov.info
 
       # SonarCloud scan (SonarQube on their cloud)
       - name: SonarCloud Scan
