@@ -7,8 +7,17 @@ nav:
   - Home: index.md
   - Documentation:
     - Cooperation agreement: documentation/cooperation-agreement.md
-    - UML Diagram: documentation/uml-diagram.md
-    - Use Case diagram: documentation/use-case-diagram.md
+    - UML's:
+      - Class Diagram: documentation/uml-diagram.md
+      - Use Case Diagram: documentation/use-case-diagram.md
+      - Entity Relationship Diagram: documentation/erd.md
+    - M&T's:
+      - M&T Sprint 1-2: documentation/mt-sprint-1-2.md
+    - Figma Designs:
+      - Week 1: documentation/figma/wk1.md
+      - Week 2: documentation/figma/wk2.md
+      - Week 3: documentation/figma/wk3.md
+      - Week 4: documentation/figma/wk4.md
     - Functional/NonFunctional requirements: documentation/functional-nonfunctional-requirements.md
     - Interviews:
       - Interview Questions: documentation/interviews/interview-questions.md
