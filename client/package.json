@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "postinstall": "patch-package",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage --coverage.reporter=lcov --coverage.reporter=text"
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.43",
