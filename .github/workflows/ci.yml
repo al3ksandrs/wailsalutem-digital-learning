@@ -31,6 +31,8 @@ jobs:
 
       # Runs tests to see coverage
       - name: Run Client Tests with Coverage
+        env:
+          ROLLUP_NATIVE: false
         run: npm run test:coverage --workspace=client
 
       # Vitest thinks files are in 'src/', but Sonar needs to know they are in 'client/src/'
