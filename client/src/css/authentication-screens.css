@@ -1,0 +1,35 @@
+.auth-step-indicator {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 3rem;
+  border-radius: 12px;
+  background-color: white;
+  margin: 0 auto;
+}
+
+.auth-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media (max-width: 1000px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+  
+  .auth-wrapper {
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+}

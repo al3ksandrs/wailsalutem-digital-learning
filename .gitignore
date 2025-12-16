@@ -24,5 +24,8 @@ dist-ssr
 *.sw?
 VPS LeerMatch.session.sql
 
+# Testing report
+*coverage
+
 # MkDocs build files
 site/

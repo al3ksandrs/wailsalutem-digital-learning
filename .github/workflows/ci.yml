@@ -21,14 +21,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # Disabled cache for now to test if this is causing the error
+          #cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          rm package-lock.json
+          npm install
 
-      # We will run tests here later (Jest and React testing framework)
+      # Runs client side tests and generates a report
+      - name: Run Client Tests
+        run: npm run test:coverage --workspace=client
 
-
+      # Verifies that TypeScript compiles without errors in the client side
+      - name: Build Client
+        run: npm run build --workspace=client
 
       # SonarCloud scan (SonarQube on their cloud)
       - name: SonarCloud Scan

@@ -1,0 +1,51 @@
+.notification-btn-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.notification-btn-container:active {
+    transform: scale(0.95);
+}
+
+/* Codicon size */
+.notification-btn-container .codicon {
+    font-size: 30px !important; 
+}
+
+.notification-btn-container.mode-light .codicon {
+    color: var(--color-text-main, #3A3A3A);
+}
+
+.notification-btn-container.mode-dark .codicon {
+    color: white;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: #D6330F; 
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border: 2px solid white; 
+    box-sizing: content-box; 
+}
+
+.notification-btn-container.mode-dark .notification-badge {
+    border-color: #333;
+}
