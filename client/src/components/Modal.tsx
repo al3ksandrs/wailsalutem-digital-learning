@@ -13,18 +13,36 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
+    if (!dialog) {
+      return;
     }
 
-    if (!isOpen && dialog.open) {
+    const canShowModal = typeof dialog.showModal === 'function';
+    const canClose = typeof dialog.close === 'function';
+
+    if (isOpen && canShowModal && !dialog.open) {
+      dialog.showModal();
+      return;
+    }
+
+    if (isOpen && !canShowModal) {
+      dialog.setAttribute('open', 'true');
+      return;
+    }
+
+    if (!isOpen && canClose) {
       dialog.close();
+      return;
+    }
+
+    if (!isOpen) {
+      dialog.removeAttribute('open');
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <dialog ref={dialogRef} className="modal-container">
