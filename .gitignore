@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 VPS LeerMatch.session.sql
+server/.env
 
 # Testing report
 *coverage
