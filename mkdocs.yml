@@ -1,7 +1,7 @@
 theme:
   name: material
 
-site_name: WailSalutem Digital learning wiki
+site_name: WailSalutem Digital Learning wiki
 
 nav:
   - Home: index.md
