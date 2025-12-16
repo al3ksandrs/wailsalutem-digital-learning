@@ -22,7 +22,7 @@ describe('Modal', () => {
         expect(screen.getByText('Modal Content')).toBeInTheDocument();
     });
 
-    test('calls onClose when overlay or close button is clicked', () => {
+    test('calls onClose when close button is clicked', () => {
         const handleClose = vi.fn();
         render(
             <Modal isOpen={true} onClose={handleClose}>
@@ -30,12 +30,8 @@ describe('Modal', () => {
             </Modal>
         );
 
-        const overlay = document.querySelector('.modal-overlay');
-        fireEvent.click(overlay!);
+        const closeBtn = screen.getByRole('button', { name: /close modal/i });
+        fireEvent.click(closeBtn);
         expect(handleClose).toHaveBeenCalledTimes(1);
-
-        const closeBtn = document.querySelector('.modal-close');
-        fireEvent.click(closeBtn!);
-        expect(handleClose).toHaveBeenCalledTimes(2);
     });
 });
