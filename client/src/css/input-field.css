@@ -1,0 +1,136 @@
+.custom-label {
+  color: var(--color-text-main) !important;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.input.custom-input,
+.textarea.custom-input,
+.select select.custom-input {
+  background-color: var(--color-input-bg);
+  border: none;
+  box-shadow: none;
+  border-radius: 6px;
+  color: var(--color-text-main);
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.input.custom-input {
+  height: 3rem;
+  padding-left: 1rem;
+}
+
+.textarea.custom-input {
+  padding: 1rem;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.select {
+  height: 3rem !important;
+}
+
+.select select.custom-input {
+  height: 100%;
+  padding-left: 1rem;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* Bulma select arrow override */
+.select::after {
+  transition: transform 0.3s ease !important;
+  transform-origin: center center !important;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+  /* Appearance */
+  border-color: #7A7A7A !important;
+  border-width: 2px !important;
+
+  /* Positioning */
+  right: 1.125em !important;
+  height: 0.625em;
+  width: 0.625em;
+  z-index: 5;
+  margin-top: -0.3125em !important;
+
+  /* Initial state: pointing down */
+  transform: rotate(-45deg);
+}
+
+/* Hover state */
+.select:not(.is-multiple):not(.is-loading):hover::after {
+  border-color: #555 !important;
+}
+
+/* Dropdown animation for arrow */
+.select:not(.is-multiple):not(.is-loading):focus-within::after {
+  transform: rotate(135deg) !important;
+  border-color: var(--color-main) !important;
+}
+
+.input.custom-input:focus,
+.textarea.custom-input:focus,
+.select select.custom-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-main);
+}
+
+/* Placeholder */
+.input.custom-input::placeholder,
+.textarea.custom-input::placeholder {
+  color: #9A9A9A;
+  font-weight: 500;
+}
+
+span.codicon.codicon-check {
+  font-size: 1.2rem;
+  color: black;
+  font-weight: bold;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.8rem;
+  text-align: left;
+  user-select: none;
+}
+
+.checkbox-wrapper:hover .checkbox-indicator {
+  opacity: 0.8;
+}
+
+.checkbox-native-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-indicator {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 30%;
+  background-color: #E8E8E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkbox-indicator.is-checked {
+  background-color: #E8E8E8;
+}
+
+.checkbox-label-text {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  color: var(--color-text-main);
+  font-weight: 500;
+}

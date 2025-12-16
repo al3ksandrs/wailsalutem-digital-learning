@@ -1,25 +1,16 @@
-import { useState, useEffect } from 'react';
-import { API_URL } from '@common/constants.ts';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import StudentMainPage from './pages/StudentMainPage';
+import RegisterTeacherPart2 from './pages/RegisterTeacherPart2';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        const msg = `${data.wrld}`;
-        setMessage(msg);
-      })
-      .catch((err) => {
-        console.error('failed to fetch from server:', err);
-        setMessage('failed to load data');
-      });
-  }, []);
-
   return (
-    <div>hello {message}</div>
-  )
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/register-teacher-2" element={<RegisterTeacherPart2 />} />
+      <Route path="/student" element={<StudentMainPage />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

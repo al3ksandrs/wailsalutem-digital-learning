@@ -1,0 +1,38 @@
+.notification-parent-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  cursor: default;
+}
+
+.notification-dropdown {
+  position: fixed;
+  top: 80px;
+  right: 40px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: max-content;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 1000px) {
+  .notification-dropdown {
+    right: 50%;
+    transform: translateX(50%);
+    top: 20px;
+    width: 95vw;
+    align-items: center;
+  }
+}

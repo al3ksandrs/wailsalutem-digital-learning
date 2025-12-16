@@ -23,5 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+# Testing report
+*coverage
+
 # MkDocs build files
 site/
