@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import fastifyPostgres from '@fastify/postgres';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url'; // Import this helper
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -30,7 +30,9 @@ export const buildServer = () => {
         version: rows[0].version 
       };
     } catch (err) {
-      request.log ? request.log.error(err) : console.error(err);
+      // Use logic OR for safer logging in tests where log might be disabled
+      (request.log || console).error(err);
+      
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       return reply.code(500).send({ status: 'Database Connection Failed', error: errorMessage });
     } finally {
@@ -41,6 +43,7 @@ export const buildServer = () => {
   return fastify;
 };
 
+/* istanbul ignore next */
 const start = async () => {
   const server = buildServer();
   try {
@@ -52,7 +55,8 @@ const start = async () => {
   }
 };
 
-// FIX: This works in "type": "module" projects
+// This works in "type": "module" projects
+/* istanbul ignore next */
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   start();
 }

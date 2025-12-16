@@ -3,9 +3,23 @@ module.exports = {
   // 1. Use the ESM preset
   preset: 'ts-jest/presets/default-esm', 
   testEnvironment: 'node',
+  
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  
+  // Ensure we generate 'lcov' for SonarQube and 'text' for your terminal
   coverageReporters: ['lcov', 'text'],
+
+  //Only count coverage for source files. 
+  collectCoverageFrom: [
+    "**/*.ts",                 // Include all TS files
+    "!**/*.test.ts",           // Exclude test files
+    "!**/node_modules/**",     // Exclude dependencies
+    "!**/dist/**",             // Exclude build output
+    "!**/coverage/**",         // Exclude coverage folder
+    "!jest.config.cjs"         // Exclude this config file
+  ],
+
   testMatch: ["**/tests/**/*.test.ts"],
   
   // 2. Map .js imports to .ts files (Crucial for ESM imports)
@@ -19,11 +33,10 @@ module.exports = {
       'ts-jest',
       {
         useESM: true,
-        // 4. Override tsconfig for tests
         tsconfig: {
-          module: 'es2022',         // Fixes "import.meta" error
-          moduleResolution: 'node', // Ensures modules are resolved correctly
-          isolatedModules: true,    // Fixes the "TS151002" warning
+          module: 'es2022',
+          moduleResolution: 'node',
+          isolatedModules: true,
         },
       },
     ],

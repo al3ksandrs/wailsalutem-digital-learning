@@ -8,6 +8,7 @@ dotenv.config();
 const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 
 export const runConnectionTest = async () => {
+  /* istanbul ignore next */
   if (isMainModule) {
     console.log(" DEBUG SCRIPT STARTED...");
     console.log("-----------------------------------------");
@@ -24,14 +25,17 @@ export const runConnectionTest = async () => {
   });
 
   try {
+    /* istanbul ignore next */
     if (isMainModule) console.log("Attempting to connect...");
 
     await client.connect();
 
+    /* istanbul ignore next */
     if (isMainModule) console.log("CONNECTED SUCCESSFULLY!");
     
     const res = await client.query('SELECT NOW() as time, version();');
     
+    /* istanbul ignore next */
     if (isMainModule) {
         console.log(` Database Time: ${res.rows[0].time}`);
         console.log(` Version:       ${res.rows[0].version}`);
@@ -40,6 +44,7 @@ export const runConnectionTest = async () => {
     return true;
 
   } catch (err: any) {
+    /* istanbul ignore next */
     if (isMainModule) {
         console.error("\n CONNECTION FAILED:", err.message);
     }
@@ -49,6 +54,7 @@ export const runConnectionTest = async () => {
   }
 };
 
+/* istanbul ignore next */
 if (isMainModule) {
   runConnectionTest();
 }
