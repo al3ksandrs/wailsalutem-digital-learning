@@ -23,5 +23,8 @@ nav:
       - Interview Questions: documentation/interviews/interview-questions.md
       - Interview Answers: documentation/interviews/interview-answers.md
   - Developers:
-    - Working with Git: developers/working-with-git.md
+    - Code Guidelines: developers/code-guidelines.md
+    - Testing Guidelines: developers/testing-guidelines.md
+    - How to update/work on this wiki: developers/wiki-guidelines.md
     - UI Components: developers/components.md
+    - Working with Git: developers/working-with-git.md
