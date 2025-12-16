@@ -18,7 +18,7 @@ const AvailabilitySlider: React.FC<AvailabilitySliderProps> = ({
   const handleChange = (_event: Event, newValue: number | number[]) => {
     const val = newValue as number[];
     setRange(val);
-    onChange && onChange(val);
+    onChange?.(val);
   };
 
   const formatTimeLabel = (val: number) => {
@@ -29,24 +29,24 @@ const AvailabilitySlider: React.FC<AvailabilitySliderProps> = ({
   };
 
   return (
-        <div className="availability-slider-container">
-            <div className="day-label">{day}</div>
-                <div className="slider-wrapper">
-                    <Slider
-                    className="availability-slider"
-                    value={range}
-                    onChange={handleChange}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={formatTimeLabel}
-                    min={8}
-                    max={20}
-                    step={0.25}
-                    />
-                    <div className="selected-time">
-                    {formatTimeLabel(range[0])} - {formatTimeLabel(range[1])}
-                </div>
-            </div>
+    <div className="availability-slider-container">
+      <div className="day-label">{day}</div>
+      <div className="slider-wrapper">
+        <Slider
+          className="availability-slider"
+          value={range}
+          onChange={handleChange}
+          valueLabelDisplay="auto"
+          valueLabelFormat={formatTimeLabel}
+          min={8}
+          max={20}
+          step={0.25}
+        />
+        <div className="selected-time">
+          {formatTimeLabel(range[0])} - {formatTimeLabel(range[1])}
         </div>
+      </div>
+    </div>
   );
 };
 

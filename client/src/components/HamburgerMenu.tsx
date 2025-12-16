@@ -6,13 +6,26 @@ const HamburgerMenu: React.FC = () => {
 
   return (
     <>
-      <button className="hamburger-button" onClick={() => setOpen(true)}>
-        <i className="codicon codicon-menu"></i>
+      {/* Hamburger button */}
+      <button
+        type="button"
+        className="hamburger-button"
+        onClick={() => setOpen(true)}
+        aria-label="Open menu"
+      >
+        <i className="codicon codicon-menu" aria-hidden="true"></i>
       </button>
-      <div
+
+      {/* Overlay */}
+      <button
+        type="button"
         className={`menu-overlay ${open ? 'open' : ''}`}
         onClick={() => setOpen(false)}
+        aria-hidden="true"
+        tabIndex={-1}
       />
+
+      {/* Menu panel */}
       <div className={`menu-panel ${open ? 'open' : ''}`}>
         <div className="menu-top-row">
           <div className="menu-top">
@@ -22,14 +35,18 @@ const HamburgerMenu: React.FC = () => {
             <div className="menu-item">Berichten</div>
             <div className="menu-item">Beschikbaarheid</div>
           </div>
-          <div
+
+          {/* Close button */}
+          <button
+            type="button"
             className="menu-close-btn"
             onClick={() => setOpen(false)}
             aria-label="Close menu"
           >
             x
-          </div>
+          </button>
         </div>
+
         <div className="menu-bottom">
           <div className="menu-section-title">Account</div>
           <div className="menu-item">Instellingen</div>
