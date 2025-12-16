@@ -36,3 +36,11 @@ jobs:
       # Verifies that TypeScript compiles without errors in the client side
       - name: Build Client
         run: npm run build --workspace=client
+
+      # SonarCloud scan (SonarQube on their cloud)
+      - name: SonarCloud Scan
+        # SonarQube likes to cry about numerical versions so we have to put a SHA of the commit ID here. (we use v6 here)
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
