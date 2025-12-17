@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../components/">
+        <link rel="prev" href="../testing-guidelines/">
       
+      
+        <link rel="next" href="../components/">
       
       
         
@@ -21,7 +23,7 @@
     
     
       
-        <title>Working with Git - WailSalutem Digital Learning wiki</title>
+        <title>How to update/work on this wiki - WailSalutem Digital Learning wiki</title>
       
     
     
@@ -61,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#wiki-guidelines" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -93,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Working with Git
+              How to update/work on this wiki
             
           </span>
         </div>
@@ -928,10 +935,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../wiki-guidelines/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to update/work on this wiki
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -947,6 +981,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expanding-the-wiki" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expanding the wiki
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-the-wiki" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploying the wiki
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -984,17 +1071,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../working-with-git/" class="md-nav__link">
         
   
   
@@ -1010,7 +1090,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1040,6 +1119,49 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#expanding-the-wiki" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expanding the wiki
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-the-wiki" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploying the wiki
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1056,19 +1178,33 @@
 
 
 
-  <h1>Working with Git</h1>
+<h1 id="wiki-guidelines">Wiki Guidelines</h1>
+<p>For the wiki we use MkDocs. MkDocs is a static site generator that uses markdown files as the source.</p>
+<h3 id="expanding-the-wiki">Expanding the wiki</h3>
+<p>To add a new page, simply add a new <code>.md</code> file under <code>/documentation</code> or <code>/developers</code>.
+The new page should follow kebab-case naming.</p>
+<p>An example page would look like this: <code>/documentation/test.md</code></p>
+<p>To actually add the page to the wiki you need to add it in the <code>mkdocs.yml</code> file. If we want to add our new <code>test.md</code> page for example;</p>
+<pre><code class="language-yaml">theme:
+  name: material
 
-<p>We use <code>main</code> and <code>development</code> as the two main branches.</p>
-<p>The <code>main</code> branch is the branch for stable code that is ready to be delivered to the client.</p>
-<p><code>development</code> branch will be used the most as this is where development is done. Only stable versions will be sent from <code>development</code> into the <code>main</code> branch.</p>
-<p>We also base our <a href="https://www.optimizely.com/optimization-glossary/feature-branch/">feature branches</a> from the <code>development</code> branch.</p>
-<p>Git commits and the feature branches follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> standard.</p>
-<pre><code>&lt;type&gt;[optional scope]: &lt;description&gt; 
-[optional body]
-[optional footer(s)]
+site_name: WailSalutem Digital Learning wiki
+
+nav:
+  - Home: index.md
+  - Documentation:
+    - Cooperation agreement: documentation/cooperation-agreement.md
+    - UML's:
+      - Class Diagram: documentation/uml-diagram.md
+      - Use Case Diagram: documentation/use-case-diagram.md
+      - Test: documentation/test.md
 </code></pre>
-<p>An example of such a commit would be <code>fix: Aligned divs to center of page</code>
-OR <code>feature/CI-CD setup</code> for a feature branch.</p>
+<h3 id="testing">Testing</h3>
+<p>To actually see the new page with the content we put in it, we need to run <code>npm run wiki</code> on the monorepo root level.
+This will start a local server; <code>http://127.0.0.1:8000/</code>. Navigating to this link will allow you to view the static site generated locally.</p>
+<h3 id="deploying-the-wiki">Deploying the wiki</h3>
+<p>To deploy the wiki to the internet, just run <code>npm run wiki:deploy</code> on the monorepo root level.
+Make sure to only do this from the <code>development</code> branch!</p>
 
 
 

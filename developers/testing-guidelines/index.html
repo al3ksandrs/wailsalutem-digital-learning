@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../components/">
+        <link rel="prev" href="../code-guidelines/">
       
+      
+        <link rel="next" href="../wiki-guidelines/">
       
       
         
@@ -21,7 +23,7 @@
     
     
       
-        <title>Working with Git - WailSalutem Digital Learning wiki</title>
+        <title>Testing Guidelines - WailSalutem Digital Learning wiki</title>
       
     
     
@@ -61,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#testing-guidelines" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -93,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Working with Git
+              Testing Guidelines
             
           </span>
         </div>
@@ -900,10 +907,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../testing-guidelines/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Guidelines
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -919,6 +953,93 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-aaa-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The AAA Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-testing-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Testing (Frontend)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client Testing (Frontend)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-component-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Component testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -984,17 +1105,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../working-with-git/" class="md-nav__link">
         
   
   
@@ -1010,7 +1124,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1040,6 +1153,83 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-aaa-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The AAA Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-testing-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Testing (Frontend)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client Testing (Frontend)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-component-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Component testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1056,19 +1246,53 @@
 
 
 
-  <h1>Working with Git</h1>
+<h1 id="testing-guidelines">Testing Guidelines</h1>
+<p>We separate our testing strategies into <strong>Client (Frontend)</strong> and <strong>Server (Backend)</strong> due to differences in frameworks and environments.
+We should probably examine if we can use just one framework for both.</p>
+<h2 id="general-principles">General Principles</h2>
+<h3 id="the-aaa-pattern">The AAA Pattern</h3>
+<p>All tests should follow the <strong>Arrange-Act-Assert</strong> pattern to ensure readability and structure.</p>
+<ol>
+<li><strong>Arrange</strong>: Set up the initial state, mocks, and inputs.</li>
+<li><strong>Act</strong>: Execute the function, component render, or API call being tested.</li>
+<li><strong>Assert</strong>: Verify the output, side effects, or DOM state matches expectations.</li>
+</ol>
+<h3 id="best-practices">Best Practices</h3>
+<ul>
+<li><strong>Isolation</strong>: Tests should not depend on each other. Use <code>beforeEach</code> to reset mocks and state.</li>
+<li><strong>Descriptive names</strong>: Test names should describe <em>what</em> is being tested and <em>expected behavior</em> (e.g., <code>it('should return 400 if email is missing')</code>).</li>
+<li><strong>Mock external dependencies</strong>: Never hit a real database or external API during unit tests.</li>
+</ul>
+<h2 id="client-testing-frontend">Client Testing (Frontend)</h2>
+<p>We use <strong>Vitest</strong> with <strong>React Testing Library</strong>. Reason for this is because Vitest is compatible with our Vite build system.</p>
+<ul>
+<li><strong>Framework</strong>: Vitest</li>
+<li><strong>Environment</strong>: JSDOM (simulates a browser)</li>
+<li><strong>Setup File</strong>: <code>client/src/tests/setup.ts</code></li>
+<li><strong>Location</strong>: <code>client/src/tests/</code></li>
+</ul>
+<h3 id="example-component-testing">Example: Component testing</h3>
+<p>When testing React components, focus on user interaction and accessibility rather than implementation details.</p>
+<pre><code class="language-tsx">import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, test, expect } from 'vitest';
+import LoginButton from '../components/LoginButton';
 
-<p>We use <code>main</code> and <code>development</code> as the two main branches.</p>
-<p>The <code>main</code> branch is the branch for stable code that is ready to be delivered to the client.</p>
-<p><code>development</code> branch will be used the most as this is where development is done. Only stable versions will be sent from <code>development</code> into the <code>main</code> branch.</p>
-<p>We also base our <a href="https://www.optimizely.com/optimization-glossary/feature-branch/">feature branches</a> from the <code>development</code> branch.</p>
-<p>Git commits and the feature branches follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> standard.</p>
-<pre><code>&lt;type&gt;[optional scope]: &lt;description&gt; 
-[optional body]
-[optional footer(s)]
+describe('LoginButton Component', () =&gt; {
+    test('renders correctly and handles click', () =&gt; {
+        // ARRANGE
+        const handleClick = vi.fn(); // Vitest mock function
+        render(&lt;LoginButton onClick={handleClick} /&gt;);
+
+        // ACT
+        const button = screen.getByRole('button', { name: /login/i });
+        fireEvent.click(button);
+
+        // ASSERT
+        expect(button).toBeInTheDocument();
+        expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+});
 </code></pre>
-<p>An example of such a commit would be <code>fix: Aligned divs to center of page</code>
-OR <code>feature/CI-CD setup</code> for a feature branch.</p>
 
 
 

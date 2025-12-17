@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../components/">
+        <link rel="prev" href="../../documentation/interviews/interview-answers/">
       
+      
+        <link rel="next" href="../testing-guidelines/">
       
       
         
@@ -21,7 +23,7 @@
     
     
       
-        <title>Working with Git - WailSalutem Digital Learning wiki</title>
+        <title>Code Guidelines - WailSalutem Digital Learning wiki</title>
       
     
     
@@ -61,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#coding-guidelines-for-react-and-typescript" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -93,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Working with Git
+              Code Guidelines
             
           </span>
         </div>
@@ -872,10 +879,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../code-guidelines/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Guidelines
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -891,6 +925,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#react-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -984,17 +1126,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../working-with-git/" class="md-nav__link">
         
   
   
@@ -1010,7 +1145,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1040,6 +1174,104 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#react-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1056,19 +1288,275 @@
 
 
 
-  <h1>Working with Git</h1>
+<h1 id="coding-guidelines-for-react-and-typescript">Coding guidelines for React and TypeScript</h1>
+<p>Interesting articles to read:</p>
+<p><a href="https://medium.com/@mkare/best-practices-for-using-typescript-with-react-bad13d851143">Best practices for using TypeScript with React</a></p>
+<h3 id="files">Files</h3>
+<p>Files should follow these naming rules:</p>
+<ul>
+<li>File name matches the declaration name</li>
+<li>Use <code>.ts</code> extension for all TypeScript files</li>
+<li>Use <code>.tsx</code> extension for all React files</li>
+<li>Use appropriate casing:</li>
+<li>PascalCase for:<ul>
+<li>Types representing objects</li>
+<li>Classes</li>
+<li>Namespaces</li>
+<li>Enums</li>
+</ul>
+</li>
+<li>camelCase for:<ul>
+<li>Function types</li>
+<li>Variable declarations</li>
+<li>Function declarations</li>
+</ul>
+</li>
+</ul>
+<h3 id="exports">Exports</h3>
+<p><strong>Named exports</strong></p>
+<p>Prefer named exports over default exports. This ensures that import names are consistent across the codebase, making refactoring, searching, and auto-importing reliable.</p>
+<pre><code class="language-typescript">// DON'T use default exports
+const UserCard = () =&gt; { ... };
+export default UserCard;
 
-<p>We use <code>main</code> and <code>development</code> as the two main branches.</p>
-<p>The <code>main</code> branch is the branch for stable code that is ready to be delivered to the client.</p>
-<p><code>development</code> branch will be used the most as this is where development is done. Only stable versions will be sent from <code>development</code> into the <code>main</code> branch.</p>
-<p>We also base our <a href="https://www.optimizely.com/optimization-glossary/feature-branch/">feature branches</a> from the <code>development</code> branch.</p>
-<p>Git commits and the feature branches follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> standard.</p>
-<pre><code>&lt;type&gt;[optional scope]: &lt;description&gt; 
-[optional body]
-[optional footer(s)]
+// This allows inconsistent naming in imports:
+// import Card from './UserCard';
+// import User from './UserCard';
+
+// DO use named exports
+export const UserCard = () =&gt; { ... };
+
+// This enforces consistent naming:
+// import { UserCard } from './UserCard';
 </code></pre>
-<p>An example of such a commit would be <code>fix: Aligned divs to center of page</code>
-OR <code>feature/CI-CD setup</code> for a feature branch.</p>
+<h3 id="types">Types</h3>
+<p><strong>Type Declarations</strong></p>
+<p>Prefer type aliases instead of interfaces for better consistency and flexibility. Type aliases provide all the capabilities of interfaces while being more flexible and having clearer syntax for complex types.</p>
+<pre><code class="language-typescript">// DON'T use interfaces
+interface User {
+  id: number;
+  name: string;
+}
+
+// DO use type aliases
+type User = {
+  id: number;
+  name: string;
+};
+</code></pre>
+<h3 id="react-components">React Components</h3>
+<p><strong>Defining Components</strong></p>
+<p>Use explicit types for Props and prefer destructuring them immediately in the function signature. This makes it clear what data the component uses.</p>
+<pre><code class="language-typescript">// DON'T use 'any' or inline types that are hard to read
+const UserCard = (props: any) =&gt; {
+  return &lt;div&gt;{props.name}&lt;/div&gt;;
+};
+
+// DO define specific types and destructure
+type UserCardProps = {
+  name: string;
+  role: string;
+  isActive?: boolean;
+};
+
+export const UserCard = ({ name, role, isActive = false }: UserCardProps) =&gt; {
+  return (
+    &lt;div className={isActive ? &quot;active&quot; : &quot;&quot;}&gt;
+      {name} ({role})
+    &lt;/div&gt;
+  );
+};
+</code></pre>
+<p><strong>Boolean props</strong></p>
+<p>Prefix boolean props with <code>is</code>, <code>has</code>, or <code>should</code> to clearly indicate they represent a state or a flag.</p>
+<pre><code class="language-typescript">// DON'T use ambiguous names
+type Props = {
+  disable: boolean; // sounds like a function
+  open: boolean;    // could be a function or state
+};
+
+// DO use state-describing prefixes
+type Props = {
+  isDisabled: boolean;
+  isOpen: boolean;
+  hasError: boolean;
+};
+</code></pre>
+<p><strong>Event handling</strong></p>
+<p>Do not use <code>any</code> for event handlers. Use React's built-in types.</p>
+<pre><code class="language-typescript">// DON'T use any
+const handleChange = (e: any) =&gt; { ... };
+
+// DO use strict React types
+import { ChangeEvent, MouseEvent } from 'react';
+
+const handleChange = (e: ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+  console.log(e.target.value);
+};
+
+const handleClick = (e: MouseEvent&lt;HTMLButtonElement&gt;) =&gt; {
+  e.preventDefault();
+};
+</code></pre>
+<h3 id="variables">Variables</h3>
+<p><strong>Single Variable Per Decleration</strong></p>
+<p>Always declare each variable separately:</p>
+<pre><code class="language-typescript">// DON'T declare multiple variables in one statement
+let a, b;
+let x = 1,
+  y = 2;
+
+// DO declare each variable separately
+let a: number;
+let b: string;
+
+let x = 1;
+let y = 2;
+</code></pre>
+<h3 id="functions">Functions</h3>
+<p><strong>Function Parameters</strong></p>
+<p>Prefer functions with a single parameter. When multiple parameters are needed, pass them as a single object with a type alias following the naming convention: <code>functionName</code> =&gt; <code>type functionNameParams</code>. Exceptions can be smaller functions.</p>
+<pre><code class="language-typescript">// DON'T use multiple parameters
+function validateUser(
+  email: string,
+  age: number,
+  preferences: UserPreferences
+): ValidationResult {
+  // Implementation
+}
+
+// DO use a single object parameter with a clear type alias
+type ValidateUserParams = {
+  email: string;
+  age: number;
+  preferences: UserPreferences;
+};
+
+function validateUser(params: ValidateUserParams): ValidationResult {
+  const { email, age, preferences } = params;
+  // Implementation
+}
+</code></pre>
+<p><strong>Avoid Nested Functions</strong></p>
+<p>Keep functions at the top level:</p>
+<pre><code class="language-typescript">// DON'T nest named functions
+function processUserData(data: User): void {
+  function validateEmail(): boolean {
+    return data.email.includes(&quot;@&quot;);
+  }
+
+  function formatName(): string {
+    return data.name.toUpperCase();
+  }
+
+  if (validateEmail()) {
+    console.log(formatName());
+  }
+}
+
+// DO keep functions at the top level
+function validateEmail(email: string): boolean {
+  return email.includes(&quot;@&quot;);
+}
+
+function formatName(name: string): string {
+  return name.toUpperCase();
+}
+
+function processUserData(data: User): void {
+  if (validateEmail(data.email)) {
+    console.log(formatName(data.name));
+  }
+}
+</code></pre>
+<p>Exceptions are possible for:</p>
+<ol>
+<li>Arrow functions in callbacks</li>
+<li>Array method callbacks</li>
+<li>React component methods</li>
+</ol>
+<h3 id="error-handling">Error handling</h3>
+<p>Make sure to have a <code>catch</code> for a <code>try</code>. Include meaningful error messages and consider logging or rethrowing as appropriate.</p>
+<pre><code class="language-typescript">// DON'T ignore errors
+try {
+  const user = fetchUserData();
+} catch {
+  // nothing here
+}
+
+// DO handle errors explicitly
+try {
+  const user = fetchUserData();
+  console.log(user.name);
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error(&quot;Failed to fetch user data:&quot;, error.message);
+  } else {
+    console.error(&quot;An unknown error occurred&quot;);
+  }
+}
+</code></pre>
+<p>For asynchronous code:</p>
+<pre><code class="language-typescript">// DON'T leave unhandled promises
+async function getUserData() {
+  return fetch(&quot;/api/user&quot;);
+}
+getUserData(); // no error handling
+
+// DO handle promise rejections
+async function getUserData() {
+  try {
+    const response = await fetch(&quot;/api/user&quot;);
+    if (!response.ok) {
+      throw new Error(&quot;Network response was not ok&quot;);
+    }
+    return await response.json();
+  } catch (error: unknown) {
+    console.error(&quot;Failed to fetch user data:&quot;, error instanceof Error ? error.message : error);
+    throw error; // optional: rethrow if caller should handle
+  }
+}
+</code></pre>
+<h3 id="documentation">Documentation</h3>
+<p>For code that isn't easily understood when looking over it, include comments to explain functionality.</p>
+<p>For such comments we use Consistent Comments.</p>
+<ul>
+<li>
+<p>Write all comments in third person singular form of the present tense.</p>
+</li>
+<li>
+<p>Start each comment with a capital letter.</p>
+</li>
+<li>
+<p>End each comment with a period.</p>
+</li>
+<li>
+<p>Focus on explaining intent and non-obvious behavior, not repeating code.</p>
+</li>
+</ul>
+<pre><code class="language-typescript">// DON'T leave unclear code uncommented
+const result = calculate(data); // what does this actually do?
+
+// DO explain intent and complex logic
+// Calculates the total price including discounts and taxes.
+const result = calculate(data);
+</code></pre>
+<pre><code class="language-typescript">// DON'T use inconsistent or incomplete comments
+// calculates total
+const total = calculate(data);
+
+// DO write consistent, grammatically correct comments
+// Calculates total including discounts and taxes.
+const total = calculate(data);
+
+// DON'T use first person or commands
+// I fix the user data here
+function fixUserData(user: User) { ... }
+
+// DO maintain third person present tense
+// Fixes the user data to match API requirements.
+function fixUserData(user: User) { ... }
+</code></pre>
 
 
 
