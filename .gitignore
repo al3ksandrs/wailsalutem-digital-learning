@@ -22,8 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-VPS LeerMatch.session.sql
 server/.env
+server/secrets
+LeerMatch.session.sql
 
 # Testing report
 *coverage
