@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: LeerMatch_db
+    restart: unless-stopped
+
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
+
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_DB_FILE: /run/secrets/postgres_db
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
+
+secrets:
+  postgres_user:
+    file: ./secrets/postgres_user.txt
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  postgres_db:
+    file: ./secrets/postgres_db.txt
