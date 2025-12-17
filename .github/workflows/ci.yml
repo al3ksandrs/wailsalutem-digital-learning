@@ -29,13 +29,17 @@ jobs:
           rm package-lock.json
           npm install
 
-      # Runs client side tests and generates a report
+      # Runs client side and server side tests and generates a report
       - name: Run Client Tests
-        run: npm run test:coverage --workspace=client
+        run: |
+          npm run test:coverage --workspace=client
+          npm run test --workspace=server
 
-      # Verifies that TypeScript compiles without errors in the client side
+      # Verifies that TypeScript compiles without errors for both client and server
       - name: Build Client
-        run: npm run build --workspace=client
+        run: |
+          npm run build --workspace=client
+          npm run build --workspace=server
 
       # SonarCloud scan (SonarQube on their cloud)
       - name: SonarCloud Scan

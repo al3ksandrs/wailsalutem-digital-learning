@@ -7,6 +7,7 @@ nav:
   - Home: index.md
   - Documentation:
     - Cooperation agreement: documentation/cooperation-agreement.md
+    - Teckstack: documentation/techstack.md
     - UML's:
       - Class Diagram: documentation/uml-diagram.md
       - Use Case Diagram: documentation/use-case-diagram.md
