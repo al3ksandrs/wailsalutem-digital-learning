@@ -12,6 +12,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "index.ts"
+    "index.ts",
+    "server/**/*.ts",
+    "server/types/**/*.d.ts"
   ]
 }

@@ -4,6 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { authRoutes } from './routes/auth.ts';
+import { studentRoutes } from './routes/student.js';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ export const buildServer = () => {
     logger: process.env.NODE_ENV === 'test' ? false : true,
   });
 
+  // Register Postgres plugin
   fastify.register(fastifyPostgres, {
     connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
   });
@@ -20,6 +22,7 @@ export const buildServer = () => {
 
   fastify.register(authRoutes, { prefix: '/api/auth' });
 
+  // DB check endpoint
   fastify.get('/db-check', async (request, reply) => {
     let client;
     try {
@@ -32,15 +35,16 @@ export const buildServer = () => {
         version: rows[0].version 
       };
     } catch (err) {
-      // Use logic OR for safer logging in tests where log might be disabled
       (request.log || console).error(err);
-      
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       return reply.code(500).send({ status: 'Database Connection Failed', error: errorMessage });
     } finally {
       if (client) client.release();
     }
   });
+
+  // Register Student routes
+  studentRoutes(fastify);
 
   return fastify;
 };
@@ -50,14 +54,14 @@ const start = async () => {
   const server = buildServer();
   try {
     await server.listen({ port: 3000, host: '0.0.0.0' });
-    console.log(`server listening on port 3000`);
+    console.log(`Server listening on port 3000`);
   } catch (err) {
     console.error(err);
     process.exit(1);
   }
 };
 
-// This works in "type": "module" projects
+// If run directly, start server
 /* istanbul ignore next */
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   start();
