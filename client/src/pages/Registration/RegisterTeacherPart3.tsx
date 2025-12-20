@@ -82,8 +82,7 @@ const RegisterTeacherPart3: React.FC = () => {
                             onRemove={handleRemove}
                             maxItems={10}
                             renderItem={(item, index) => {
-                                // Logic to ensure we don't pass 'options' to a text input
-                                // which might cause the InputField component to crash
+                                // don't pass 'options' to a text input, might cause the InputField component to crash
                                 const isText = item.isCustom;
                                 
                                 return (

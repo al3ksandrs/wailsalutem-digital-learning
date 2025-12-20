@@ -16,7 +16,7 @@ const RegisterTeacherPart4: React.FC = () => {
     const handleToggleUpload = (e: ChangeEvent<HTMLInputElement>) => {
         setIsUploadEnabled(e.target.checked);
         if (!e.target.checked) {
-            setUploadedFile(null); // Reset file if unchecked
+            setUploadedFile(null); 
         }
     };
 
@@ -38,7 +38,7 @@ const RegisterTeacherPart4: React.FC = () => {
     };
 
     const handleBack = () => {
-        navigate('/teacher-register-3');
+        navigate('/register-teacher-3');
     };
 
     return (
@@ -81,7 +81,7 @@ const RegisterTeacherPart4: React.FC = () => {
                         {isUploadEnabled && (
                             <div className="mb-5 fade-in">
                                 {!uploadedFile ? (
-                                    // Empty Upload State (Screenshot Part 5)
+                                    // Empty Upload State
                                     <div className="file is-boxed is-centered is-fullwidth">
                                         <label className="file-label">
                                             <input 
@@ -94,6 +94,8 @@ const RegisterTeacherPart4: React.FC = () => {
                                             <span className="file-cta has-background-white" style={{ border: '1px solid #3273dc', borderRadius: '8px', padding: '1rem' }}>
                                                 <span className="file-icon">
                                                     <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
+                                                        {/* d="m9,16V10H5 etc basically draws that upload symbol, either keep it like this
+                                                        or create a costum component or import a symbol lib" */}
                                                         <path fill="#3273dc" d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
                                                     </svg>
                                                 </span>
@@ -101,7 +103,7 @@ const RegisterTeacherPart4: React.FC = () => {
                                         </label>
                                     </div>
                                 ) : (
-                                    // File Selected State (Screenshot Part 6)
+                                    // File Selected State 
                                     <div className="box is-flex is-justify-content-space-between is-align-items-center py-3 px-4" style={{ border: '1px solid #dbdbdb', boxShadow: 'none' }}>
                                         <span className="is-size-7 has-text-weight-medium text-truncate">
                                             {uploadedFile.name} 

@@ -8,7 +8,6 @@ const RegisterTeacherWaiting: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSkip = () => {
-        // Navigate to dashboard or login
         navigate('/'); 
     };
 
@@ -18,20 +17,19 @@ const RegisterTeacherWaiting: React.FC = () => {
                 <Logo />
 
                 <div 
+                    // these are bulma helpers for center alignment
                     className="login-card has-text-centered is-flex is-flex-direction-column is-justify-content-center" 
                     style={{ minHeight: '400px' }}
                 >
                     <div className="mb-6">
                         <h2 className="title is-4 mb-4">Thank you for registering</h2>
-                        <p className="subtitle is-6 has-text-grey">
-                            An admin is working on the request
-                        </p>
+                        <p className="subtitle is-6">An admin is working on the request</p>
                     </div>
 
                     <div className="is-flex is-justify-content-center">
                         <div style={{ width: '200px' }}>
                             <WSButton
-                                label="(demo skip)"
+                                label="(Return to homepage (login for now))"
                                 onClick={handleSkip}
                                 fullWidth={true}
                                 type="button"

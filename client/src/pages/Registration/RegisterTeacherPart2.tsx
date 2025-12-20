@@ -74,7 +74,7 @@ const RegisterTeacherPart2: React.FC = () => {
                             getItemKey={(item) => item.id}
                             onAdd={handleAdd}
                             onRemove={handleRemove}
-                            // we should probably adjust this to be dynamic later, based on amount of expertises to select from
+                            // todo adjust this to be dynamic, based on amount of expertises to select from
                             maxItems={10}
                             renderItem={(item, index) => (
                                 <InputField
