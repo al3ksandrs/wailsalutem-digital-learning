@@ -20,7 +20,7 @@ const LoginPage = () => {
 
   const handleToggle = (tab: 'login' | 'register') => {
     if (tab === 'register') {
-      navigate('/register-teacher-2');
+      navigate('/register');
     } else {
       setActiveTab(tab);
     }
