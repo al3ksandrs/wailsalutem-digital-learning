@@ -9,7 +9,7 @@ import {
     UserStatus
 } from '../../../common/types';
 
-// Mock auth user key
+// we will need to add in JWT or session cookie management here later
 const AUTH_USER_KEY = 'authUser';
 
 // Mock data fetching until real routes are complete
@@ -64,6 +64,20 @@ const mockRegisterStudent = async (data: RegisterStudentRequest): Promise<UserPr
   });
 };
 
+const mockDeleteUser = async (userId: number): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const index = MOCK_USERS.findIndex(u => u.id === userId);
+      if (index > -1) {
+        MOCK_USERS.splice(index, 1);
+        resolve();
+      } else {
+        reject(new Error('User not found'));
+      }
+    }, MOCK_API_DELAY_MS);
+  });
+};
+
 // React query hooks
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -93,6 +107,16 @@ export const useRegisterStudent = () => {
     mutationFn: mockRegisterStudent,
     onSuccess: (data) => {
       console.log('Student registration successful:', data);
+    }
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: mockDeleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [AUTH_USER_KEY] });
     }
   });
 };
