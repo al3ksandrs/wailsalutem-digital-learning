@@ -45,15 +45,6 @@ describe('Server Routes', () => {
     await app.close();
   });
 
-  test('GET / should return { wrld: "wrld" }', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/'
-    });
-    expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ wrld: 'wrld' });
-  });
-
   test('GET /db-check should return success', async () => {
     const response = await app.inject({
       method: 'GET',

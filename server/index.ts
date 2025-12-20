@@ -1,7 +1,9 @@
 import Fastify from 'fastify';
 import fastifyPostgres from '@fastify/postgres';
+import fastifyCookie from '@fastify/cookie';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { authRoutes } from './routes/auth.ts';
 
 dotenv.config();
 
@@ -14,9 +16,9 @@ export const buildServer = () => {
     connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
   });
 
-  fastify.get('/', async (request, reply) => {
-    return { wrld: 'wrld' };
-  });
+  fastify.register(fastifyCookie);
+
+  fastify.register(authRoutes, { prefix: '/api/auth' });
 
   fastify.get('/db-check', async (request, reply) => {
     let client;

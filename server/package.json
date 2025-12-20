@@ -12,12 +12,16 @@
     "test:db": "tsx scripts/test-db-connection.ts"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/postgres": "^6.0.2",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "xtend": "^4.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.19.25",
     "@types/pg": "^8.15.6",
