@@ -53,6 +53,9 @@ INSERT INTO teacher_subject (teacher_id, subject_id) VALUES
 (2, 1), (2, 7),
 (3, 4), (3, 5), (3, 6);
 
+-- Updates id to latest value
+SELECT setval('subject_id_seq', (SELECT MAX(id) FROM subject));
+
 -- 5. AVAILABILITY
 -- ==========================================
 INSERT INTO availability (teacher_id, dayOfTheWeek, startTime, endTime, isBooked) VALUES

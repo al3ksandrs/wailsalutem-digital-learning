@@ -10,6 +10,7 @@ const HTTP_OK = 200;
 const HTTP_CREATED = 201;
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_SERVER_ERROR = 500;
+const HTTP_BAD_REQUEST = 400;
 const COOKIE_MAX_AGE_SEC = 604800; // 1 week, we can change this later
 const SALT_ROUNDS = 10;
 const MIN_NAME_LENGTH = 2;
@@ -19,9 +20,15 @@ const MIN_PASSWORD_LENGTH = 6;
 const registerSchema = z.object({
     email: z.email(),
     name: z.string().min(MIN_NAME_LENGTH),
-    // Users can only sign up as Student or Teacher
     role: z.enum(['Student', 'Teacher']),
     password: z.string().min(MIN_PASSWORD_LENGTH),
+    // Optional fields
+    education: z.string().optional(),
+    schoolYear: z.number().optional(),
+    schoolProfile: z.string().optional(),
+    expertise: z.string().optional(),
+    bio: z.string().optional(),
+    subjects: z.array(z.string()).optional(),
 });
 
 const loginSchema = z.object({
@@ -37,7 +44,11 @@ export async function authRoutes(fastify: FastifyInstance) {
             body: registerSchema
         }
     }, async (request, reply) => {
-        const { email, name, role, password } = request.body;
+        const {
+            email, name, role, password,
+            education, schoolYear, schoolProfile,
+            expertise, bio, subjects
+        } = request.body;
 
         const client = await fastify.pg.connect();
 
@@ -50,7 +61,13 @@ export async function authRoutes(fastify: FastifyInstance) {
                 email,
                 name,
                 role,
-                password: hashedPassword
+                password: hashedPassword,
+                education,
+                schoolYear,
+                schoolProfile,
+                expertise,
+                bio,
+                subjects
             });
 
             return reply.code(HTTP_CREATED).send({
@@ -58,9 +75,20 @@ export async function authRoutes(fastify: FastifyInstance) {
                 user: newUser
             });
 
-        } catch (err) {
+        } catch (err: any) {
             request.log.error(err);
-            return reply.code(HTTP_SERVER_ERROR).send({ error: 'Registration failed' });
+
+            if (err.code === '23505') {
+                if (err.constraint === 'users_email_key') {
+                    return reply.code(HTTP_BAD_REQUEST).send({ error: 'Email already exists' });
+                }
+            }
+
+            if (err.code === '22P02' || err.message.includes('invalid input value for enum')) {
+                return reply.code(HTTP_BAD_REQUEST).send({ error: 'Invalid data provided (e.g. invalid education level)' });
+            }
+
+            return reply.code(HTTP_SERVER_ERROR).send({ error: 'Registration failed', details: err.message });
         } finally {
             client.release();
         }
