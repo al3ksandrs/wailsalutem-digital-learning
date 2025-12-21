@@ -4,8 +4,8 @@ import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
-import Connection from '../../components/connection';
 import Jan from '../../assets/images/jan.png'
+import Connection from '../../components/Connection';
 
 const StudentConnections: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
