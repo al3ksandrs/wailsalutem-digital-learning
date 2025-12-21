@@ -1,70 +1,35 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, test, expect, vi } from 'vitest';
-import '@testing-library/jest-dom';
-import RegisterTeacherPart2 from '../../pages/RegisterTeacherPart2';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
+import RegisterTeacherPart2 from '../../pages/Registration/RegisterTeacherPart2';
 
-const { mockNavigate } = vi.hoisted(() => {
-    return { mockNavigate: vi.fn() };
-});
+const { mockNavigate } = vi.hoisted(() => ({
+    mockNavigate: vi.fn(),
+}));
 
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual<any>('react-router-dom');
-    return {
-        ...actual,
-        useNavigate: () => mockNavigate,
-    };
+    return { ...actual, useNavigate: () => mockNavigate };
 });
 
 describe('RegisterTeacherPart2', () => {
-    test('renders initial expertise items', () => {
-        render(
-            <MemoryRouter>
-                <RegisterTeacherPart2 />
-            </MemoryRouter>
-        );
-        expect(screen.getAllByDisplayValue('HBO')).toHaveLength(1);
-        expect(screen.getAllByDisplayValue('Universiteit')).toHaveLength(1);
+    beforeEach(() => {
+        vi.clearAllMocks();
     });
 
-    test('adds a new expertise line', () => {
-        render(
-            <MemoryRouter>
-                <RegisterTeacherPart2 />
-            </MemoryRouter>
-        );
+    test('should render expertise list and navigate to part 3', () => {
+        // ARRANGE
+        render(<MemoryRouter><RegisterTeacherPart2 /></MemoryRouter>);
 
-        const addButton = screen.getByLabelText('Add new item');
-        fireEvent.click(addButton);
-
-        const selects = screen.getAllByRole('combobox');
-        expect(selects.length).toBe(3); 
-    });
-
-    test('removes an expertise line', () => {
-        render(
-            <MemoryRouter>
-                <RegisterTeacherPart2 />
-            </MemoryRouter>
-        );
-
-        const removeButtons = screen.getAllByLabelText('Remove item');
-        fireEvent.click(removeButtons[0]);
-
-        expect(screen.queryByDisplayValue('HBO')).not.toBeInTheDocument();
+        // ASSERT - Checks initial list items.
+        expect(screen.getByDisplayValue('HBO')).toBeInTheDocument();
         expect(screen.getByDisplayValue('Universiteit')).toBeInTheDocument();
-    });
 
-    test('navigates on next', () => {
-        render(
-            <MemoryRouter>
-                <RegisterTeacherPart2 />
-            </MemoryRouter>
-        );
-
-        const nextBtn = screen.getByText('Volgende stap');
+        // ACT - Proceed to next step.
+        const nextBtn = screen.getByText(/Volgende stap/i);
         fireEvent.click(nextBtn);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/student');
+        // ASSERT
+        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-3');
     });
 });

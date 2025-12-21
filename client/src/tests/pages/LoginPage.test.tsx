@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import '@testing-library/jest-dom';
 import LoginPage from '../../pages/LoginPage';
 
 const { mockNavigate } = vi.hoisted(() => {
@@ -55,7 +54,7 @@ describe('LoginPage', () => {
         const registerTab = screen.getByRole('tab', { name: 'Registreren' });
         fireEvent.click(registerTab);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-2');
+        expect(mockNavigate).toHaveBeenCalledWith('/register');
     });
 
     test('navigates to student page on form submit', () => {

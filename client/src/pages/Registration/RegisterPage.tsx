@@ -6,7 +6,7 @@ import InputField from '../../components/InputField';
 import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
 
-const RegisterStep1: React.FC = () => {
+const RegisterPage: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('register');
 
@@ -112,4 +112,4 @@ const RegisterStep1: React.FC = () => {
     );
 };
 
-export default RegisterStep1;
+export default RegisterPage;
