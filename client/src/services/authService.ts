@@ -1,81 +1,99 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MOCK_API_DELAY_MS, MOCK_USERS } from './mockData';
-import { 
-    type LoginRequest, 
-    type RegisterTeacherRequest, 
-    type RegisterStudentRequest, 
-    type UserProfile,
-    Role,
-    UserStatus
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  type LoginRequest,
+  type RegisterTeacherRequest,
+  type RegisterStudentRequest,
+  type UserProfile,
 } from '../../../common/types';
 
-// we will need to add in JWT or session cookie management here later
 const AUTH_USER_KEY = 'authUser';
+const API_URL = 'http://localhost:3000/api/auth'; // local backend used for now
 
-// Mock data fetching until real routes are complete
-const mockLogin = async (credentials: LoginRequest): Promise<UserProfile> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const user = MOCK_USERS.find(u => u.email === credentials.email);
-      
-      if (user) {
-        resolve(user);
-      } else {
-        reject(new Error('Invalid credentials'));
-      }
-    }, MOCK_API_DELAY_MS);
+// Requests to our API endpoints
+const login = async (credentials: LoginRequest): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+    credentials: 'include',
   });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Login failed');
+  }
+
+  const data = await response.json();
+  return data.user;
 };
 
-const mockRegisterTeacher = async (data: RegisterTeacherRequest): Promise<UserProfile> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newUser: UserProfile = {
-        id: Math.floor(Math.random() * 10000),
-        email: data.email,
-        name: data.name,
-        status: UserStatus.Pending,
-        role: Role.Teacher,
-        expertise: data.expertise,
-      } as any; 
-      
-      MOCK_USERS.push(newUser);
-      resolve(newUser);
-    }, MOCK_API_DELAY_MS);
+const registerTeacher = async (data: RegisterTeacherRequest): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...data, role: 'Teacher' }),
+    credentials: 'include',
   });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Registration failed');
+  }
+
+  const resData = await response.json();
+  return resData.user;
 };
 
-const mockRegisterStudent = async (data: RegisterStudentRequest): Promise<UserProfile> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newUser: UserProfile = {
-        id: Math.floor(Math.random() * 10000),
-        email: data.email,
-        name: data.name,
-        status: UserStatus.Pending,
-        role: Role.Student,
-        education: data.education,
-        schoolYear: data.schoolYear,
-      } as any;
-      
-      MOCK_USERS.push(newUser);
-      resolve(newUser);
-    }, MOCK_API_DELAY_MS);
+const registerStudent = async (data: RegisterStudentRequest): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...data, role: 'Student' }),
+    credentials: 'include',
   });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Registration failed');
+  }
+
+  const resData = await response.json();
+  return resData.user;
 };
 
-const mockDeleteUser = async (userId: number): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = MOCK_USERS.findIndex(u => u.id === userId);
-      if (index > -1) {
-        MOCK_USERS.splice(index, 1);
-        resolve();
-      } else {
-        reject(new Error('User not found'));
-      }
-    }, MOCK_API_DELAY_MS);
+const logout = async (): Promise<void> => {
+  const response = await fetch(`${API_URL}/logout`, {
+    method: 'POST',
+    credentials: 'include',
   });
+
+  if (!response.ok) {
+    throw new Error('Logout failed');
+  }
+};
+
+const deleteUser = async (userId: number): Promise<void> => {
+  throw new Error('Delete user not implemented in backend');
+};
+
+const checkSession = async (): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/me`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Not authenticated');
+  }
+
+  const data = await response.json();
+  return data.user;
 };
 
 // React query hooks
@@ -83,7 +101,7 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: mockLogin,
+    mutationFn: login,
     onSuccess: (data) => {
       queryClient.setQueryData([AUTH_USER_KEY], data);
     },
@@ -95,7 +113,7 @@ export const useLogin = () => {
 
 export const useRegisterTeacher = () => {
   return useMutation({
-    mutationFn: mockRegisterTeacher,
+    mutationFn: registerTeacher,
     onSuccess: (data) => {
       console.log('Teacher registration successful:', data);
     }
@@ -104,9 +122,20 @@ export const useRegisterTeacher = () => {
 
 export const useRegisterStudent = () => {
   return useMutation({
-    mutationFn: mockRegisterStudent,
+    mutationFn: registerStudent,
     onSuccess: (data) => {
       console.log('Student registration successful:', data);
+    }
+  });
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      queryClient.setQueryData([AUTH_USER_KEY], null);
+      queryClient.clear();
     }
   });
 };
@@ -114,9 +143,17 @@ export const useRegisterStudent = () => {
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: mockDeleteUser,
+    mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [AUTH_USER_KEY] });
     }
+  });
+};
+
+export const useAuthSession = () => {
+  return useQuery({
+    queryKey: [AUTH_USER_KEY],
+    queryFn: checkSession,
+    retry: false,
   });
 };
