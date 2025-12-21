@@ -1,0 +1,63 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, test, expect, vi } from 'vitest';
+import StudentConnections from '../../pages/Student/StudentConnections';
+
+vi.mock('../../components/notifications/NotificationParent', () => ({
+    default: () => <div>NotificationsMock</div>
+}));
+
+describe('StudentRequest', () => {
+    test('renders layout with greeting', () => {
+        render(
+            <MemoryRouter>
+                <StudentConnections />
+            </MemoryRouter>
+        );
+        expect(screen.getByText('Goedenavond, Hendrik')).toBeInTheDocument();
+
+        const titles = screen.getAllByText('Mijn Connecties');
+        expect(titles.length).toBeGreaterThan(0);
+        expect(screen.getByRole('heading', { name: 'Mijn Connecties' })).toBeInTheDocument();
+    });
+
+    test('renders data', () => {
+
+        render(<StudentConnections />);
+
+        expect(screen.getByText('Jan Hooiberg')).toBeInTheDocument();
+        expect(screen.getByText('Wiskunde')).toBeInTheDocument();
+        expect(screen.getByText('Info')).toBeInTheDocument();
+        expect(screen.getByText('Contact')).toBeInTheDocument();
+    });
+
+    test('opens logout modal when logout button is clicked', () => {
+        render(
+            <MemoryRouter>
+                <StudentConnections />
+            </MemoryRouter>
+        );
+
+        const logoutBtns = screen.getAllByText('Logout');
+        fireEvent.click(logoutBtns.at(-1)!);
+
+        expect(screen.getByText('Weet je zeker dat je wilt uitloggen?')).toBeInTheDocument();
+    });
+
+    test('closes logout modal', () => {
+        render(
+            <MemoryRouter>
+                <StudentConnections />
+            </MemoryRouter>
+        );
+
+        const logoutBtns = screen.getAllByText('Logout');
+        fireEvent.click(logoutBtns.at(-1)!);
+
+        const closeBtn = document.querySelector('.modal-close');
+        expect(closeBtn).toBeInTheDocument();
+        fireEvent.click(closeBtn!);
+
+        expect(screen.queryByText('Weet je zeker dat je wilt uitloggen?')).not.toBeInTheDocument();
+    });
+});
