@@ -140,9 +140,13 @@ export interface RegisterStudentRequest extends RegisterBaseRequest {
     role: Role; // student
     education: EducationLevel;
     schoolYear: number;
+    schoolProfile?: string;
+    subjects?: string[];
 }
 
 export interface RegisterTeacherRequest extends RegisterBaseRequest {
     role: Role; // teacher
     expertise: string;
+    bio?: string;
+    subjects?: string[];
 }
