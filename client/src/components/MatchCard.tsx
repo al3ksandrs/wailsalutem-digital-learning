@@ -1,45 +1,22 @@
 import WSButton from "./WSButton";
+import BaseProfileCard from "./BaseProfileCard";
 
 interface MatchCardProps {
-    name: string;
-    image: string;
-    subjects: string[];
+  name: string;
+  image: string;
+  subjects: string[];
 }
 
 const MatchCard: React.FC<MatchCardProps> = ({
-    name,
-    image,
-    subjects,
+  name,
+  image,
+  subjects,
 }) => {
-
-    return (
-        <div className="box" style={{ background: "#f5f5f5" }}>
-            <div className="level is-mobile">
-                <div className="level-left">
-                    <figure className="image is-64x64 mr-4">
-                        <img src={image} alt={name} />
-                    </figure>
-
-                    <div>
-                        <p className="has-text-black">{name}</p>
-
-                        <div className="tags mt-2">
-                            {subjects.map((subject) => (
-                                <span key={subject} className="tag has-text-black has-background-white">
-                                    {subject}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                <WSButton
-                    label="Zie profiel"
-                    size="normal"
-                />
-            </div>
-        </div>
-    );
+  return (
+    <BaseProfileCard name={name} image={image} subjects={subjects}>
+      <WSButton label="Zie profiel" size="normal" />
+    </BaseProfileCard>
+  );
 };
 
 export default MatchCard;
