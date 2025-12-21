@@ -4,7 +4,7 @@ import ResetPassword from './pages/ResetPassword';
 import RegisterPage from './pages/Registration/RegisterPage'
 import StudentMainPage from './pages/StudentMainPage';
 import StudentRequests from './pages/Student/StudentRequests';
-
+import StudentConnections from './pages/Student/StudentConnections';
 
 import RegisterStudentPart2 from './pages/Registration/RegisterStudentPart2';
 import RegisterStudentPart3 from './pages/Registration/RegisterStudentPart3';
@@ -32,7 +32,8 @@ function App() {
       <Route path="/register-teacher-waiting" element={<RegisterTeacherWaiting />} />
 
       <Route path="/student" element={<StudentMainPage />} />
-      <Route path="/mijnverzoeken" element={<StudentRequests />} />
+      <Route path="/verzoeken" element={<StudentRequests />} />
+      <Route path="/connecties" element={<StudentConnections />} />
     </Routes>
   );
 }
