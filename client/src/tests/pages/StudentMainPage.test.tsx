@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
-import '@testing-library/jest-dom';
 import StudentMainPage from '../../pages/StudentMainPage';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
