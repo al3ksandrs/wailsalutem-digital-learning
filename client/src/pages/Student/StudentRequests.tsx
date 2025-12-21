@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
-import ScreenLayout from '../components/ScreenLayout';
-import MainInfoPanel from '../components/MainInfoPanel';
-import Modal from '../components/Modal';
-import '../css/student-main.css';
-import WSButton from '../components/WSButton';
-import MatchCard from '../components/MatchCard';
+import Header from '../../components/Header';
+import ScreenLayout from '../../components/ScreenLayout';
+import MainInfoPanel from '../../components/MainInfoPanel';
+import Modal from '../../components/Modal';
+import WSButton from '../../components/WSButton';
+import Request from '../../components/Request';
 
-// Mock Data
-import Thomas from '../assets/images/thomas.png';
-import Saskia from '../assets/images/saskia.png';
-
-const StudentMainPage: React.FC = () => {
+const StudentRequests: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    interface Match {
-        name: string;
-        image: string;
-        subjects: string[];
+    interface Request {
+        subject: string,
+        level: string,
+        location: string,
+        time: string,
     }
 
-    const matches: Match[] = [
+    // Mock Data
+    const requests: Request[] = [
         {
-            name: "Thomas de Jong",
-            image: Thomas,
-            subjects: ["Biology"],
+            subject: "Scheikude",
+            level: "HAVO",
+            location: "Amsterdam",
+            time: "13:00 - 14:00",
         },
         {
-            name: "Saskia Veermans",
-            image: Saskia,
-            subjects: ["English", "History"],
+            subject: "Wiskunde",
+            level: "HAVO",
+            location: "Alkmaar",
+            time: "12:30 - 13:30",
+        },
+        {
+            subject: "Geschiedenis",
+            level: "HAVO",
+            location: "Amstelveen",
+            time: "11:45 - 12:25",
         },
     ];
-
 
     return (
         <>
             <Header
+
                 onLogout={() => setIsModalOpen(true)}
             />
 
             <ScreenLayout
                 greeting="Goedenavond, Hendrik"
-                rightTitle="Voorgestelde matches"
+                rightTitle="Mijn Verzoeken"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
@@ -66,9 +71,9 @@ const StudentMainPage: React.FC = () => {
                 }
                 rightContent={
                     <div className="student-page-placeholder">
-                        <div className="container" style={{ maxWidth: 700 }}>
-                            {matches.map((match) => (
-                                <MatchCard key={match.name} {...match} />
+                        <div className="container overflow" style={{maxHeight: 450, overflow: "auto"}}>
+                            {requests.map((request) => (
+                                <Request key={request.subject} {...request} />
                             ))}
                         </div>
                     </div>
@@ -86,4 +91,4 @@ const StudentMainPage: React.FC = () => {
     );
 };
 
-export default StudentMainPage;
+export default StudentRequests;

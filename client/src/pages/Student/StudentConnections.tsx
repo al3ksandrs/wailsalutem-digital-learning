@@ -1,35 +1,26 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
-import ScreenLayout from '../components/ScreenLayout';
-import MainInfoPanel from '../components/MainInfoPanel';
-import Modal from '../components/Modal';
-import '../css/student-main.css';
-import WSButton from '../components/WSButton';
-import MatchCard from '../components/MatchCard';
+import Header from '../../components/Header';
+import ScreenLayout from '../../components/ScreenLayout';
+import MainInfoPanel from '../../components/MainInfoPanel';
+import Modal from '../../components/Modal';
+import WSButton from '../../components/WSButton';
+import Jan from '../../assets/images/jan.png'
+import Connection from '../../components/Connection';
 
-// Mock Data
-import Thomas from '../assets/images/thomas.png';
-import Saskia from '../assets/images/saskia.png';
-
-const StudentMainPage: React.FC = () => {
+const StudentConnections: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    interface Match {
+    interface Connection {
         name: string;
         image: string;
         subjects: string[];
     }
 
-    const matches: Match[] = [
+    const connections: Connection[] = [
         {
-            name: "Thomas de Jong",
-            image: Thomas,
-            subjects: ["Biology"],
-        },
-        {
-            name: "Saskia Veermans",
-            image: Saskia,
-            subjects: ["English", "History"],
+            name: "Jan Hooiberg",
+            image: Jan,
+            subjects: ["Natuurkunde", "Wiskunde"],
         },
     ];
 
@@ -42,7 +33,7 @@ const StudentMainPage: React.FC = () => {
 
             <ScreenLayout
                 greeting="Goedenavond, Hendrik"
-                rightTitle="Voorgestelde matches"
+                rightTitle="Mijn Connecties"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
@@ -67,8 +58,8 @@ const StudentMainPage: React.FC = () => {
                 rightContent={
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
-                            {matches.map((match) => (
-                                <MatchCard key={match.name} {...match} />
+                            {connections.map((connection) => (
+                                <Connection key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>
@@ -86,4 +77,4 @@ const StudentMainPage: React.FC = () => {
     );
 };
 
-export default StudentMainPage;
+export default StudentConnections;

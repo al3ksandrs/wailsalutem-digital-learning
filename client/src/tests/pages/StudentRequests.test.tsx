@@ -1,30 +1,44 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
-import StudentMainPage from '../../pages/StudentMainPage';
+import StudentRequests from '../../pages/Student/StudentRequests';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
 }));
 
-describe('StudentMainPage', () => {
+describe('StudentRequest', () => {
     test('renders layout with greeting', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <StudentRequests />
             </MemoryRouter>
         );
         expect(screen.getByText('Goedenavond, Hendrik')).toBeInTheDocument();
-        
-        const titles = screen.getAllByText('Voorgestelde matches');
+
+        const titles = screen.getAllByText('Mijn Verzoeken');
         expect(titles.length).toBeGreaterThan(0);
-        expect(screen.getByRole('heading', { name: 'Voorgestelde matches' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Mijn Verzoeken' })).toBeInTheDocument();
+    });
+
+    test('renders data', () => {
+
+        render(<StudentRequests />);
+
+        expect(screen.getByText('Scheikude')).toBeInTheDocument();
+        expect(screen.getByText('Wiskunde')).toBeInTheDocument();
+        expect(screen.getByText('Geschiedenis')).toBeInTheDocument();
+
+        expect(screen.getByText('Amsterdam')).toBeInTheDocument();
+        expect(screen.getByText('Alkmaar')).toBeInTheDocument();
+        expect(screen.getByText('Amstelveen')).toBeInTheDocument();
+
     });
 
     test('opens logout modal when logout button is clicked', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <StudentRequests />
             </MemoryRouter>
         );
 
@@ -37,13 +51,13 @@ describe('StudentMainPage', () => {
     test('closes logout modal', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <StudentRequests />
             </MemoryRouter>
         );
 
         const logoutBtns = screen.getAllByText('Logout');
         fireEvent.click(logoutBtns.at(-1)!);
-        
+
         const closeBtn = document.querySelector('.modal-close');
         expect(closeBtn).toBeInTheDocument();
         fireEvent.click(closeBtn!);
