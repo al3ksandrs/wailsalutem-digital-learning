@@ -1,12 +1,12 @@
 import WSButton from "./WSButton";
 
-interface MatchCardProps {
+interface ConnectionProps {
     name: string;
     image: string;
     subjects: string[];
 }
 
-const MatchCard: React.FC<MatchCardProps> = ({
+const Connection: React.FC<ConnectionProps> = ({
     name,
     image,
     subjects,
@@ -33,13 +33,20 @@ const MatchCard: React.FC<MatchCardProps> = ({
                     </div>
                 </div>
 
-                <WSButton
-                    label="Zie profiel"
-                    size="normal"
-                />
+                < div className="level-right">
+                    <WSButton
+                        label="Info"
+                        size="normal"
+                    />
+                    <WSButton
+                        label="Contact"
+                        size="normal"
+                    />
+                </div>
+
             </div>
         </div>
-    );
+    )
 };
 
-export default MatchCard;
+export default Connection;

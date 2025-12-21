@@ -6,7 +6,7 @@ import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
 import Request from '../../components/Request';
 
-const StudentMainPage: React.FC = () => {
+const StudentRequests: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Request {
@@ -26,22 +26,22 @@ const StudentMainPage: React.FC = () => {
         },
         {
             subject: "Wiskunde",
-            level: "MAVO",
-            location: "Hilversum",
+            level: "HAVO",
+            location: "Alkmaar",
             time: "12:30 - 13:30",
         },
         {
-            subject: "Wiskunde",
-            level: "MAVO",
-            location: "Hilversum",
-            time: "12:30 - 13:30",
+            subject: "Geschiedenis",
+            level: "HAVO",
+            location: "Amstelveen",
+            time: "11:45 - 12:25",
         },
     ];
 
     return (
         <>
             <Header
-                
+
                 onLogout={() => setIsModalOpen(true)}
             />
 
@@ -91,4 +91,4 @@ const StudentMainPage: React.FC = () => {
     );
 };
 
-export default StudentMainPage;
+export default StudentRequests;

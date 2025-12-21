@@ -4,23 +4,21 @@ import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
-import MatchCard from '../../components/MatchCard';
+import Connection from '../../components/connection';
 import Jan from '../../assets/images/jan.png'
 
 const StudentConnections: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    interface Match {
+    interface Connection {
         name: string;
-        type: 'connection'
         image: string;
         subjects: string[];
     }
 
-    const matches: Match[] = [
+    const connections: Connection[] = [
         {
             name: "Jan Hooiberg",
-            type: 'connection',
             image: Jan,
             subjects: ["Natuurkunde", "Wiskunde"],
         },
@@ -35,7 +33,7 @@ const StudentConnections: React.FC = () => {
 
             <ScreenLayout
                 greeting="Goedenavond, Hendrik"
-                rightTitle="Mijn connecties"
+                rightTitle="Mijn Connecties"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
@@ -60,8 +58,8 @@ const StudentConnections: React.FC = () => {
                 rightContent={
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
-                            {matches.map((match) => (
-                                <MatchCard key={match.name} {...match} />
+                            {connections.map((connection) => (
+                                <Connection key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>

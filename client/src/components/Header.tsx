@@ -1,6 +1,5 @@
 import React from 'react';
 import LogoutButton from './LogoutButton';
-import { useNavigate } from 'react-router-dom';
 import HamburgerMenu from './HamburgerMenu';
 import logo from '../assets/graduation-cap-white.png';
 import Notifications from './notifications/NotificationParent';
@@ -11,19 +10,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
-    const navigate = useNavigate();
-
-    function toMatches() {
-        navigate('/student')
-    }
-
-    function toRequests() {
-        navigate('/verzoeken')
-    }
-
-    function toConnections() {
-        navigate('/connecties')
-    }
     return (
         <header className="topbar">
 
@@ -36,9 +22,9 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             <div className="topbar-left desktop-left">
                 <img src={logo} alt="Logo" className="topbar-logo" />
                 <nav className="topbar-tabs">
-                    <button className="topbar-tab" onClick={toMatches}>Voorgestelde matches</button>
-                    <button className="topbar-tab" onClick={toRequests}>Mijn verzoeken</button>
-                    <button className="topbar-tab" onClick={toConnections}>Connecties</button>
+                    <button className="topbar-tab">Voorgestelde matches</button>
+                    <button className="topbar-tab">Mijn verzoeken</button>
+                    <button className="topbar-tab">Connecties</button>
                 </nav>
             </div>
 

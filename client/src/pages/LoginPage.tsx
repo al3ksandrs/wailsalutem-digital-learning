@@ -69,8 +69,14 @@ const LoginPage = () => {
               size="normal"
             />
 
-            <div className='mt-2 has-text-centered' onClick={handlePasswordReset}>
-              <a>Wachtwoord vergeten?</a>
+            <div className='has-text-centered'>
+              <button
+                type="button"
+                className="mt-2 link-button"
+                onClick={handlePasswordReset}
+              >
+                Wachtwoord vergeten?
+              </button>
             </div>
 
           </form>
