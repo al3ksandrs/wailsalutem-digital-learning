@@ -18,7 +18,11 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     }
 
     function toRequests() {
-        navigate('/mijnverzoeken')
+        navigate('/verzoeken')
+    }
+
+    function toConnections() {
+        navigate('/connecties')
     }
     return (
         <header className="topbar">
@@ -34,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                 <nav className="topbar-tabs">
                     <button className="topbar-tab" onClick={toMatches}>Voorgestelde matches</button>
                     <button className="topbar-tab" onClick={toRequests}>Mijn verzoeken</button>
-                    <button className="topbar-tab">Connecties</button>
+                    <button className="topbar-tab" onClick={toConnections}>Connecties</button>
                 </nav>
             </div>
 
