@@ -31,7 +31,7 @@ export const buildServer = () => {
 
   // JWT
   fastify.register(fastifyJwt, {
-    secret: process.env.JWT_SECRET || 'supersecret', // will probably need to change this in the future to something more unique?
+    secret: process.env.JWT_SECRET || 'supersecretstringthatnoonewilleverguessihope', // will probably need to change this in the future to something more unique?
     cookie: {
       cookieName: 'token',
       signed: false, // JWT is already signed
@@ -43,8 +43,9 @@ export const buildServer = () => {
     connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
   });
 
+  // For signing cookies
   fastify.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET || 'anothersupersecret', // For signing cookies
+    secret: process.env.COOKIE_SECRET || 'anothersupersecretstringthatnoonewilleverguessihopefreediddy',
     hook: 'onRequest',
   });
 

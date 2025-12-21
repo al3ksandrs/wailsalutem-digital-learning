@@ -1,4 +1,6 @@
 import { FastifyInstance } from 'fastify';
+import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import z from 'zod';
 import '@fastify/cookie';
 import * as authDB from '../db/auth.ts';
 import bcrypt from 'bcrypt';
@@ -8,14 +10,34 @@ const HTTP_OK = 200;
 const HTTP_CREATED = 201;
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_SERVER_ERROR = 500;
-const COOKIE_MAX_AGE_SEC = 3600; // 1 hour, we can change this later
+const COOKIE_MAX_AGE_SEC = 604800; // 1 week, we can change this later
 const SALT_ROUNDS = 10;
+const MIN_NAME_LENGTH = 2;
+const MIN_PASSWORD_LENGTH = 6;
+
+// Validation schemas
+const registerSchema = z.object({
+    email: z.email(),
+    name: z.string().min(MIN_NAME_LENGTH),
+    // Users can only sign up as Student or Teacher
+    role: z.enum(['Student', 'Teacher']),
+    password: z.string().min(MIN_PASSWORD_LENGTH),
+});
+
+const loginSchema = z.object({
+    email: z.email(),
+    password: z.string(),
+});
 
 export async function authRoutes(fastify: FastifyInstance) {
 
     // Registers user
-    fastify.post('/register', async (request, reply) => {
-        const { email, name, role, password } = request.body as any;
+    fastify.withTypeProvider<ZodTypeProvider>().post('/register', {
+        schema: {
+            body: registerSchema
+        }
+    }, async (request, reply) => {
+        const { email, name, role, password } = request.body;
 
         const client = await fastify.pg.connect();
 
@@ -45,8 +67,12 @@ export async function authRoutes(fastify: FastifyInstance) {
     });
 
     // Login user
-    fastify.post('/login', async (request, reply) => {
-        const { email, password } = request.body as any;
+    fastify.withTypeProvider<ZodTypeProvider>().post('/login', {
+        schema: {
+            body: loginSchema
+        }
+    }, async (request, reply) => {
+        const { email, password } = request.body;
 
         const client = await fastify.pg.connect();
 
@@ -61,11 +87,19 @@ export async function authRoutes(fastify: FastifyInstance) {
                 return reply.code(HTTP_UNAUTHORIZED).send({ error: 'Invalid credentials' });
             }
 
+            // Generate JWT
+            const token = fastify.jwt.sign({
+                id: user.id,
+                email: user.email,
+                role: user.role,
+                name: user.name
+            });
+
             // Sets session cookie
-            reply.setCookie('token', `user-${user.id}`, {
+            reply.setCookie('token', token, {
                 path: '/',
                 httpOnly: true,
-                secure: false, // we must set this to true later for CORS (HTTPS)
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
                 maxAge: COOKIE_MAX_AGE_SEC
             });
@@ -96,15 +130,15 @@ export async function authRoutes(fastify: FastifyInstance) {
 
     // Session check (shows some basic user data of the authenticated user)
     fastify.get('/me', async (request, reply) => {
-        const token = request.cookies.token;
-
-        if (!token) {
+        try {
+            await request.jwtVerify();
+            return reply.code(HTTP_OK).send({
+                status: 'authenticated',
+                user: request.user
+            });
+        } catch (err) {
+            request.log.debug(err);
             return reply.code(HTTP_UNAUTHORIZED).send({ error: 'Not authenticated' });
         }
-
-        return reply.code(HTTP_OK).send({
-            status: 'authenticated',
-            token_preview: token
-        });
     });
 }
