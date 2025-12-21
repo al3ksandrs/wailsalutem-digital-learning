@@ -72,14 +72,17 @@ const MatchCard: React.FC<MatchCardProps> = ({
                         </div>
                     </div>
 
-                    <WSButton className=""
-                        label="Info"
-                        size="normal"
-                    /> 
-                    <WSButton
-                        label="Contact"
-                        size="normal"
-                    />
+                    < div className="level-right">
+                        <WSButton
+                            label="Info"
+                            size="normal"
+                        />
+                        <WSButton
+                            label="Contact"
+                            size="normal"
+                        />
+                    </div>
+
                 </div>
             </div>
         )
