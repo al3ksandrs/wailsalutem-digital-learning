@@ -78,10 +78,6 @@ const logout = async (): Promise<void> => {
   }
 };
 
-const deleteUser = async (userId: number): Promise<void> => {
-  throw new Error('Delete user not implemented in backend');
-};
-
 const checkSession = async (): Promise<UserProfile> => {
   const response = await fetch(`${API_URL}/me`, {
     method: 'GET',
@@ -136,16 +132,6 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.setQueryData([AUTH_USER_KEY], null);
       queryClient.clear();
-    }
-  });
-};
-
-export const useDeleteUser = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: deleteUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [AUTH_USER_KEY] });
     }
   });
 };
