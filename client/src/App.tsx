@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import ResetPassword from './pages/ResetPassword';
 import RegisterPage from './pages/Registration/RegisterPage'
 import StudentMainPage from './pages/StudentMainPage';
+import StudentRequests from './pages/Student/StudentRequests';
 
 
 import RegisterStudentPart2 from './pages/Registration/RegisterStudentPart2';
@@ -31,6 +32,7 @@ function App() {
       <Route path="/register-teacher-waiting" element={<RegisterTeacherWaiting />} />
 
       <Route path="/student" element={<StudentMainPage />} />
+      <Route path="/mijnverzoeken" element={<StudentRequests />} />
     </Routes>
   );
 }
