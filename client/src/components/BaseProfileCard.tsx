@@ -35,7 +35,6 @@ const BaseProfileCard: React.FC<BaseProfileCardProps> = ({
           </div>
         </div>
 
-        {/* Right-side content */}
         {children && <div className="level-right">{children}</div>}
       </div>
     </div>
