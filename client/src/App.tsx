@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import ResetPassword from './pages/ResetPassword';
 import RegisterPage from './pages/Registration/RegisterPage'
 import StudentMainPage from './pages/StudentMainPage';
 
@@ -19,6 +20,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/resetpassword" element={<ResetPassword />} />
 
       <Route path="/register-student-2" element={<RegisterStudentPart2 />} />
       <Route path="/register-student-3" element={<RegisterStudentPart3 />} />

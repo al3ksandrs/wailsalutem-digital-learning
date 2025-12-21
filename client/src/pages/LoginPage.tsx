@@ -26,6 +26,10 @@ const LoginPage = () => {
     }
   };
 
+  function handlePasswordReset() {
+    navigate('/resetpassword');
+  }
+
   return (
     <div className="page-wrapper bg-auth">
       <div className="auth-wrapper">
@@ -64,6 +68,11 @@ const LoginPage = () => {
               fullWidth={true}
               size="normal"
             />
+
+            <div className='mt-2 has-text-centered' onClick={handlePasswordReset}>
+              <a>Wachtwoord vergeten?</a>
+            </div>
+
           </form>
         </div>
       </div>
