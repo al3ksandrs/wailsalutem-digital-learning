@@ -2,17 +2,37 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import ScreenLayout from '../components/ScreenLayout';
 import MainInfoPanel from '../components/MainInfoPanel';
-import AvailabilitySlider from '../components/AvailabilitySlider';
 import Modal from '../components/Modal';
 import '../css/student-main.css';
-import SubjectTags from '../components/SubjectTags';
-import Achievement from '../components/Achievement';
-import BlueCheck from '../assets/badges/blue-check.png';
+import WSButton from '../components/WSButton';
+import MatchCard from '../components/MatchCard';
+
+// Mock Data
+import Thomas from '../assets/images/thomas.png';
+import Saskia from '../assets/images/saskia.png';
 
 const StudentMainPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const Subjects = ['Wiskunde B', 'Natuurkunde', 'Scheikunde', 'Biologie', 'Informatica', 'Engels'];
+    interface Match {
+        name: string;
+        image: string;
+        subjects: string[];
+    }
+
+    const matches: Match[] = [
+        {
+            name: "Thomas de Jong",
+            image: Thomas,
+            subjects: ["Biology"],
+        },
+        {
+            name: "Saskia Veermans",
+            image: Saskia,
+            subjects: ["English", "History"],
+        },
+    ];
+
 
     return (
         <>
@@ -27,33 +47,29 @@ const StudentMainPage: React.FC = () => {
                     <div className="student-left-panel">
                         <div className="panel-box">
                             <MainInfoPanel pending={3} matches={12} connections={27} />
+
+                            <WSButton
+                                label="Kalender"
+                                type="submit"
+                                fullWidth={true}
+                                size="normal"
+                            />
+
+                            <WSButton
+                                label="Nieuw hulpverzoek"
+                                type="submit"
+                                fullWidth={true}
+                                size="normal"
+                            />
                         </div>
                     </div>
                 }
                 rightContent={
                     <div className="student-page-placeholder">
-                        <div>
-                            <AvailabilitySlider 
-                                day="Maandag"
-                                value={[9, 17]}
-                                onChange={(val) => console.log('Maandag availability:', val)}
-                            />
-                        </div>
-
-                        <SubjectTags
-                            items={Subjects}
-                            maxItems={3}
-                            direction="horizontal"
-                            showDropdown={true}
-                        />
-
-                        <div>
-                            <Achievement
-                                title="Verified Teacher"
-                                description="Verified by a resume."
-                                badgeSrc={BlueCheck}
-                                progress={45}
-                            />
+                        <div className="container" style={{ maxWidth: 700 }}>
+                            {matches.map((match) => (
+                                <MatchCard key={match.name} {...match} />
+                            ))}
                         </div>
                     </div>
                 }
