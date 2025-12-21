@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Logo from '../components/Logo';
 import InputField from '../components/InputField';
 import WSButton from '../components/WSButton';

@@ -68,7 +68,7 @@ const StudentMainPage: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
                             {matches.map((match) => (
-                                <MatchCard key={match.name} {...match} />
+                                <MatchCard type={'match'} key={match.name} {...match} />
                             ))}
                         </div>
                     </div>
