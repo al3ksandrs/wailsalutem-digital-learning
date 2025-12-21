@@ -3,9 +3,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import LoginPage from '../../pages/LoginPage';
 
-const { mockNavigate } = vi.hoisted(() => {
-    return { mockNavigate: vi.fn() };
-});
+const { mockNavigate } = vi.hoisted(() => ({
+    mockNavigate: vi.fn(),
+}));
 
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual<any>('react-router-dom');
@@ -17,56 +17,83 @@ vi.mock('react-router-dom', async () => {
 
 describe('LoginPage', () => {
     beforeEach(() => {
-        mockNavigate.mockClear();
+        vi.clearAllMocks();
+        // Spies on console.log to hit the coverage for the log statement.
+        vi.spyOn(console, 'log').mockImplementation(() => {});
     });
 
-    test('renders login form', () => {
-        render(
-            <MemoryRouter>
-                <LoginPage />
-            </MemoryRouter>
-        );
+    test('should render the email and password inputs', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
 
+        // ASSERT
         expect(screen.getByPlaceholderText('email@address.com')).toBeInTheDocument();
         expect(screen.getByPlaceholderText('**********')).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Inloggen' })).toBeInTheDocument();
     });
 
-    test('updates input fields', () => {
-        render(
-            <MemoryRouter>
-                <LoginPage />
-            </MemoryRouter>
-        );
-
+    test('should update email and password state when user types', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
         const emailInput = screen.getByPlaceholderText('email@address.com');
-        fireEvent.change(emailInput, { target: { value: 'test@test.com' } });
-        expect(emailInput).toHaveValue('test@test.com');
+        const passwordInput = screen.getByPlaceholderText('**********');
+
+        // ACT
+        fireEvent.change(emailInput, { target: { value: 'test@leer.nl' } });
+        fireEvent.change(passwordInput, { target: { value: 'password123' } });
+
+        // ASSERT
+        expect(emailInput).toHaveValue('test@leer.nl');
+        expect(passwordInput).toHaveValue('password123');
     });
 
-    test('navigates to register page when toggle is clicked', () => {
-        render(
-            <MemoryRouter>
-                <LoginPage />
-            </MemoryRouter>
-        );
+    test('should navigate to /student and log data on successful login', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
+        const submitBtn = screen.getByRole('button', { name: /Inloggen/i });
 
-        const registerTab = screen.getByRole('tab', { name: 'Registreren' });
+        // ACT
+        fireEvent.click(submitBtn);
+
+        // ASSERT
+        expect(console.log).toHaveBeenCalledWith('Login attempt:', expect.any(Object));
+        expect(mockNavigate).toHaveBeenCalledWith('/student');
+    });
+
+    test('should navigate to /register when the register toggle is clicked', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
+        const registerTab = screen.getByRole('tab', { name: /Registreren/i });
+
+        // ACT
         fireEvent.click(registerTab);
 
+        // ASSERT
         expect(mockNavigate).toHaveBeenCalledWith('/register');
     });
 
-    test('navigates to student page on form submit', () => {
-        render(
-            <MemoryRouter>
-                <LoginPage />
-            </MemoryRouter>
-        );
+    test('should stay on login tab when login toggle is clicked while active', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
+        const loginTab = screen.getByRole('tab', { name: /Inloggen/i });
 
-        const submitBtn = screen.getByRole('button', { name: 'Inloggen' });
-        fireEvent.click(submitBtn);
+        // ACT
+        // This triggers the 'else' branch of handleToggle where it just sets activeTab.
+        fireEvent.click(loginTab);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/student');
+        // ASSERT
+        expect(loginTab).toHaveClass('active');
+        expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    test('should navigate to /resetpassword when forgot password is clicked', () => {
+        // ARRANGE
+        render(<MemoryRouter><LoginPage /></MemoryRouter>);
+        const resetBtn = screen.getByText(/Wachtwoord vergeten\?/i);
+
+        // ACT
+        fireEvent.click(resetBtn);
+
+        // ASSERT
+        expect(mockNavigate).toHaveBeenCalledWith('/resetpassword');
     });
 });

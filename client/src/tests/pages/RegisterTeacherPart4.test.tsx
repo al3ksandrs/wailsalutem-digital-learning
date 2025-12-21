@@ -15,31 +15,56 @@ vi.mock('react-router-dom', async () => {
 describe('RegisterTeacherPart4', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.spyOn(console, 'log').mockImplementation(() => {});
     });
 
-    test('should update bio value and handle file selection visibility', () => {
+    test('updates bio and navigates on register (Submit Branch)', () => {
         // ARRANGE
         render(<MemoryRouter><RegisterTeacherPart4 /></MemoryRouter>);
         const bioInput = screen.getByPlaceholderText(/I'm very motivated.../i);
 
-        // ACT - Updates bio.
-        fireEvent.change(bioInput, { target: { value: 'New Bio' } });
-        // ACT - Enables CV upload.
-        fireEvent.click(screen.getByLabelText(/Upload your CV\?/i));
+        // ACT
+        fireEvent.change(bioInput, { target: { value: 'My bio text' } });
+        fireEvent.click(screen.getByText('Register'));
 
         // ASSERT
-        expect(bioInput).toHaveValue('New Bio');
-        expect(document.querySelector('input[type="file"]')).toBeInTheDocument();
+        expect(console.log).toHaveBeenCalledWith('Bio:', 'My bio text');
+        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-waiting');
     });
 
-    test('should navigate to waiting screen', () => {
+    test('handles file upload and removal (File Logic Branches)', () => {
         // ARRANGE
         render(<MemoryRouter><RegisterTeacherPart4 /></MemoryRouter>);
+        const checkbox = screen.getByLabelText(/Upload your CV\?/i);
 
-        // ACT
-        fireEvent.click(screen.getByText(/Register/i));
+        // ACT - Enable upload
+        fireEvent.click(checkbox);
+        const file = new File(['test'], 'cv.pdf', { type: 'application/pdf' });
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        // ASSERT
+        expect(screen.getByText(/cv.pdf/i)).toBeInTheDocument();
+
+        // ACT - Remove file
+        fireEvent.click(screen.getByLabelText('remove file'));
+        expect(screen.queryByText(/cv.pdf/i)).not.toBeInTheDocument();
+    });
+
+    test('clears file when upload is disabled (Toggle Cleanup Branch)', () => {
+        // ARRANGE
+        render(<MemoryRouter><RegisterTeacherPart4 /></MemoryRouter>);
+        const checkbox = screen.getByLabelText(/Upload your CV\?/i);
+
+        // ACT - Upload then uncheck
+        fireEvent.click(checkbox);
+        const file = new File(['test'], 'cv.pdf', { type: 'application/pdf' });
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+        fireEvent.change(input, { target: { files: [file] } });
+        
+        fireEvent.click(checkbox); // Uncheck triggers cleanup logic
 
         // ASSERT
-        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-waiting');
+        expect(screen.queryByText(/cv.pdf/i)).not.toBeInTheDocument();
     });
 });
