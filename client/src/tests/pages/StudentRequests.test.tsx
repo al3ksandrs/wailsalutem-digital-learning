@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import StudentRequests from '../../pages/Student/StudentRequests';
+import PagesWithHeader from '../../App';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
@@ -37,8 +38,12 @@ describe('StudentRequest', () => {
 
     test('opens logout modal when logout button is clicked', () => {
         render(
-            <MemoryRouter>
-                <StudentRequests />
+            <MemoryRouter initialEntries={["/verzoeken"]}>
+                <Routes>
+                    <Route element={<PagesWithHeader />}>
+                        <Route path="/verzoeken" element={<StudentRequests />} />
+                    </Route>
+                </Routes>
             </MemoryRouter>
         );
 
@@ -50,8 +55,12 @@ describe('StudentRequest', () => {
 
     test('closes logout modal', () => {
         render(
-            <MemoryRouter>
-                <StudentRequests />
+            <MemoryRouter initialEntries={["/verzoeken"]}>
+                <Routes>
+                    <Route element={<PagesWithHeader />}>
+                        <Route path="/verzoeken" element={<StudentRequests />} />
+                    </Route>
+                </Routes>
             </MemoryRouter>
         );
 
