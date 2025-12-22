@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from '../../components/Header';
 import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
@@ -24,13 +23,8 @@ const StudentConnections: React.FC = () => {
         },
     ];
 
-
     return (
         <>
-            <Header
-                onLogout={() => setIsModalOpen(true)}
-            />
-
             <ScreenLayout
                 greeting="Goedenavond, Hendrik"
                 rightTitle="Mijn Connecties"

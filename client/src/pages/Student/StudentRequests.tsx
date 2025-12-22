@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from '../../components/Header';
 import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
@@ -40,11 +39,6 @@ const StudentRequests: React.FC = () => {
 
     return (
         <>
-            <Header
-
-                onLogout={() => setIsModalOpen(true)}
-            />
-
             <ScreenLayout
                 greeting="Goedenavond, Hendrik"
                 rightTitle="Mijn Verzoeken"
@@ -71,7 +65,7 @@ const StudentRequests: React.FC = () => {
                 }
                 rightContent={
                     <div className="student-page-placeholder">
-                        <div className="container overflow" style={{maxHeight: 450, overflow: "auto"}}>
+                        <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
                                 <Request key={request.subject} {...request} />
                             ))}

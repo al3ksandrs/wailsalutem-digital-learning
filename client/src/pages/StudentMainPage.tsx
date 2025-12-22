@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
+import React from 'react';
 import ScreenLayout from '../components/ScreenLayout';
 import MainInfoPanel from '../components/MainInfoPanel';
-import Modal from '../components/Modal';
 import '../css/student-main.css';
 import WSButton from '../components/WSButton';
 import MatchCard from '../components/MatchCard';
@@ -12,8 +10,6 @@ import Thomas from '../assets/images/thomas.png';
 import Saskia from '../assets/images/saskia.png';
 
 const StudentMainPage: React.FC = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
     interface Match {
         name: string;
         image: string;
@@ -33,14 +29,8 @@ const StudentMainPage: React.FC = () => {
         },
     ];
 
-
     return (
-        <>
-            <Header
-                onLogout={() => setIsModalOpen(true)}
-            />
-
-            <ScreenLayout
+        <ScreenLayout
                 greeting="Goedenavond, Hendrik"
                 rightTitle="Voorgestelde matches"
                 leftContent={
@@ -74,15 +64,6 @@ const StudentMainPage: React.FC = () => {
                     </div>
                 }
             />
-
-            <Modal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Weet je zeker dat je wilt uitloggen?"
-            >
-                <p>Als je uitlogt, wordt je sessie beëindigd.</p>
-            </Modal>
-        </>
     );
 };
 
