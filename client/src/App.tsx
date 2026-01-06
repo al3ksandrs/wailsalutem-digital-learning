@@ -2,9 +2,11 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ResetPassword from './pages/ResetPassword';
 import RegisterPage from './pages/Registration/RegisterPage'
-import StudentMainPage from './pages/StudentMainPage';
+import StudentMainPage from './pages/Student/StudentMainPage';
 import StudentRequests from './pages/Student/StudentRequests';
 import StudentConnections from './pages/Student/StudentConnections';
+import TeacherMainPage from './pages/TeacherMainPage';
+import TeacherConnections from './pages/Teacher/TeacherConnections';
 import RegisterStudentPart2 from './pages/Registration/RegisterStudentPart2';
 import RegisterStudentPart3 from './pages/Registration/RegisterStudentPart3';
 import RegisterTeacherPart2 from './pages/Registration/RegisterTeacherPart2';
@@ -14,9 +16,11 @@ import RegisterTeacherWaiting from './pages/Registration/RegisterTeacherWaiting'
 import Header from './components/Header';
 import { useState } from 'react';
 import Modal from './components/Modal';
+import TeacherRequests from './pages/Teacher/TeacherRequests';
 
 function PagesWithHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <>
       <Header onLogout={() => setIsModalOpen(true)} />
@@ -50,8 +54,11 @@ function App() {
 
       <Route element={<PagesWithHeader />}>
         <Route path="/student" element={<StudentMainPage />} />
-        <Route path="/verzoeken" element={<StudentRequests />} />
-        <Route path="/connecties" element={<StudentConnections />} />
+        <Route path="/mijnverzoeken" element={<StudentRequests />} />
+        <Route path="/mijnconnecties" element={<StudentConnections />} />
+        <Route path="/docent" element={<TeacherMainPage />} />
+        <Route path="/studentverzoeken" element={<TeacherRequests />} />
+        <Route path="/mijnstudenten" element={<TeacherConnections />} /> 
       </Route>
     </Routes>
   );
