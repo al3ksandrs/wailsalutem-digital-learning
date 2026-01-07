@@ -16,7 +16,7 @@ jest.unstable_mockModule('pg', () => ({
 }));
 
 // 3. Dynamically import the script AFTER mocking
-const { runConnectionTest } = await import('../scripts/test-db-connection');
+const { runConnectionTest } = await import('../scripts/test-db-connection.js');
 
 describe('Connection Script', () => {
   beforeEach(() => {

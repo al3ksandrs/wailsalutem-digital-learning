@@ -43,8 +43,8 @@ jest.unstable_mockModule('bcrypt', () => ({
 }));
 
 // Imports modules AFTER mocking
-const { buildServer } = await import('../index');
-const authDB = await import('../db/auth');
+const { buildServer } = await import('../index.js');
+const authDB = await import('../db/auth.js');
 
 describe('Auth Module', () => {
   let app: FastifyInstance;

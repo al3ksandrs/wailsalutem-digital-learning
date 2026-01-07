@@ -19,7 +19,7 @@ jest.unstable_mockModule('@fastify/postgres', () => ({
 }));
 
 // 3. Dynamically import the server
-const { buildServer } = await import('../index');
+const { buildServer } = await import('../index.js');
 
 describe('Server Routes', () => {
   let app: any;
