@@ -101,6 +101,11 @@ const TeacherMainPage: React.FC = () => {
                                         }
                                     />
                                 ))}
+                                <WSButton
+                                    label="Verstuur"
+                                    type="submit"
+                                    size="normal"
+                                />
                             </div>
 
                         </form>

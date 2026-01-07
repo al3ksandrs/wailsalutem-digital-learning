@@ -1,5 +1,14 @@
+import BaseProfileCard from "./BaseProfileCard";
+
+export type RequestType =
+  | 'open'
+  | 'student'
+
 interface RequestProps {
+  name: string;
+  type: RequestType;
   subject: string;
+  image: string;
   level: string;
   location: string;
   time: string;
@@ -8,13 +17,32 @@ interface RequestProps {
 }
 
 const Request: React.FC<RequestProps> = ({
-    subject,
-    level,
-    location,
-    time,
-    onEdit,
-    onDelete
+  name,
+  type,
+  subject,
+  image,
+  level,
+  location,
+  time,
+  onEdit,
+  onDelete
 }) => {
+
+  if (type === 'open') {
+    return (
+      <BaseProfileCard type="Request" name={name} image={image} subject={subject} subjects={[]} level={level}>
+        <p className="has-text-weight-semibold has-text-black">
+          {subject}
+        </p>
+        <p className="is-size-6 has-text-grey">
+          {location}
+        </p>
+        <p className="is-size-6 has-text-grey">
+          {time}
+        </p>
+      </BaseProfileCard>
+    )
+  }
   return (
     <div className="box lesson-card has-background-white-ter has-text-black">
       <div className="is-flex is-justify-content-space-between is-align-items-center">

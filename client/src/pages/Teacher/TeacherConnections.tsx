@@ -12,14 +12,12 @@ const TeacherConnections: React.FC = () => {
     interface Connection {
         name: string;
         image: string;
-        subjects: string[]
     }
 
     const connections: Connection[] = [
         {
             name: "Thomas",
             image: Thomas,
-            subjects: ["Natuurkunde", "Wiskunde"],
         },
     ];
 
@@ -46,7 +44,7 @@ const TeacherConnections: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
                             {connections.map((connection) => (
-                                <Connection key={connection.name} {...connection} />
+                                <Connection subjects={[]} key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>
