@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import ScreenLayout from '../components/ScreenLayout';
-import MainInfoPanel from '../components/MainInfoPanel';
-import '../css/student-main.css';
-import WSButton from '../components/WSButton';
-import '../css/authentication-screens.css';
-import Modal from '../components/Modal';
-import AvailabilitySlider from '../components/AvailabilitySlider';
+import ScreenLayout from '../../components/ScreenLayout';
+import MainInfoPanel from '../../components/MainInfoPanel';
+import '../../css/student-main.css';
+import WSButton from '../../components/WSButton';
+import '../../css/authentication-screens.css';
+import Modal from '../../components/Modal';
+import AvailabilitySlider from '../../components/AvailabilitySlider';
 
 export type DayOfWeek =
     | "Ma"

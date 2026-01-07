@@ -20,14 +20,14 @@ const TeacherRequests: React.FC = () => {
     const requests: Request[] = [
         {
             name: "Student 1",
-            subject: "Scheikude",
+            subject: "Student 1",
             level: "HAVO",
             location: "Amsterdam",
             time: "13:00 - 14:00",
         },
         {
             name: "Student 2",
-            subject: "Wiskunde",
+            subject: "Student 2",
             level: "HAVO",
             location: "Alkmaar",
             time: "12:30 - 13:30",
@@ -37,7 +37,7 @@ const TeacherRequests: React.FC = () => {
     return (
         <>
             <ScreenLayout
-                greeting="Goedenavond, Hendrik"
+                greeting="Goedenavond, Jan"
                 rightTitle="Mijn Verzoeken"
                 leftContent={
                     <div className="student-left-panel">
@@ -50,13 +50,6 @@ const TeacherRequests: React.FC = () => {
                                 fullWidth={true}
                                 size="normal"
                             />
-
-                            <WSButton
-                                label="Nieuw hulpverzoek"
-                                type="submit"
-                                fullWidth={true}
-                                size="normal"
-                            />
                         </div>
                     </div>
                 }
@@ -64,7 +57,7 @@ const TeacherRequests: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
-                                <Request key={request.subject} {...request} />
+                                <Request key={request.name} {...request} />
                             ))}
                         </div>
                     </div>

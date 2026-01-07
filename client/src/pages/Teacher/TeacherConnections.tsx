@@ -12,12 +12,14 @@ const TeacherConnections: React.FC = () => {
     interface Connection {
         name: string;
         image: string;
+        subjects: string[]
     }
 
     const connections: Connection[] = [
         {
-            name: "Mees de Vries",
+            name: "Thomas",
             image: Thomas,
+            subjects: ["Natuurkunde", "Wiskunde"],
         },
     ];
 

@@ -5,7 +5,7 @@ import RegisterPage from './pages/Registration/RegisterPage'
 import StudentMainPage from './pages/Student/StudentMainPage';
 import StudentRequests from './pages/Student/StudentRequests';
 import StudentConnections from './pages/Student/StudentConnections';
-import TeacherMainPage from './pages/TeacherMainPage';
+import TeacherMainPage from './pages/Teacher/TeacherMainPage';
 import TeacherConnections from './pages/Teacher/TeacherConnections';
 import RegisterStudentPart2 from './pages/Registration/RegisterStudentPart2';
 import RegisterStudentPart3 from './pages/Registration/RegisterStudentPart3';
