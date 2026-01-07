@@ -8,29 +8,7 @@ import MatchCard from '../../components/MatchCard';
 // Mock Data
 import Thomas from '../../assets/images/thomas.png';
 import Saskia from '../../assets/images/saskia.png';
-import Modal from '../../components/Modal';
-import InputField from '../../components/InputField';
-import AvailabilitySlider from '../../components/AvailabilitySlider';
 import { useNavigate } from 'react-router-dom';
-
-export type DayOfWeek =
-    | "Ma"
-    | "Di"
-    | "Wo"
-    | "Do"
-    | "Vr"
-    | "Za"
-    | "Zo";
-
-export const DAYS_OF_WEEK: DayOfWeek[] = [
-    "Ma",
-    "Di",
-    "Wo",
-    "Do",
-    "Vr",
-    "Za",
-    "Zo",
-];
 
 const StudentMainPage: React.FC = () => {
     const navigate = useNavigate();
@@ -55,42 +33,6 @@ const StudentMainPage: React.FC = () => {
         },
     ];
 
-    interface DayAvailability {
-        active: boolean;
-        range: number[];
-    }
-
-    type WeeklyAvailability = Record<DayOfWeek, DayAvailability>;
-
-    const defaultRange: number[] = [9, 17];
-
-    const [availability, setAvailability] = useState<WeeklyAvailability>(() =>
-        DAYS_OF_WEEK.reduce((acc, day) => {
-            acc[day] = { active: false, range: defaultRange };
-            return acc;
-        }, {} as WeeklyAvailability)
-    );
-
-    const SUBJECTS = [
-        { value: 'Nederlands', label: 'Nederlands' },
-        { value: 'Engels', label: 'Engels' },
-        { value: 'Wiskunde A', label: 'Wiskunde A' },
-        { value: 'Wiskunde B', label: 'Wiskunde B' },
-        { value: 'Natuurkunde', label: 'Natuurkunde' },
-        { value: 'Scheikunde', label: 'Scheikunde' },
-        { value: 'Geschiedenis', label: 'Geschiedenis' },
-    ];
-
-    const LEVELS = [
-        { value: 'Basisschool', label: 'Basisschool' },
-        { value: 'VMBO', label: 'VMBO' },
-        { value: 'HAVO', label: 'HAVO' },
-        { value: 'VWO', label: 'VWO' },
-        { value: 'MBO', label: 'MBO' },
-        { value: 'HBO', label: 'HBO' },
-        { value: 'Universiteit', label: 'Universiteit' },
-    ];
-
     function toCalendar() {
         navigate('/kalender');
     }
@@ -112,14 +54,6 @@ const StudentMainPage: React.FC = () => {
                             size="normal"
                             onClick={() => toCalendar()}
                         />
-
-                        <WSButton
-                            label="Nieuw hulpverzoek"
-                            type="submit"
-                            fullWidth={true}
-                            size="normal"
-                            onClick={() => setIsModalOpen(true)}
-                        />
                     </div>
                 </div>
             }
@@ -129,71 +63,6 @@ const StudentMainPage: React.FC = () => {
                         {matches.map((match) => (
                             <MatchCard key={match.name} {...match} />
                         ))}
-                        <Modal
-                            isOpen={isModalOpen}
-                            onClose={() => setIsModalOpen(false)}
-                            title="Nieuw Hulpverzoek"
-                        >
-                            <form onSubmit={(e) => e.preventDefault()}>
-
-                                {/* Subject Selection */}
-                                <InputField
-                                    label="Vak"
-                                    type="select"
-                                    options={SUBJECTS}
-                                />
-                                {/* Level Selection */}
-                                <InputField
-                                    label="Niveau"
-                                    type="select"
-                                    options={LEVELS}
-                                />
-
-                                {/* Location Selection */}
-                                <InputField
-                                    label="Locatie"
-                                    type="text"
-                                />
-
-                                <p className='custom-label'>Beschikbaarheid</p>
-                                <div className="availability-section">
-                                    {DAYS_OF_WEEK.map((day) => (
-                                        <AvailabilitySlider
-                                            key={day}
-                                            day={day}
-                                            active={availability[day].active}
-                                            value={availability[day].range}
-                                            onActiveChange={(active) =>
-                                                setAvailability((prev) => ({
-                                                    ...prev,
-                                                    [day]: { ...prev[day], active },
-                                                }))
-                                            }
-                                            onChange={(range) =>
-                                                setAvailability((prev) => ({
-                                                    ...prev,
-                                                    [day]: { ...prev[day], range },
-                                                }))
-                                            }
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Additional Information */}
-                                <InputField
-                                    label="Extra Informatie"
-                                    type="textarea"
-                                />
-
-                                <div className='pt-2 has-text-centered'>
-                                    <WSButton
-                                        label="Verstuur Verzoek"
-                                        type="submit"
-                                        size="normal"
-                                    />
-                                </div>
-                            </form>
-                        </Modal>
                     </div>
                 </div>
             }

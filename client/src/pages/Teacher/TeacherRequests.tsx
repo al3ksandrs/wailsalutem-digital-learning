@@ -5,9 +5,15 @@ import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
 import Request from '../../components/Request';
 import Rob from "../../assets/images/rob.png"
+import { useNavigate } from 'react-router-dom';
 
 const TeacherRequests: React.FC = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    function toCalendar() {
+        navigate('/kalender');
+    }
 
     interface Request {
         name: string,
@@ -53,6 +59,8 @@ const TeacherRequests: React.FC = () => {
                                 type="submit"
                                 fullWidth={true}
                                 size="normal"
+                                onClick={() => toCalendar()}
+
                             />
                         </div>
                     </div>

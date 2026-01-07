@@ -6,6 +6,7 @@ import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
 import Modal from '../../components/Modal';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
+import { useNavigate } from 'react-router-dom';
 
 export type DayOfWeek =
     | "Ma"
@@ -27,6 +28,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
 ];
 
 const TeacherMainPage: React.FC = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface DayAvailability {
@@ -45,6 +47,10 @@ const TeacherMainPage: React.FC = () => {
         }, {} as WeeklyAvailability)
     );
 
+    function toCalendar() {
+        navigate('/kalender');
+    }
+
     return (
         <ScreenLayout
             greeting="Goedenavond, Jan"
@@ -54,6 +60,14 @@ const TeacherMainPage: React.FC = () => {
                 <div className="student-left-panel">
                     <div className="panel-box">
                         <MainInfoPanel pending={0} matches={0} connections={2} />
+
+                        <WSButton
+                            label="Kalender"
+                            type="submit"
+                            fullWidth={true}
+                            size="normal"
+                            onClick={toCalendar}
+                        />
 
                         <WSButton
                             label="Beschikbaarheid"

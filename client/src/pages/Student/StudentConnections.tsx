@@ -5,9 +5,15 @@ import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
 import Jan from '../../assets/images/jan.png'
 import Connection from '../../components/Connection';
+import { useNavigate } from 'react-router-dom';
 
 const StudentConnections: React.FC = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    function toCalendar() {
+        navigate('/kalender');
+    }
 
     interface Connection {
         name: string;
@@ -38,13 +44,7 @@ const StudentConnections: React.FC = () => {
                                 type="submit"
                                 fullWidth={true}
                                 size="normal"
-                            />
-
-                            <WSButton
-                                label="Nieuw hulpverzoek"
-                                type="submit"
-                                fullWidth={true}
-                                size="normal"
+                                onClick={() => toCalendar()}
                             />
                         </div>
                     </div>

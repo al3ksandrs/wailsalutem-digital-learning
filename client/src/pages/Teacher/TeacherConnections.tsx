@@ -5,8 +5,11 @@ import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
 import Rob from '../../assets/images/rob.png';
 import Connection from '../../components/Connection';
+import { useNavigate } from 'react-router-dom';
+
 
 const TeacherConnections: React.FC = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Connection {
@@ -20,6 +23,10 @@ const TeacherConnections: React.FC = () => {
             image: Rob,
         },
     ];
+
+    function toCalendar() {
+        navigate('/kalender');
+    }
 
     return (
         <>
@@ -36,6 +43,7 @@ const TeacherConnections: React.FC = () => {
                                 type="submit"
                                 fullWidth={true}
                                 size="normal"
+                                onClick={toCalendar}
                             />
                         </div>
                     </div>
