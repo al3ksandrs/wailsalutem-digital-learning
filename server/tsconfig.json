@@ -13,7 +13,7 @@
   },
   "include": [
     "index.ts",
-    "server/**/*.ts",
-    "server/types/**/*.d.ts"
+    "**/*.ts",
+    "types/**/*.d.ts"
   ]
 }
