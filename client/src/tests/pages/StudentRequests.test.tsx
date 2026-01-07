@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import StudentRequests from '../../pages/Student/StudentRequests';
 import PagesWithHeader from '../../App';
+import { RoleProvider } from '../../navigation/role.config';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
@@ -38,13 +39,15 @@ describe('StudentRequest', () => {
 
     test('opens logout modal when logout button is clicked', () => {
         render(
-            <MemoryRouter initialEntries={["/verzoeken"]}>
-                <Routes>
-                    <Route element={<PagesWithHeader />}>
-                        <Route path="/verzoeken" element={<StudentRequests />} />
-                    </Route>
-                </Routes>
-            </MemoryRouter>
+            <RoleProvider>
+                <MemoryRouter initialEntries={["/mijnverzoeken"]}>
+                    <Routes>
+                        <Route element={<PagesWithHeader />}>
+                            <Route path="/mijnverzoeken" element={<StudentRequests />} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </RoleProvider>
         );
 
         const logoutBtns = screen.getAllByText('Logout');
@@ -55,13 +58,15 @@ describe('StudentRequest', () => {
 
     test('closes logout modal', () => {
         render(
-            <MemoryRouter initialEntries={["/verzoeken"]}>
-                <Routes>
-                    <Route element={<PagesWithHeader />}>
-                        <Route path="/verzoeken" element={<StudentRequests />} />
-                    </Route>
-                </Routes>
-            </MemoryRouter>
+            <RoleProvider>
+                <MemoryRouter initialEntries={["/mijnverzoeken"]}>
+                    <Routes>
+                        <Route element={<PagesWithHeader />}>
+                            <Route path="/mijnverzoeken" element={<StudentRequests />} />
+                        </Route>
+                    </Routes>
+                </MemoryRouter>
+            </RoleProvider>
         );
 
         const logoutBtns = screen.getAllByText('Logout');

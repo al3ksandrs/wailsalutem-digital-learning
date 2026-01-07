@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import RegisterStudentPart3 from '../../pages/Registration/RegisterStudentPart3';
+import { RoleProvider } from '../../navigation/role.config';
 
 const { mockNavigate } = vi.hoisted(() => ({
     mockNavigate: vi.fn(),
@@ -19,7 +20,7 @@ describe('RegisterStudentPart3', () => {
 
     test('should show initial selections and handle strict subject matching', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterStudentPart3 /></MemoryRouter>);
+        render(<RoleProvider><MemoryRouter><RegisterStudentPart3 /></MemoryRouter></RoleProvider>);
 
         // ACT - Matches exact Economics button, ignoring Business Economics.
         const germanBtn = screen.getByRole('button', { name: /german/i });
@@ -32,7 +33,7 @@ describe('RegisterStudentPart3', () => {
 
     test('should toggle selection when pill is clicked', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterStudentPart3 /></MemoryRouter>);
+        render(<RoleProvider><MemoryRouter><RegisterStudentPart3 /></MemoryRouter></RoleProvider>);
         const mathBtn = screen.getByRole('button', { name: /math/i });
 
         // ACT - Selects Math.

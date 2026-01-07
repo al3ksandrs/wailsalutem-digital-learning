@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import RegisterTeacherWaiting from '../../pages/Registration/RegisterTeacherWaiting';
+import { RoleProvider } from '../../navigation/role.config';
 
 const { mockNavigate } = vi.hoisted(() => ({
     mockNavigate: vi.fn(),
@@ -19,7 +20,7 @@ describe('RegisterTeacherWaiting', () => {
 
     test('should render success message and handle home redirect', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterTeacherWaiting /></MemoryRouter>);
+        render(<RoleProvider><MemoryRouter><RegisterTeacherWaiting /></MemoryRouter></RoleProvider>);
 
         // ASSERT
         expect(screen.getByText(/Thank you for registering/i)).toBeInTheDocument();
@@ -28,6 +29,6 @@ describe('RegisterTeacherWaiting', () => {
         fireEvent.click(screen.getByRole('button'));
 
         // ASSERT
-        expect(mockNavigate).toHaveBeenCalledWith('/');
+        expect(mockNavigate).toHaveBeenCalledWith('/docent');
     });
 });
