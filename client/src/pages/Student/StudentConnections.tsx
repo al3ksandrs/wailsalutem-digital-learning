@@ -15,7 +15,7 @@ const StudentConnections: React.FC = () => {
         subjects: string[];
     }
 
-    const connections: Connection[] = [
+    const students: Connection[] = [
         {
             name: "Jan Hooiberg",
             image: Jan,
@@ -52,8 +52,8 @@ const StudentConnections: React.FC = () => {
                 rightContent={
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
-                            {connections.map((connection) => (
-                                <Connection key={connection.name} {...connection} />
+                            {students.map((student) => (
+                                <Connection key={student.name} {...student} />
                             ))}
                         </div>
                     </div>
