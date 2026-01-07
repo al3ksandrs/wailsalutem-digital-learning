@@ -1,10 +1,9 @@
 import { FastifyInstance } from 'fastify';
+import { authGuard } from '../plugins/authguard.ts';
 import {
   getStudentDashboard,
   getPendingRequests,
   getMatches,
-  getConnections,
-  getMyRequests,
   createHelpRequest,
   updateHelpRequest,
   deleteHelpRequest,
@@ -12,67 +11,48 @@ import {
 
 export async function studentRoutes(fastify: FastifyInstance) {
 
-  // Dashboard counts
+  fastify.addHook('onRequest', authGuard('Student'));
+
+  // Dashboard
   fastify.get('/student/dashboard', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const client = await fastify.pg.connect();
     try {
       const data = await getStudentDashboard(client, studentId);
       return reply.send(data);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to load dashboard' });
     } finally {
       client.release();
     }
   });
 
-  // Pending requests
+  // Pending request
   fastify.get('/student/pending-requests', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const client = await fastify.pg.connect();
     try {
       const data = await getPendingRequests(client, studentId);
       return reply.send(data);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch pending requests' });
     } finally {
       client.release();
     }
   });
 
-  // Matches (Accepted requests)
+  // Matches
   fastify.get('/student/matches', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const client = await fastify.pg.connect();
     try {
       const data = await getMatches(client, studentId);
       return reply.send(data);
-    } finally {
-      client.release();
-    }
-  });
-
-  // Connections (unique teachers)
-  fastify.get('/student/connections', async (request, reply) => {
-    await request.jwtVerify();
-    const studentId = request.user.id;
-    const client = await fastify.pg.connect();
-    try {
-      const data = await getConnections(client, studentId);
-      return reply.send(data);
-    } finally {
-      client.release();
-    }
-  });
-
-  // My requests (optional filter by subject)
-  fastify.get('/student/my-requests', async (request, reply) => {
-    await request.jwtVerify();
-    const studentId = request.user.id;
-    const subjectId = (request.query as any)?.subjectId;
-    const client = await fastify.pg.connect();
-    try {
-      const data = await getMyRequests(client, studentId, subjectId ? Number(subjectId) : undefined);
-      return reply.send(data);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch matches' });
     } finally {
       client.release();
     }
@@ -80,28 +60,34 @@ export async function studentRoutes(fastify: FastifyInstance) {
 
   // Create a new help request
   fastify.post('/student/help-requests', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const body = request.body as any;
+
+    if (!body.subjectId || !body.description) {
+      return reply.code(400).send({ error: 'Subject and description are required' });
+    }
+
     const client = await fastify.pg.connect();
     try {
       const newRequest = await createHelpRequest(client, {
         studentId,
         subjectId: body.subjectId,
         description: body.description,
-        location: body.location,
+        location: body.location || 'Online',
         startTime: body.startTime,
         endTime: body.endTime,
       });
       return reply.code(201).send(newRequest);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to create help request' });
     } finally {
       client.release();
     }
   });
 
-  // Update a help request (only if Pending)
+  // Update a help request
   fastify.put('/student/help-requests/:id', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const requestId = Number((request.params as any).id);
     const body = request.body as any;
@@ -116,26 +102,30 @@ export async function studentRoutes(fastify: FastifyInstance) {
         startTime: body.startTime,
         endTime: body.endTime,
       });
-      if (!updated) return reply.code(400).send({ error: 'Cannot update request' });
+      if (!updated) return reply.code(404).send({ error: 'Request not found or not editable' });
       return reply.send(updated);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Update failed' });
     } finally {
       client.release();
     }
   });
 
-  // Delete a help request (only if Pending)
+  // Delete a help request
   fastify.delete('/student/help-requests/:id', async (request, reply) => {
-    await request.jwtVerify();
     const studentId = request.user.id;
     const requestId = Number((request.params as any).id);
     const client = await fastify.pg.connect();
     try {
       const deleted = await deleteHelpRequest(client, studentId, requestId);
-      if (!deleted) return reply.code(400).send({ error: 'Cannot delete request' });
-      return reply.send({ success: true });
+      if (!deleted) return reply.code(404).send({ error: 'Request not found' });
+      return reply.send({ success: true, message: 'Request deleted' });
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Deletion failed' });
     } finally {
       client.release();
     }
   });
-
 }
