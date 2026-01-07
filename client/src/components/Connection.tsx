@@ -4,6 +4,7 @@ import BaseProfileCard from "./BaseProfileCard";
 interface ConnectionProps {
   name: string;
   image: string;
+  subject: string;
   subjects: string[];
 }
 
@@ -13,7 +14,7 @@ const Connection: React.FC<ConnectionProps> = ({
   subjects,
 }) => {
   return (
-    <BaseProfileCard name={name} image={image} subjects={subjects} level={""} type={""} subject={""}>
+    <BaseProfileCard name={name} image={image} subjects={subjects} level={""} type={""}>
       <WSButton label="Info" size="normal" />
       <WSButton label="Contact" size="normal" />
     </BaseProfileCard>

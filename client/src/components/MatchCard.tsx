@@ -13,7 +13,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
   subjects,
 }) => {
   return (
-    <BaseProfileCard name={name} image={image} subjects={subjects}>
+    <BaseProfileCard name={name} image={image} subjects={subjects} level={""} type={""}>
       <WSButton label="Zie profiel" size="normal" />
     </BaseProfileCard>
   );
