@@ -5,7 +5,7 @@ import App from './App.tsx'
 import 'bulma/css/bulma.min.css';
 import '@vscode/codicons/dist/codicon.css';
 import './css/index.css'
-import { RoleProvider } from './navigation/rolecontect.tsx';
+import { RoleProvider } from './navigation/role.config.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

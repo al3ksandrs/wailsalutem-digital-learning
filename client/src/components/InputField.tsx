@@ -74,7 +74,7 @@ const InputField: React.FC<InputFieldProps> = ({
     if (type === 'textarea') {
       return (
         <textarea
-          className="textarea custom-input"
+          className="textarea custom-input has-fixed-size"
           placeholder={placeholder}
           value={value}
           onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}

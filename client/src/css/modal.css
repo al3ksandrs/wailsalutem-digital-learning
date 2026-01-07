@@ -7,8 +7,9 @@
     background-color: rgba(0,0,0,0.4);
     display: flex;
     justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 2rem 0;
 }
 
 .modal-container {
@@ -28,6 +29,8 @@
 }
 
 .modal-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     margin-bottom: 1rem;
 }
 

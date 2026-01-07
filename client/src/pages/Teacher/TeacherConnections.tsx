@@ -1,38 +1,31 @@
-import React from 'react';
-import ScreenLayout from '../components/ScreenLayout';
-import MainInfoPanel from '../components/MainInfoPanel';
-import '../css/student-main.css';
-import WSButton from '../components/WSButton';
-import MatchCard from '../components/MatchCard';
+import React, { useState } from 'react';
+import ScreenLayout from '../../components/ScreenLayout';
+import MainInfoPanel from '../../components/MainInfoPanel';
+import Modal from '../../components/Modal';
+import WSButton from '../../components/WSButton';
+import Thomas from '../../assets/images/thomas.png';
+import Connection from '../../components/Connection';
 
-// Mock Data
-import Thomas from '../assets/images/thomas.png';
-import Saskia from '../assets/images/saskia.png';
+const TeacherConnections: React.FC = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-const StudentMainPage: React.FC = () => {
-    interface Match {
+    interface Connection {
         name: string;
         image: string;
-        subjects: string[];
     }
 
-    const matches: Match[] = [
+    const connections: Connection[] = [
         {
-            name: "Thomas de Jong",
+            name: "Mees de Vries",
             image: Thomas,
-            subjects: ["Biology"],
-        },
-        {
-            name: "Saskia Veermans",
-            image: Saskia,
-            subjects: ["English", "History"],
         },
     ];
 
     return (
-        <ScreenLayout
+        <>
+            <ScreenLayout
                 greeting="Goedenavond, Hendrik"
-                rightTitle="Voorgestelde matches"
+                rightTitle="Mijn Connecties"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
@@ -57,14 +50,23 @@ const StudentMainPage: React.FC = () => {
                 rightContent={
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
-                            {matches.map((match) => (
-                                <MatchCard key={match.name} {...match} />
+                            {connections.map((connection) => (
+                                <Connection subjects={[]} key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>
                 }
             />
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Weet je zeker dat je wilt uitloggen?"
+            >
+                <p>Als je uitlogt, wordt je sessie beëindigd.</p>
+            </Modal>
+        </>
     );
 };
 
-export default StudentMainPage;
+export default TeacherConnections;

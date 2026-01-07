@@ -5,7 +5,7 @@ import logo from '../assets/graduation-cap-white.png';
 import Notifications from './notifications/NotificationParent';
 import '../css/header.css';
 import { Link } from 'react-router-dom';
-import { useRole } from '../navigation/rolecontect';
+import { useRole } from '../navigation/role.config';
 import { NAVIGATION_BY_ROLE } from '../navigation/navigation.config';
 
 interface HeaderProps {
