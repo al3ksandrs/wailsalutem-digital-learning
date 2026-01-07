@@ -1,13 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { describe, test, expect } from 'vitest';
-import { useGetTeachers, useGetTeacherById, useGetAvailability, useUpdateTeacherProfile, useUpdateAvailability, useDeleteTeacher } from '../../services/teacherService';
-import { MOCK_USERS, MOCK_AVAILABILITY } from '../../services/mockData';
-import { Role, DayOfWeek } from '@common/types';
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useTeacherDashboard, useSuggestedMatches, useAcceptMatch, useRemoveStudent } from '../../services/teacherService';
 
-const TEACHER_ROLE = Role.Teacher;
-const EXISTING_TEACHER_ID = 1;
-const NEW_BIO = 'Updated bio for testing';
+const MOCK_DASHBOARD = {
+    activeStudents: 5,
+    pendingRequests: 2
+};
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -23,76 +22,76 @@ const createWrapper = () => {
 };
 
 describe('teacherService', () => {
-    test('useGetTeachers fetches only teachers', async () => {
-        const { result } = renderHook(() => useGetTeachers(), { wrapper: createWrapper() });
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data).toBeDefined();
-        
-        const allAreTeachers = result.current.data?.every(u => u.role === TEACHER_ROLE);
-        expect(allAreTeachers).toBe(true);
+    beforeEach(() => {
+        globalThis.fetch = vi.fn();
     });
 
-    test('useGetTeacherById fetches correct teacher', async () => {
-        const { result } = renderHook(() => useGetTeacherById(EXISTING_TEACHER_ID), { wrapper: createWrapper() });
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.id).toBe(EXISTING_TEACHER_ID);
-        expect(result.current.data?.role).toBe(TEACHER_ROLE);
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
-    test('useGetAvailability fetches availability for teacher', async () => {
-        const { result } = renderHook(() => useGetAvailability(EXISTING_TEACHER_ID), { wrapper: createWrapper() });
+    test('useTeacherDashboard fetches dashboard data', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => MOCK_DASHBOARD,
+        });
+
+        const { result } = renderHook(() => useTeacherDashboard(), { wrapper: createWrapper() });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data).toBeDefined();
-        
-        const forTeacher = result.current.data?.every(a => a.teacherId === EXISTING_TEACHER_ID);
-        expect(forTeacher).toBe(true);
+        expect(result.current.data).toEqual(MOCK_DASHBOARD);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/dashboard'),
+            expect.anything()
+        );
     });
 
-    test('useUpdateTeacherProfile updates teacher info', async () => {
-        const { result } = renderHook(() => useUpdateTeacherProfile(), { wrapper: createWrapper() });
+    test('useSuggestedMatches fetches suggestions', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => [],
+        });
 
-        result.current.mutate({ id: EXISTING_TEACHER_ID, bio: NEW_BIO });
+        const { result } = renderHook(() => useSuggestedMatches(), { wrapper: createWrapper() });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.bio).toBe(NEW_BIO);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/suggested-matches'),
+            expect.anything()
+        );
     });
 
-    test('useUpdateAvailability updates availability slots', async () => {
-        const { result } = renderHook(() => useUpdateAvailability(), { wrapper: createWrapper() });
+    test('useAcceptMatch posts acceptance', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ success: true }),
+        });
 
-        const newAvailability = [{
-            id: 999,
-            teacherId: EXISTING_TEACHER_ID,
-            dayOfWeek: DayOfWeek.Friday,
-            startTime: '10:00',
-            endTime: '12:00',
-            isBooked: false
-        }];
+        const { result } = renderHook(() => useAcceptMatch(), { wrapper: createWrapper() });
 
-        result.current.mutate({ teacherId: EXISTING_TEACHER_ID, availability: newAvailability });
+        result.current.mutate(123); // request ID
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-        const updatedSlots = MOCK_AVAILABILITY.filter(a => a.teacherId === EXISTING_TEACHER_ID);
-        // Expecting only the new slot as the service replaces them
-        expect(updatedSlots).toHaveLength(1);
-        expect(updatedSlots[0].dayOfWeek).toBe(DayOfWeek.Friday);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/suggested-matches/123/accept'),
+            expect.objectContaining({ method: 'POST' })
+        );
     });
 
-    test('useDeleteTeacher removes a teacher', async () => {
-        const { result } = renderHook(() => useDeleteTeacher(), { wrapper: createWrapper() });
-        const teacherToDelete = MOCK_USERS.find(u => u.role === TEACHER_ROLE);
-        
-        if (!teacherToDelete) throw new Error('No teacher found to delete');
+    test('useRemoveStudent deletes student connection', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ success: true }),
+        });
 
-        result.current.mutate(teacherToDelete.id);
+        const { result } = renderHook(() => useRemoveStudent(), { wrapper: createWrapper() });
+
+        result.current.mutate(55); // student ID
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        
-        const exists = MOCK_USERS.find(u => u.id === teacherToDelete.id);
-        expect(exists).toBeUndefined();
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/students/55'),
+            expect.objectContaining({ method: 'DELETE' })
+        );
     });
 });

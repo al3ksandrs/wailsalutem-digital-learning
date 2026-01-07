@@ -1,95 +1,27 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MOCK_API_DELAY_MS, MOCK_USERS } from './mockData';
-import { type Student, Role } from '../../../common/types';
+import { useQuery } from '@tanstack/react-query';
 
-const STUDENTS_KEY = 'students';
-const STUDENT_PROFILE_KEY = 'studentProfile';
+const STUDENT_DATA_KEY = 'studentData';
+const API_URL = 'http://localhost:3000/api/student';
 
-// Mock data fetching until real routes are complete
-const fetchStudents = async (): Promise<Student[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const students = MOCK_USERS.filter(u => u.role === Role.Student) as Student[];
-      resolve(students);
-    }, MOCK_API_DELAY_MS);
-  });
+const getDashboard = async () => {
+  const response = await fetch(`${API_URL}/dashboard`, { credentials: 'include' });
+  if (!response.ok) throw new Error('Failed to fetch dashboard');
+  return response.json();
 };
 
-const fetchStudentById = async (studentId: number): Promise<Student> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const student = MOCK_USERS.find(u => u.id === studentId && u.role === Role.Student);
-      if (student) {
-        resolve(student as Student);
-      } else {
-        reject(new Error('Student not found'));
-      }
-    }, MOCK_API_DELAY_MS);
-  });
+const getMatches = async () => {
+  const response = await fetch(`${API_URL}/matches`, { credentials: 'include' });
+  if (!response.ok) throw new Error('Failed to fetch matches');
+  return response.json();
 };
 
-const updateStudentProfile = async (data: Partial<Student>): Promise<Student> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = MOCK_USERS.findIndex(u => u.id === data.id);
-      if (index > -1) {
-        MOCK_USERS[index] = { ...MOCK_USERS[index], ...data } as Student;
-        resolve(MOCK_USERS[index] as Student);
-      } else {
-        reject(new Error('Student not found'));
-      }
-    }, MOCK_API_DELAY_MS);
-  });
-};
-
-const deleteStudent = async (studentId: number): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = MOCK_USERS.findIndex(u => u.id === studentId && u.role === Role.Student);
-      if (index > -1) {
-        MOCK_USERS.splice(index, 1);
-        resolve();
-      } else {
-        reject(new Error('Student not found'));
-      }
-    }, MOCK_API_DELAY_MS);
-  });
+const getConnections = async () => {
+  const response = await fetch(`${API_URL}/connections`, { credentials: 'include' });
+  if (!response.ok) throw new Error('Failed to fetch connections');
+  return response.json();
 };
 
 // React query hooks
-export const useGetStudents = () => {
-  return useQuery({
-    queryKey: [STUDENTS_KEY],
-    queryFn: fetchStudents,
-  });
-};
-
-export const useGetStudentById = (studentId: number) => {
-  return useQuery({
-    queryKey: [STUDENT_PROFILE_KEY, studentId],
-    queryFn: () => fetchStudentById(studentId),
-    enabled: !!studentId,
-  });
-};
-
-export const useUpdateStudentProfile = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateStudentProfile,
-    onSuccess: (data) => {
-      queryClient.setQueryData([STUDENT_PROFILE_KEY, data.id], data);
-      queryClient.invalidateQueries({ queryKey: [STUDENTS_KEY] });
-    }
-  });
-};
-
-export const useDeleteStudent = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: deleteStudent,
-    onSuccess: (_, variables) => {
-      queryClient.removeQueries({ queryKey: [STUDENT_PROFILE_KEY, variables] });
-      queryClient.invalidateQueries({ queryKey: [STUDENTS_KEY] });
-    }
-  });
-};
+export const useStudentDashboard = () => useQuery({ queryKey: [STUDENT_DATA_KEY, 'dashboard'], queryFn: getDashboard });
+export const useStudentMatches = () => useQuery({ queryKey: [STUDENT_DATA_KEY, 'matches'], queryFn: getMatches });
+export const useStudentConnections = () => useQuery({ queryKey: [STUDENT_DATA_KEY, 'connections'], queryFn: getConnections });

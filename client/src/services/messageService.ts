@@ -1,153 +1,70 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { MOCK_API_DELAY_MS, MOCK_MESSAGES } from './mockData';
 import { type Message } from '../../../common/types';
 
-// when we have the API points we will use websockets instead of polling for messages
 const MESSAGES_KEY = 'messages';
-const MESSAGE_DETAIL_KEY = 'messageDetail';
+const INBOX_KEY = 'inbox';
+const API_URL = 'http://localhost:3000/api/messages';
 const REFRESH_INTERVAL_MS = 5000;
-const ID_RANGE_MULTIPLIER = 10000;
 
-type SendMessageParams = Omit<Message, 'id' | 'timestamp'>;
-type UpdateMessageParams = { messageId: number; content: string };
-
-// Mock data fetching until real routes are complete
-const fetchMessages = async (userId: number, otherId: number): Promise<Message[]> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const messages = MOCK_MESSAGES.filter(m => 
-                (m.senderId === userId && m.receiverId === otherId) ||
-                (m.senderId === otherId && m.receiverId === userId)
-            );
-            
-            messages.sort((a, b) => 
-                new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-            );
-
-            resolve(messages);
-        }, MOCK_API_DELAY_MS);
-    });
+type SendMessageParams = {
+  receiverId: number;
+  content: string;
+  attachments?: string[];
 };
 
-const fetchAllMessages = async (): Promise<Message[]> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(MOCK_MESSAGES);
-        }, MOCK_API_DELAY_MS);
-    });
+const getInbox = async (): Promise<any[]> => {
+  const response = await fetch(`${API_URL}/inbox`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch inbox');
+  return response.json();
 };
 
-const fetchMessageById = async (messageId: number): Promise<Message> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const message = MOCK_MESSAGES.find(m => m.id === messageId);
-            if (message) {
-                resolve(message);
-            } else {
-                reject(new Error('Message not found'));
-            }
-        }, MOCK_API_DELAY_MS);
-    });
+const getConversation = async (otherUserId: number): Promise<Message[]> => {
+  const response = await fetch(`${API_URL}/${otherUserId}`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch conversation');
+  return response.json();
 };
 
 const sendMessage = async (data: SendMessageParams): Promise<Message> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const newMessage: Message = {
-                ...data,
-                id: Math.floor(Math.random() * ID_RANGE_MULTIPLIER),
-                timestamp: new Date().toISOString()
-            };
-            MOCK_MESSAGES.push(newMessage);
-            resolve(newMessage);
-        }, MOCK_API_DELAY_MS);
-    });
-};
-
-const updateMessage = async ({ messageId, content }: UpdateMessageParams): Promise<Message> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const message = MOCK_MESSAGES.find(m => m.id === messageId);
-            if (message) {
-                message.content = content;
-                resolve(message);
-            } else {
-                reject(new Error('Message not found'));
-            }
-        }, MOCK_API_DELAY_MS);
-    });
-};
-
-const deleteMessage = async (messageId: number): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const index = MOCK_MESSAGES.findIndex(m => m.id === messageId);
-            if (index > -1) {
-                MOCK_MESSAGES.splice(index, 1);
-                resolve();
-            } else {
-                reject(new Error('Message not found'));
-            }
-        }, MOCK_API_DELAY_MS);
-    });
+  const response = await fetch(`${API_URL}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to send message');
+  return response.json();
 };
 
 // React query hooks
-export const useGetMessages = (userId: number, otherId: number) => {
-    return useQuery({
-        queryKey: [MESSAGES_KEY, userId, otherId],
-        queryFn: () => fetchMessages(userId, otherId),
-        enabled: !!userId && !!otherId,
-        refetchInterval: REFRESH_INTERVAL_MS 
-    });
+export const useGetInbox = () => {
+  return useQuery({
+    queryKey: [INBOX_KEY],
+    queryFn: getInbox,
+  });
 };
 
-export const useGetAllMessages = () => {
-    return useQuery({
-        queryKey: [MESSAGES_KEY, 'all'],
-        queryFn: fetchAllMessages,
-    });
-};
-
-export const useGetMessageById = (messageId: number) => {
-    return useQuery({
-        queryKey: [MESSAGE_DETAIL_KEY, messageId],
-        queryFn: () => fetchMessageById(messageId),
-        enabled: !!messageId
-    });
+export const useGetConversation = (otherUserId: number) => {
+  return useQuery({
+    queryKey: [MESSAGES_KEY, otherUserId],
+    queryFn: () => getConversation(otherUserId),
+    enabled: !!otherUserId,
+    refetchInterval: REFRESH_INTERVAL_MS, 
+  });
 };
 
 export const useSendMessage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: sendMessage,
-        onSuccess: (newMessage) => {
-            queryClient.invalidateQueries({ 
-                queryKey: [MESSAGES_KEY, newMessage.senderId, newMessage.receiverId] 
-            });
-            queryClient.invalidateQueries({ queryKey: [MESSAGES_KEY, 'all'] });
-        }
-    });
-};
-
-export const useUpdateMessage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: updateMessage,
-        onSuccess: (updatedMessage) => {
-            queryClient.invalidateQueries({ queryKey: [MESSAGES_KEY] });
-            queryClient.invalidateQueries({ queryKey: [MESSAGE_DETAIL_KEY, updatedMessage.id] });
-        }
-    });
-};
-
-export const useDeleteMessage = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: deleteMessage,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [MESSAGES_KEY] });
-            queryClient.invalidateQueries({ queryKey: [MESSAGE_DETAIL_KEY] });
-        }
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: sendMessage,
+    onSuccess: (newMessage) => {
+      queryClient.invalidateQueries({ 
+        queryKey: [MESSAGES_KEY, newMessage.receiverId] 
+      });
+      queryClient.invalidateQueries({ queryKey: [INBOX_KEY] });
+    },
+  });
 };

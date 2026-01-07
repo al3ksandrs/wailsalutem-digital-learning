@@ -1,12 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { describe, test, expect } from 'vitest';
-import { useGetSubjects, useGetSubjectById, useCreateSubject, useUpdateSubject, useDeleteSubject } from '../../services/subjectService';
-import { MOCK_SUBJECTS } from '../../services/mockData';
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useGetSubjects, useGetSubjectById, useCreateSubject, useDeleteSubject } from '../../services/subjectService';
 
-const FIRST_SUBJECT_ID = 1;
-const NEW_SUBJECT_NAME = 'Philosophy';
-const UPDATED_SUBJECT_NAME = 'Advanced Math';
+const MOCK_SUBJECT = { id: 1, name: 'Math' };
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -22,55 +19,79 @@ const createWrapper = () => {
 };
 
 describe('subjectService', () => {
-    test('useGetSubjects fetches subjects', async () => {
+    beforeEach(() => {
+        globalThis.fetch = vi.fn();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    test('useGetSubjects fetches all subjects', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => [MOCK_SUBJECT],
+        });
+
         const { result } = renderHook(() => useGetSubjects(), { wrapper: createWrapper() });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data).toBeDefined();
-        expect(result.current.data?.length).toBeGreaterThan(0);
+        expect(result.current.data).toEqual([MOCK_SUBJECT]);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/subjects'),
+            expect.anything()
+        );
     });
 
     test('useGetSubjectById fetches a specific subject', async () => {
-        const { result } = renderHook(() => useGetSubjectById(FIRST_SUBJECT_ID), { wrapper: createWrapper() });
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => MOCK_SUBJECT,
+        });
+
+        const { result } = renderHook(() => useGetSubjectById(1), { wrapper: createWrapper() });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data).toBeDefined();
-        expect(result.current.data?.id).toBe(FIRST_SUBJECT_ID);
+        expect(result.current.data).toEqual(MOCK_SUBJECT);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/subjects/1'),
+            expect.anything()
+        );
     });
 
-    test('useCreateSubject adds a new subject', async () => {
+    test('useCreateSubject POSTs a new subject', async () => {
+        const newSubject = { id: 2, name: 'Physics' };
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => newSubject,
+        });
+
         const { result } = renderHook(() => useCreateSubject(), { wrapper: createWrapper() });
 
-        result.current.mutate(NEW_SUBJECT_NAME);
+        result.current.mutate('Physics');
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.name).toBe(NEW_SUBJECT_NAME);
-        
-        const exists = MOCK_SUBJECTS.find(s => s.name === NEW_SUBJECT_NAME);
-        expect(exists).toBeDefined();
+        expect(result.current.data).toEqual(newSubject);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/subjects'),
+            expect.objectContaining({ method: 'POST', body: expect.stringContaining('Physics') })
+        );
     });
 
-    test('useUpdateSubject updates an existing subject', async () => {
-        const { result } = renderHook(() => useUpdateSubject(), { wrapper: createWrapper() });
+    test('useDeleteSubject DELETEs a subject', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ success: true }),
+        });
 
-        result.current.mutate({ id: FIRST_SUBJECT_ID, name: UPDATED_SUBJECT_NAME });
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.name).toBe(UPDATED_SUBJECT_NAME);
-        
-        const updated = MOCK_SUBJECTS.find(s => s.id === FIRST_SUBJECT_ID);
-        expect(updated?.name).toBe(UPDATED_SUBJECT_NAME);
-    });
-
-    test('useDeleteSubject removes a subject', async () => {
         const { result } = renderHook(() => useDeleteSubject(), { wrapper: createWrapper() });
-        const subjectToDelete = MOCK_SUBJECTS.at(-1)!;
 
-        result.current.mutate(subjectToDelete.id);
+        result.current.mutate(1);
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        
-        const exists = MOCK_SUBJECTS.find(s => s.id === subjectToDelete.id);
-        expect(exists).toBeUndefined();
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/subjects/1'),
+            expect.objectContaining({ method: 'DELETE' })
+        );
     });
 });

@@ -1,13 +1,22 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { describe, test, expect } from 'vitest';
-import { useGetRequests, useGetAllRequests, useGetRequestById, useCreateRequest, useUpdateRequestStatus, useDeleteRequest } from '../../services/requestService';
-import { MOCK_REQUESTS } from '../../services/mockData';
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
+import { 
+    useGetMyRequests, 
+    useGetPendingRequests, 
+    useGetTeacherRequests, 
+    useCreateRequest, 
+    useUpdateRequestStatus 
+} from '../../services/requestService';
 import { RequestStatus } from '@common/types';
 
-const TEST_USER_ID = 2; // Student ID
-const EXISTING_REQUEST_ID = 1;
-const NEW_DESCRIPTION = 'Help with Physics';
+const MOCK_REQUEST = {
+    id: 1,
+    studentId: 2,
+    subjectId: 101,
+    description: 'Help needed',
+    status: 'pending'
+};
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -23,38 +32,72 @@ const createWrapper = () => {
 };
 
 describe('requestService', () => {
-    test('useGetRequests fetches requests for a specific user', async () => {
-        const { result } = renderHook(() => useGetRequests(TEST_USER_ID), { wrapper: createWrapper() });
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data).toBeDefined();
-        
-        const userRequests = result.current.data?.every(r => r.studentId === TEST_USER_ID || r.assignedTeacherId === TEST_USER_ID);
-        expect(userRequests).toBe(true);
+    beforeEach(() => {
+        globalThis.fetch = vi.fn();
     });
 
-    test('useGetAllRequests fetches all requests', async () => {
-        const { result } = renderHook(() => useGetAllRequests(), { wrapper: createWrapper() });
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.length).toBeGreaterThanOrEqual(1);
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
-    test('useGetRequestById fetches correct request', async () => {
-        const { result } = renderHook(() => useGetRequestById(EXISTING_REQUEST_ID), { wrapper: createWrapper() });
+    test('useGetMyRequests fetches student requests', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => [MOCK_REQUEST],
+        });
+
+        const { result } = renderHook(() => useGetMyRequests(), { wrapper: createWrapper() });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.id).toBe(EXISTING_REQUEST_ID);
+        expect(result.current.data).toEqual([MOCK_REQUEST]);
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/student/my-requests'),
+            expect.anything()
+        );
     });
 
-    test('useCreateRequest adds a new request', async () => {
+    test('useGetPendingRequests fetches pending requests', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => [MOCK_REQUEST],
+        });
+
+        const { result } = renderHook(() => useGetPendingRequests(), { wrapper: createWrapper() });
+
+        await waitFor(() => expect(result.current.isSuccess).toBe(true));
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/student/pending-requests'),
+            expect.anything()
+        );
+    });
+
+    test('useGetTeacherRequests fetches assigned requests for teacher', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => [MOCK_REQUEST],
+        });
+
+        const { result } = renderHook(() => useGetTeacherRequests(), { wrapper: createWrapper() });
+
+        await waitFor(() => expect(result.current.isSuccess).toBe(true));
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/help-requests'),
+            expect.anything()
+        );
+    });
+
+    test('useCreateRequest POSTs a new request', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => MOCK_REQUEST,
+        });
+
         const { result } = renderHook(() => useCreateRequest(), { wrapper: createWrapper() });
 
         const newRequest = {
-            studentId: TEST_USER_ID,
-            assignedTeacherId: 1,
             subjectId: 2,
-            description: NEW_DESCRIPTION,
+            description: 'New Help',
+            location: 'Room 1',
             startTime: new Date().toISOString(),
             endTime: new Date().toISOString()
         };
@@ -62,31 +105,28 @@ describe('requestService', () => {
         result.current.mutate(newRequest);
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.description).toBe(NEW_DESCRIPTION);
-        expect(result.current.data?.status).toBe('pending');
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/student/help-requests'),
+            expect.objectContaining({ method: 'POST' })
+        );
     });
 
-    test('useUpdateRequestStatus updates status', async () => {
+    test('useUpdateRequestStatus PUTs a status update', async () => {
+        const updatedRequest = { ...MOCK_REQUEST, status: 'Accepted' };
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: true,
+            json: async () => updatedRequest,
+        });
+
         const { result } = renderHook(() => useUpdateRequestStatus(), { wrapper: createWrapper() });
 
-        result.current.mutate({ requestId: EXISTING_REQUEST_ID, status: RequestStatus.Accepted });
+        result.current.mutate({ requestId: 1, status: RequestStatus.Accepted });
 
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        expect(result.current.data?.status).toBe(RequestStatus.Accepted);
-        
-        const updated = MOCK_REQUESTS.find(r => r.id === EXISTING_REQUEST_ID);
-        expect(updated?.status).toBe(RequestStatus.Accepted);
-    });
-
-    test('useDeleteRequest removes a request', async () => {
-        const { result } = renderHook(() => useDeleteRequest(), { wrapper: createWrapper() });
-        const requestToDelete = MOCK_REQUESTS[0];
-
-        result.current.mutate(requestToDelete.id);
-
-        await waitFor(() => expect(result.current.isSuccess).toBe(true));
-        
-        const exists = MOCK_REQUESTS.find(r => r.id === requestToDelete.id);
-        expect(exists).toBeUndefined();
+        expect(result.current.data?.status).toBe('Accepted');
+        expect(globalThis.fetch).toHaveBeenCalledWith(
+            expect.stringContaining('/api/teacher/help-requests/1'),
+            expect.objectContaining({ method: 'PUT' })
+        );
     });
 });
