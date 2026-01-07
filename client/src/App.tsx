@@ -5,6 +5,7 @@ import RegisterPage from './pages/Registration/RegisterPage'
 import StudentMainPage from './pages/Student/StudentMainPage';
 import StudentRequests from './pages/Student/StudentRequests';
 import StudentConnections from './pages/Student/StudentConnections';
+import StudentCalendar from './pages/Student/StudentCalendar';
 import TeacherMainPage from './pages/Teacher/TeacherMainPage';
 import TeacherConnections from './pages/Teacher/TeacherConnections';
 import RegisterStudentPart2 from './pages/Registration/RegisterStudentPart2';
@@ -56,6 +57,7 @@ function App() {
         <Route path="/student" element={<StudentMainPage />} />
         <Route path="/mijnverzoeken" element={<StudentRequests />} />
         <Route path="/mijnconnecties" element={<StudentConnections />} />
+        <Route path="/kalender" element={<StudentCalendar />} />
         <Route path="/docent" element={<TeacherMainPage />} />
         <Route path="/studentverzoeken" element={<TeacherRequests />} />
         <Route path="/mijnstudenten" element={<TeacherConnections />} /> 

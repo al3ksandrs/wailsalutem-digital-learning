@@ -13,7 +13,7 @@ const Connection: React.FC<ConnectionProps> = ({
   subjects,
 }) => {
   return (
-    <BaseProfileCard name={name} image={image} subjects={subjects}>
+    <BaseProfileCard name={name} image={image} subjects={subjects} level={""} type={""} subject={""}>
       <WSButton label="Info" size="normal" />
       <WSButton label="Contact" size="normal" />
     </BaseProfileCard>

@@ -11,6 +11,7 @@ import Saskia from '../../assets/images/saskia.png';
 import Modal from '../../components/Modal';
 import InputField from '../../components/InputField';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
+import { useNavigate } from 'react-router-dom';
 
 export type DayOfWeek =
     | "Ma"
@@ -32,6 +33,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
 ];
 
 const StudentMainPage: React.FC = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Match {
@@ -89,6 +91,10 @@ const StudentMainPage: React.FC = () => {
         { value: 'Universiteit', label: 'Universiteit' },
     ];
 
+    function toCalendar() {
+        navigate('/kalender');
+    }
+
     return (
         <ScreenLayout
             greeting="Goedenavond, Hendrik"
@@ -104,6 +110,7 @@ const StudentMainPage: React.FC = () => {
                             type="submit"
                             fullWidth={true}
                             size="normal"
+                            onClick={() => toCalendar()}
                         />
 
                         <WSButton

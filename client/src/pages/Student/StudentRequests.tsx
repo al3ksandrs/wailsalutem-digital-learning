@@ -18,7 +18,7 @@ const StudentRequests: React.FC = () => {
     // Mock Data
     const requests: Request[] = [
         {
-            subject: "Scheikude",
+            subject: "Scheikunde",
             level: "HAVO",
             location: "Amsterdam",
             time: "13:00 - 14:00",
@@ -67,7 +67,7 @@ const StudentRequests: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
-                                <Request key={request.subject} {...request} />
+                                <Request name={''} type={'student'} image={''} key={request.subject} {...request} />
                             ))}
                         </div>
                     </div>

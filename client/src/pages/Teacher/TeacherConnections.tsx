@@ -3,7 +3,7 @@ import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
-import Thomas from '../../assets/images/thomas.png';
+import Rob from '../../assets/images/rob.png';
 import Connection from '../../components/Connection';
 
 const TeacherConnections: React.FC = () => {
@@ -16,8 +16,8 @@ const TeacherConnections: React.FC = () => {
 
     const connections: Connection[] = [
         {
-            name: "Thomas",
-            image: Thomas,
+            name: "Rob",
+            image: Rob,
         },
     ];
 
