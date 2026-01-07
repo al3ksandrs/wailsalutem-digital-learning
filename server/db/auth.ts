@@ -1,6 +1,7 @@
 import { PoolClient, QueryResult } from 'pg';
 
 const STATUS_PENDING = 'Pending';
+const STATUS_APPROVED = 'Approved';
 
 // Types representing the DB row
 type UserRow = {
@@ -9,6 +10,7 @@ type UserRow = {
   password: string;
   role: 'Student' | 'Teacher' | 'Admin';
   name: string;
+  status: string;
 };
 
 // Input type for creation
@@ -110,6 +112,8 @@ export async function createUser(client: PoolClient, data: CreateUserParams) {
     // Starts transaction
     await client.query('BEGIN');
 
+    const initialStatus = data.role === 'Student' ? STATUS_APPROVED : STATUS_PENDING;
+
     // Inserts into users table
     const userQuery = `
       INSERT INTO users (email, name, role, password, status)
@@ -122,7 +126,7 @@ export async function createUser(client: PoolClient, data: CreateUserParams) {
       data.name,
       data.role,
       data.password,
-      STATUS_PENDING
+      initialStatus
     ]);
 
     const newUser = userResult.rows[0];

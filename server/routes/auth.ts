@@ -120,7 +120,8 @@ export async function authRoutes(fastify: FastifyInstance) {
                 id: user.id,
                 email: user.email,
                 role: user.role,
-                name: user.name
+                name: user.name,
+                status: user.status
             });
 
             // Sets session cookie
@@ -138,7 +139,8 @@ export async function authRoutes(fastify: FastifyInstance) {
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    status: user.status
                 }
             });
 
