@@ -5,7 +5,6 @@ interface BaseProfileCardProps {
   level: string
   type: string;
   image: string;
-  subject: string;
   subjects: string[];
   children?: React.ReactNode;
 }
@@ -66,8 +65,6 @@ const BaseProfileCard: React.FC<BaseProfileCardProps> = ({
           </div>
         </div>
       </div>
-
-
     )
   }
   return (

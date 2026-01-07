@@ -30,7 +30,7 @@ const Request: React.FC<RequestProps> = ({
 
   if (type === 'open') {
     return (
-      <BaseProfileCard type="Request" name={name} image={image} subject={subject} subjects={[]} level={level}>
+      <BaseProfileCard type="Request" name={name} image={image} subjects={[]} level={level}>
         <p className="has-text-weight-semibold has-text-black">
           {subject}
         </p>

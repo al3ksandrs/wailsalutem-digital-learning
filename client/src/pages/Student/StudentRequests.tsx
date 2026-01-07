@@ -9,6 +9,8 @@ const StudentRequests: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Request {
+        name: string,
+        image: string,
         subject: string,
         level: string,
         location: string,
@@ -18,18 +20,24 @@ const StudentRequests: React.FC = () => {
     // Mock Data
     const requests: Request[] = [
         {
+            name: "",
+            image: "",
             subject: "Scheikunde",
             level: "HAVO",
             location: "Amsterdam",
             time: "13:00 - 14:00",
         },
         {
+            name: "",
+            image: "",
             subject: "Wiskunde",
             level: "HAVO",
             location: "Alkmaar",
             time: "12:30 - 13:30",
         },
         {
+            name: "",
+            image: "",
             subject: "Geschiedenis",
             level: "HAVO",
             location: "Amstelveen",
@@ -67,7 +75,7 @@ const StudentRequests: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
-                                <Request name={''} type={'student'} image={''} key={request.subject} {...request} />
+                                <Request type='student' key={request.subject} {...request} />
                             ))}
                         </div>
                     </div>
