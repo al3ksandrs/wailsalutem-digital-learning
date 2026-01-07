@@ -27,7 +27,7 @@ describe('StudentRequest', () => {
 
         render(<StudentRequests />);
 
-        expect(screen.getByText('Scheikude')).toBeInTheDocument();
+        expect(screen.getByText('Scheikunde')).toBeInTheDocument();
         expect(screen.getByText('Wiskunde')).toBeInTheDocument();
         expect(screen.getByText('Geschiedenis')).toBeInTheDocument();
 
