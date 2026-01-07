@@ -74,28 +74,29 @@ const TeacherMainPage: React.FC = () => {
                     </div>
 
                     <Modal
+                        title="Beschikbaarheid opgeven"
                         isOpen={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
-                        title="Beschikbaarheid opgeven"
+
                     >
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="availability-section">
                                 {DAYS_OF_WEEK.map((day) => (
                                     <AvailabilitySlider
-                                        key={day}
                                         day={day}
+                                        key={day}
                                         active={availability[day].active}
                                         value={availability[day].range}
-                                        onActiveChange={(active) =>
-                                            setAvailability((prev) => ({
-                                                ...prev,
-                                                [day]: { ...prev[day], active },
-                                            }))
-                                        }
                                         onChange={(range) =>
                                             setAvailability((prev) => ({
                                                 ...prev,
                                                 [day]: { ...prev[day], range },
+                                            }))
+                                        }
+                                        onActiveChange={(active) =>
+                                            setAvailability((prev) => ({
+                                                ...prev,
+                                                [day]: { ...prev[day], active },
                                             }))
                                         }
                                     />
