@@ -4,7 +4,6 @@ import BaseProfileCard from "./BaseProfileCard";
 interface ConnectionProps {
   name: string;
   image: string;
-  subject: string;
   subjects: string[];
 }
 
