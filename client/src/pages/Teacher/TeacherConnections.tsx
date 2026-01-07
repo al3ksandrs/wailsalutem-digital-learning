@@ -26,7 +26,7 @@ const TeacherConnections: React.FC = () => {
     return (
         <>
             <ScreenLayout
-                greeting="Goedenavond, Hendrik"
+                greeting="Goedenavond, Jan"
                 rightTitle="Mijn Connecties"
                 leftContent={
                     <div className="student-left-panel">
@@ -35,13 +35,6 @@ const TeacherConnections: React.FC = () => {
 
                             <WSButton
                                 label="Kalender"
-                                type="submit"
-                                fullWidth={true}
-                                size="normal"
-                            />
-
-                            <WSButton
-                                label="Nieuw hulpverzoek"
                                 type="submit"
                                 fullWidth={true}
                                 size="normal"
