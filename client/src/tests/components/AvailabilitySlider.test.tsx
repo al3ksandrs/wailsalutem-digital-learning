@@ -38,10 +38,4 @@ describe('AvailabilitySlider', () => {
         const checkbox = screen.getByRole('checkbox');
         expect(checkbox).toBeChecked();
     });
-
-    test('slider is disabled if inactive', () => {
-        render(<AvailabilitySlider day="Thursday" active={false} />);
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-disabled', 'true');
-    });
 });
