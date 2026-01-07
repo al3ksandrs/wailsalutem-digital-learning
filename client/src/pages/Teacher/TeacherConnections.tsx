@@ -53,7 +53,7 @@ const TeacherConnections: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
                             {connections.map((connection) => (
-                                <Connection subjects={[]} key={connection.name} {...connection} />
+                                <Connection key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>
