@@ -64,4 +64,16 @@ describe('TeacherMainPage', () => {
 
         expect(screen.queryByText('Weet je zeker dat je wilt uitloggen?')).not.toBeInTheDocument();
     });
+
+    test('opens availability modal when clicked', () => {
+        render(
+            <MemoryRouter>
+                <TeacherMainPage />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByText('Beschikbaarheid'));
+        expect(screen.getByText('Ma')).toBeInTheDocument();
+        expect(screen.getByText('Verstuur')).toBeInTheDocument();
+    });
 });
