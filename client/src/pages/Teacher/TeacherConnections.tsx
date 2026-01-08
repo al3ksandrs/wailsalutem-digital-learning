@@ -3,50 +3,49 @@ import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
-import Jan from '../../assets/images/jan.png'
+import Rob from '../../assets/images/rob.png';
 import Connection from '../../components/Connection';
 import { useNavigate } from 'react-router-dom';
 
-const StudentConnections: React.FC = () => {
+
+const TeacherConnections: React.FC = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    function toCalendar() {
-        navigate('/kalender');
-    }
 
     interface Connection {
         id: number;
         name: string;
         image: string;
-        subjects: string[];
     }
 
-    const students: Connection[] = [
+    const connections: Connection[] = [
         {
             id: 1,
-            name: "Jan Hooiberg",
-            image: Jan,
-            subjects: ["Natuurkunde", "Wiskunde"],
+            name: "Rob",
+            image: Rob,
         },
     ];
+
+    function toCalendar() {
+        navigate('/kalender');
+    }
 
     return (
         <>
             <ScreenLayout
-                greeting="Goedenavond, Hendrik"
+                greeting="Goedenavond, Jan"
                 rightTitle="Mijn Connecties"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
-                            <MainInfoPanel pending={3} matches={2} connections={1} />
+                            <MainInfoPanel pending={3} matches={12} connections={27} />
 
                             <WSButton
                                 label="Kalender"
                                 type="submit"
                                 fullWidth={true}
                                 size="normal"
-                                onClick={() => toCalendar()}
+                                onClick={toCalendar}
                             />
                         </div>
                     </div>
@@ -54,8 +53,8 @@ const StudentConnections: React.FC = () => {
                 rightContent={
                     <div className="student-page-placeholder">
                         <div className="container" style={{ maxWidth: 700 }}>
-                            {students.map((student) => (
-                                <Connection key={student.name} {...student} />
+                            {connections.map((connection) => (
+                                <Connection subjects={[]} key={connection.name} {...connection} />
                             ))}
                         </div>
                     </div>
@@ -73,4 +72,4 @@ const StudentConnections: React.FC = () => {
     );
 };
 
-export default StudentConnections;
+export default TeacherConnections;

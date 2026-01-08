@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo';
 import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
+import { useRole } from '../../navigation/role.config';
 
 const RegisterTeacherWaiting: React.FC = () => {
+    const { setRole } = useRole();
     const navigate = useNavigate();
 
     const handleSkip = () => {
-        navigate('/'); 
+        setRole("teacher");
+        navigate('/docent'); 
     };
 
     return (

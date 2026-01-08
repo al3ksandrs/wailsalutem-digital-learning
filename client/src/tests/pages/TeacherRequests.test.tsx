@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
-import StudentMainPage from '../../pages/Student/StudentMainPage';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
+import TeacherRequests from '../../pages/Teacher/TeacherRequests';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
@@ -21,27 +21,27 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
-describe('StudentMainPage', () => {
+describe('TeacherMainPage', () => {
     test('renders layout with greeting', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <TeacherRequests />
             </MemoryRouter>
         );
-        expect(screen.getByText('Goedenavond, Hendrik')).toBeInTheDocument();
+        expect(screen.getByText('Goedenavond, Jan')).toBeInTheDocument();
 
-        const titles = screen.getAllByText('Voorgestelde matches');
+        const titles = screen.getAllByText('Mijn Verzoeken');
         expect(titles.length).toBeGreaterThan(0);
-        expect(screen.getByRole('heading', { name: 'Voorgestelde matches' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: 'Mijn Verzoeken' })).toBeInTheDocument();
     });
 
     test('opens logout modal when logout button is clicked', () => {
         render(
             <RoleProvider>
-                <MemoryRouter initialEntries={["/student"]}>
+                <MemoryRouter initialEntries={["/studentverzoeken"]}>
                     <Routes>
                         <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                            <Route path="/studentverzoeken" element={<TeacherRequests />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -57,10 +57,10 @@ describe('StudentMainPage', () => {
     test('closes logout modal', () => {
         render(
             <RoleProvider>
-                <MemoryRouter initialEntries={["/student"]}>
+                <MemoryRouter initialEntries={["/studentverzoeken"]}>
                     <Routes>
                         <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                            <Route path="/studentverzoeken" element={<TeacherRequests />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -80,7 +80,7 @@ describe('StudentMainPage', () => {
     test('navigate to calendar', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <TeacherRequests />
             </MemoryRouter>
         );
 

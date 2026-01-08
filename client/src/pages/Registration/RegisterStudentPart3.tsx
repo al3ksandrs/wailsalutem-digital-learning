@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo';
 import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
+import { useRole } from '../../navigation/role.config';
 
 // A mix of subjects to match your screenshot
 const ALL_SUBJECTS = [
@@ -13,6 +14,7 @@ const ALL_SUBJECTS = [
 ];
 
 const RegisterStudentPart3: React.FC = () => {
+    const { setRole } = useRole();
     const navigate = useNavigate();
 
     // In a real app, use this data to filter subjects (e.g., C&M profile implies History/Art)
@@ -31,6 +33,7 @@ const RegisterStudentPart3: React.FC = () => {
     const handleRegister = () => {
         console.log('Registration Complete:', selectedSubjects);
         // Navigate to the Success/Waiting page you already have
+        setRole("student");
         navigate('/student'); // Or create a specific student success page if needed
     };
 

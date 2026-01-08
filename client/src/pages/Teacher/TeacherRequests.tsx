@@ -3,11 +3,11 @@ import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import Modal from '../../components/Modal';
 import WSButton from '../../components/WSButton';
-import Jan from '../../assets/images/jan.png'
-import Connection from '../../components/Connection';
+import Request from '../../components/Request';
+import Rob from "../../assets/images/rob.png"
 import { useNavigate } from 'react-router-dom';
 
-const StudentConnections: React.FC = () => {
+const TeacherRequests: React.FC = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -15,31 +15,47 @@ const StudentConnections: React.FC = () => {
         navigate('/kalender');
     }
 
-    interface Connection {
+    interface Request {
         id: number;
-        name: string;
-        image: string;
-        subjects: string[];
+        name: string,
+        image: string,
+        subject: string,
+        level: string,
+        location: string,
+        time: string,
     }
 
-    const students: Connection[] = [
+    // Mock Data
+    const requests: Request[] = [
         {
             id: 1,
-            name: "Jan Hooiberg",
-            image: Jan,
-            subjects: ["Natuurkunde", "Wiskunde"],
+            name: "Rob",
+            image: Rob,
+            subject: "Wiskunde",
+            level: "HAVO",
+            location: "Amsterdam",
+            time: "13:00 - 14:00",
         },
+        {
+            id: 2,
+            name: "Rob",
+            image: Rob,
+            subject: "Scheikunde",
+            level: "HAVO",
+            location: "Alkmaar",
+            time: "12:30 - 13:30",
+        }
     ];
 
     return (
         <>
             <ScreenLayout
-                greeting="Goedenavond, Hendrik"
-                rightTitle="Mijn Connecties"
+                greeting="Goedenavond, Jan"
+                rightTitle="Mijn Verzoeken"
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
-                            <MainInfoPanel pending={3} matches={2} connections={1} />
+                            <MainInfoPanel pending={3} matches={12} connections={27} />
 
                             <WSButton
                                 label="Kalender"
@@ -47,15 +63,16 @@ const StudentConnections: React.FC = () => {
                                 fullWidth={true}
                                 size="normal"
                                 onClick={() => toCalendar()}
+
                             />
                         </div>
                     </div>
                 }
                 rightContent={
                     <div className="student-page-placeholder">
-                        <div className="container" style={{ maxWidth: 700 }}>
-                            {students.map((student) => (
-                                <Connection key={student.name} {...student} />
+                        <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
+                            {requests.map((request) => (
+                                <Request type={'open'} key={request.name} {...request} />
                             ))}
                         </div>
                     </div>
@@ -73,4 +90,4 @@ const StudentConnections: React.FC = () => {
     );
 };
 
-export default StudentConnections;
+export default TeacherRequests;
