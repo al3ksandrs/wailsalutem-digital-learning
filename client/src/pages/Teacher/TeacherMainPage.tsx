@@ -6,7 +6,7 @@ import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
 import Modal from '../../components/Modal';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
-import Anon from '../../assets/images/Anon.png'
+import Anon from '../../assets/images/anon.png'
 import { useNavigate } from 'react-router-dom';
 import Connection from '../../components/Connection';
 
