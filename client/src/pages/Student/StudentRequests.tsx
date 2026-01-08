@@ -32,7 +32,7 @@ const StudentRequests: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Request {
-        name: string,
+        id: number,
         image: string,
         subject: string,
         level: string,
@@ -41,9 +41,9 @@ const StudentRequests: React.FC = () => {
     }
 
     // Mock Data
-    const requests: Request[] = [
+    const [requests, setRequests] = useState<Request[]>([
         {
-            name: "",
+            id: 1,
             image: "",
             subject: "Scheikunde",
             level: "HAVO",
@@ -51,7 +51,7 @@ const StudentRequests: React.FC = () => {
             time: "13:00 - 14:00",
         },
         {
-            name: "",
+            id: 2,
             image: "",
             subject: "Wiskunde",
             level: "HAVO",
@@ -59,14 +59,14 @@ const StudentRequests: React.FC = () => {
             time: "12:30 - 13:30",
         },
         {
-            name: "",
+            id: 3,
             image: "",
             subject: "Geschiedenis",
             level: "HAVO",
             location: "Amstelveen",
             time: "11:45 - 12:25",
         },
-    ];
+    ]);
 
     interface DayAvailability {
         active: boolean;
@@ -108,6 +108,12 @@ const StudentRequests: React.FC = () => {
         navigate('/kalender');
     }
 
+    function deleteRequest(requestId: number) {
+        setRequests(prev =>
+            prev.filter(request => request.id !== requestId)
+        );
+    }
+
     return (
         <>
             <ScreenLayout
@@ -140,7 +146,7 @@ const StudentRequests: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
-                                <Request type='student' key={request.subject} onEdit={() => setIsModalOpen(true)} {...request} />
+                                <Request type='student' key={request.id} onEdit={() => setIsModalOpen(true)} onDelete={() => deleteRequest(request.id)} {...request} />
                             ))}
                         </div>
                     </div>

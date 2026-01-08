@@ -1,6 +1,7 @@
 import WSButton from "./WSButton";
 
 interface BaseProfileCardProps {
+  id: number;
   name: string;
   level: string
   type: string;
