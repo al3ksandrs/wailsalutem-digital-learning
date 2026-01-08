@@ -9,7 +9,6 @@ interface ConnectionProps {
 }
 
 const Connection: React.FC<ConnectionProps> = ({
-  id,
   name,
   image,
   subjects,
