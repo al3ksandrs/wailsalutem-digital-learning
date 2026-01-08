@@ -286,7 +286,7 @@ const StudentRequests: React.FC = () => {
 
           <div className="pt-2 has-text-centered">
             <WSButton
-              label={currentRequest ? "Sla Wijzigingen Op" : "Verstuur Verzoek"}
+              label={currentRequest ? "Opslaan" : "Verstuur Verzoek"}
               type="submit"
               size="normal"
             />

@@ -94,6 +94,69 @@ describe('StudentRequest', () => {
         expect(screen.queryByText('Weet je zeker dat je wilt uitloggen?')).not.toBeInTheDocument();
     });
 
+    test("opens modal to create a new request", () => {
+        render(<StudentRequests />);
+
+        const createButton = screen.getByText("Nieuw hulpverzoek");
+        fireEvent.click(createButton);
+
+        expect(screen.getByText("Nieuw Hulpverzoek")).toBeInTheDocument();
+        expect(screen.getByLabelText("Vak")).toBeInTheDocument();
+        expect(screen.getByLabelText("Niveau")).toBeInTheDocument();
+    });
+
+    test("creates a new request", () => {
+        render(<StudentRequests />);
+
+        fireEvent.click(screen.getByText("Nieuw hulpverzoek"));
+
+        fireEvent.change(screen.getByLabelText("Vak"), {
+            target: { value: "Engels" },
+        });
+        fireEvent.change(screen.getByLabelText("Niveau"), {
+            target: { value: "VWO" },
+        });
+        fireEvent.change(screen.getByLabelText("Locatie"), {
+            target: { value: "Utrecht" },
+        });
+        fireEvent.change(screen.getByLabelText("Extra Informatie"), {
+            target: { value: "Dit is extra informatie" },
+        });
+
+        fireEvent.click(screen.getByText("Verstuur Verzoek"));
+        expect(screen.getByText("Engels")).toBeInTheDocument();
+        expect(screen.getByText("Utrecht")).toBeInTheDocument();
+    });
+
+    test("open modal to edit request", () => {
+        render(<StudentRequests />);
+
+        const editButtons = screen.getAllByLabelText("Edit");
+        fireEvent.click(editButtons[0]);
+
+        expect(screen.getByText("Bewerk Hulpverzoek")).toBeInTheDocument();
+        expect(screen.getByDisplayValue("Scheikunde")).toBeInTheDocument();
+    });
+
+    test("edits an existing request", () => {
+        render(<StudentRequests />);
+
+        const editButtons = screen.getAllByLabelText("Edit");
+        fireEvent.click(editButtons[0]);
+        const subjectSelect = screen.getByLabelText("Vak");
+        fireEvent.change(subjectSelect, { target: { value: "Natuurkunde" } });
+        fireEvent.click(screen.getByText("Opslaan"));
+        expect(screen.getByText("Natuurkunde")).toBeInTheDocument();
+    });
+
+    test("deletes a request", () => {
+        render(<StudentRequests />);
+
+        const deleteButtons = screen.getAllByLabelText("Delete");
+        fireEvent.click(deleteButtons[0]);
+        expect(screen.queryByText("Scheikunde")).not.toBeInTheDocument();
+    });
+
     test('navigate to calendar', () => {
         render(
             <MemoryRouter>
