@@ -1,12 +1,9 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals';
 
-// 1. Define the mock implementation with explicit types
-// (TS): "These functions return a Promise that resolves to anything"
 const mockConnect = jest.fn<() => Promise<void>>();
 const mockQuery = jest.fn<() => Promise<{ rows: any[] }>>();
 const mockEnd = jest.fn<() => Promise<void>>();
 
-// 2. Mock 'pg' BEFORE importing the script
 jest.unstable_mockModule('pg', () => ({
   Client: jest.fn(() => ({
     connect: mockConnect,

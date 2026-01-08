@@ -1,5 +1,5 @@
-// server/routes/admin.ts
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyInstance } from 'fastify';
+import { authGuard } from '../plugins/authguard.ts';
 import {
   getAllUsers,
   getUserById,
@@ -9,26 +9,12 @@ import {
   updateUserStatus,
 } from '../db/admin.ts';
 
-async function ensureAdmin(
-  request: FastifyRequest,
-  reply: FastifyReply
-): Promise<void> {
-  try {
-    await request.jwtVerify();
-    const user = request.user as { role: string };
-    if (user.role !== 'Admin') {
-      reply.code(403).send({ error: 'Forbidden' });
-    }
-  } catch (err) {
-    request.log.error(err);
-    reply.code(401).send({ error: 'Not authenticated' });
-  }
-}
-
-
 export async function adminRoutes(fastify: FastifyInstance) {
-  // GET all users
-  fastify.get('/admin/users', { preHandler: ensureAdmin }, async (request, reply) => {
+  
+  fastify.addHook('onRequest', authGuard('Admin'));
+
+  // Get all users
+  fastify.get('/admin/users', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const role = (request.query as { role?: string })?.role;
@@ -42,8 +28,8 @@ export async function adminRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // GET single user by ID
-  fastify.get('/admin/users/:id', { preHandler: ensureAdmin }, async (request, reply) => {
+  // Get single user by ID
+  fastify.get('/admin/users/:id', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const userId = Number((request.params as { id: string }).id);
@@ -58,8 +44,8 @@ export async function adminRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // POST create user
-  fastify.post('/admin/users', { preHandler: ensureAdmin }, async (request, reply) => {
+  // Create user
+  fastify.post('/admin/users', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const body = request.body as { name: string; email: string; password: string; role: string };
@@ -73,8 +59,8 @@ export async function adminRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // PUT update user
-  fastify.put('/admin/users/:id', { preHandler: ensureAdmin }, async (request, reply) => {
+  // Update user
+  fastify.put('/admin/users/:id', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const userId = Number((request.params as { id: string }).id);
@@ -90,8 +76,8 @@ export async function adminRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // DELETE user
-  fastify.delete('/admin/users/:id', { preHandler: ensureAdmin }, async (request, reply) => {
+  // Delete user
+  fastify.delete('/admin/users/:id', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const userId = Number((request.params as { id: string }).id);
@@ -106,8 +92,8 @@ export async function adminRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // PATCH update user status
-  fastify.patch('/admin/users/:id/status', { preHandler: ensureAdmin }, async (request, reply) => {
+  // Update user status
+  fastify.patch('/admin/users/:id/status', async (request, reply) => {
     const client = await fastify.pg.connect();
     try {
       const userId = Number((request.params as { id: string }).id);

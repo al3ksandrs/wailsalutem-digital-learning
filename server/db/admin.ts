@@ -1,4 +1,5 @@
 import { PoolClient } from 'pg';
+import bcrypt from 'bcrypt';
 
 export async function getAllUsers(client: PoolClient, role?: string) {
   const result = await client.query(
@@ -20,10 +21,15 @@ export async function createUser(
   client: PoolClient,
   data: { name: string; email: string; password: string; role: string }
 ) {
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
   const result = await client.query(
-    `INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, status`,
-    [data.name, data.email, data.password, data.role]
+    `INSERT INTO users (name, email, password, role) 
+     VALUES ($1, $2, $3, $4) 
+     RETURNING id, name, email, role, status`,
+    [data.name, data.email, hashedPassword, data.role]
   );
+
   return result.rows[0];
 }
 
