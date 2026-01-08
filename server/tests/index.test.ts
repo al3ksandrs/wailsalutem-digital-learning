@@ -1,12 +1,9 @@
 import { jest, describe, test, expect, afterAll, beforeEach } from '@jest/globals';
 
-// 1. Create mock functions with explicit Generics
-// This enables .mockResolvedValue() and .mockRejectedValue() to work without errors.
 const mockRelease = jest.fn(); 
 const mockQuery = jest.fn<() => Promise<any>>();
 const mockConnect = jest.fn<() => Promise<any>>();
 
-// 2. Mock fastify-postgres using these hoistable variables
 jest.unstable_mockModule('@fastify/postgres', () => ({
   default: Object.assign(
     async (fastify: any) => {
@@ -18,8 +15,8 @@ jest.unstable_mockModule('@fastify/postgres', () => ({
   )
 }));
 
-// 3. Dynamically import the server
-const { buildServer } = await import('../index');
+// import the server
+const { buildServer } = await import('../index.ts');
 
 describe('Server Routes', () => {
   let app: any;
@@ -27,12 +24,11 @@ describe('Server Routes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Default "Happy Path" behavior
     mockQuery.mockResolvedValue({ 
       rows: [{ time: '2025-01-01', version: 'Postgres Mock' }] 
     });
     
-    // Connect returns a client object containing release/query
+    // connect returns a client object containing release/query
     mockConnect.mockResolvedValue({
       query: mockQuery,
       release: mockRelease,
@@ -59,7 +55,7 @@ describe('Server Routes', () => {
   });
 
   test('GET /db-check should handle DB errors (500)', async () => {
-    // Simulate a DB connection failure
+    // cimulate DB connection failure
     mockConnect.mockRejectedValueOnce(new Error('Critical DB Failure'));
 
     const response = await app.inject({
@@ -71,7 +67,7 @@ describe('Server Routes', () => {
     const body = response.json();
     expect(body.status).toBe('Database Connection Failed');
     expect(body.error).toBe('Critical DB Failure');
-    // Ensure release is not called if connect fails (as client is undefined)
+    // Release is not called if connect fails
     expect(mockRelease).not.toHaveBeenCalled(); 
   });
 });

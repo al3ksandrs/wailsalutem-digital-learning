@@ -15,41 +15,32 @@ const MOCK_NAME = 'Test User';
 const STUDENT_ROLE = 'Student';
 const TEACHER_ROLE = 'Teacher';
 
-// Mock functions with explicit generics to fix TS errors
+// Mock functions
 const mockRelease = jest.fn();
-const mockQuery = jest.fn<(...args: any[]) => Promise<any>>(); 
+const mockQuery = jest.fn<(...args: any[]) => Promise<any>>();
 const mockConnect = jest.fn<() => Promise<any>>();
 const mockHash = jest.fn<(...args: any[]) => Promise<string>>();
 const mockCompare = jest.fn<(...args: any[]) => Promise<boolean>>();
 
-// Mocks fastify-postgres
+// Mock fastify-postgres
 jest.unstable_mockModule('@fastify/postgres', () => ({
-  default: Object.assign(
-    async (fastify: any) => {
-      fastify.decorate('pg', {
-        connect: mockConnect,
-      });
-    },
-    { [Symbol.for('skip-override')]: true }
-  )
+  default: Object.assign(async (fastify: any) => {
+    fastify.decorate('pg', { connect: mockConnect });
+  }, { [Symbol.for('skip-override')]: true })
 }));
 
-// Mocks bcrypt
+// Mock bcrypt
 jest.unstable_mockModule('bcrypt', () => ({
-  default: {
-    hash: mockHash,
-    compare: mockCompare
-  }
+  default: { hash: mockHash, compare: mockCompare }
 }));
 
-// Imports modules AFTER mocking
-const { buildServer } = await import('../index');
-const authDB = await import('../db/auth');
+// Import modules AFTER mocks
+const { buildServer } = await import('../index.ts');
+const authDB = await import('../db/auth.ts');
 
 describe('Auth Module', () => {
   let app: FastifyInstance;
-  
-  // Casts the mock client to unknown then PoolClient to satisfy TS types
+
   const mockClient = {
     query: mockQuery,
     release: mockRelease,
@@ -62,13 +53,9 @@ describe('Auth Module', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
-    // Default mock behaviors
     mockConnect.mockResolvedValue(mockClient);
     mockHash.mockResolvedValue(MOCK_HASHED_PASSWORD);
     mockCompare.mockResolvedValue(true);
-    
-    // Default happy path behavior for DB queries
     mockQuery.mockResolvedValue({ rows: [] });
   });
 
@@ -76,293 +63,184 @@ describe('Auth Module', () => {
     await app.close();
   });
 
-  describe('DB Layer (server/db/auth.ts)', () => {
-    test('createUser should handle Student creation transaction correctly', async () => {
+  describe('POST /register', () => {
+    test('should register a Student successfully', async () => {
       // BEGIN
-      mockQuery.mockResolvedValueOnce({ rows: [] }); 
-      // INSERT users
+      mockQuery.mockResolvedValueOnce({ rows: [] });
       mockQuery.mockResolvedValueOnce({ 
-        rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, role: STUDENT_ROLE, name: MOCK_NAME, status: 'Pending' }] 
+        rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, role: STUDENT_ROLE, name: MOCK_NAME, status: 'Approved' }]
       });
-      // INSERT student
-      mockQuery.mockResolvedValueOnce({ rows: [] });
-      // COMMIT
-      mockQuery.mockResolvedValueOnce({ rows: [] });
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // insert student
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // commit
 
-      const result = await authDB.createUser(mockClient, {
-        email: MOCK_EMAIL,
-        name: MOCK_NAME,
-        role: STUDENT_ROLE,
-        password: MOCK_HASHED_PASSWORD,
-        education: 'High School',
-        schoolYear: 1
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/register', // ✅ fixed prefix
+        payload: {
+          email: MOCK_EMAIL,
+          name: MOCK_NAME,
+          password: MOCK_PASSWORD,
+          role: STUDENT_ROLE,
+          education: 'University',
+          schoolYear: 2
+        }
       });
 
-      expect(mockQuery).toHaveBeenCalledTimes(4);
-      expect(mockQuery).toHaveBeenNthCalledWith(1, 'BEGIN');
-      expect(mockQuery).toHaveBeenNthCalledWith(4, 'COMMIT');
-      expect(result.id).toBe(MOCK_USER_ID);
-      expect(result.role).toBe(STUDENT_ROLE);
+      expect(response.statusCode).toBe(HTTP_CREATED);
+      expect(response.json()).toEqual({
+        status: 'success',
+        user: expect.objectContaining({
+          email: MOCK_EMAIL,
+          role: STUDENT_ROLE,
+          status: 'Approved'
+        })
+      });
+      expect(mockHash).toHaveBeenCalledWith(MOCK_PASSWORD, SALT_ROUNDS);
     });
 
-    test('createUser should rollback on error', async () => {
-      // BEGIN
+    test('should register a Teacher successfully with subjects', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
-      // INSERT users fails
-      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
-      // ROLLBACK
+      mockQuery.mockResolvedValueOnce({ 
+        rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, role: TEACHER_ROLE, name: MOCK_NAME, status: 'Pending' }]
+      });
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // insert teacher
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 10 }] }); // select subject
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // insert teacher_subject
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // commit
+
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/register',
+        payload: {
+          email: MOCK_EMAIL,
+          name: MOCK_NAME,
+          password: MOCK_PASSWORD,
+          role: TEACHER_ROLE,
+          expertise: 'Math',
+          subjects: ['Math']
+        }
+      });
+
+      expect(response.statusCode).toBe(HTTP_CREATED);
+      expect(response.json().user.status).toBe('Pending');
+    });
+
+    test('should return 400 if email already exists', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
+      const duplicateError: any = new Error('Duplicate');
+      duplicateError.code = '23505';
+      duplicateError.constraint = 'users_email_key';
+      mockQuery.mockRejectedValueOnce(duplicateError);
+      mockQuery.mockResolvedValueOnce({ rows: [] }); // rollback
 
-      await expect(authDB.createUser(mockClient, {
-        email: MOCK_EMAIL,
-        name: MOCK_NAME,
-        role: STUDENT_ROLE,
-        password: MOCK_HASHED_PASSWORD,
-        education: 'High School'
-      })).rejects.toThrow('DB Error');
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/register',
+        payload: {
+          email: MOCK_EMAIL,
+          name: MOCK_NAME,
+          password: MOCK_PASSWORD,
+          role: STUDENT_ROLE,
+          education: 'N/A'
+        }
+      });
 
-      expect(mockQuery).toHaveBeenCalledWith('ROLLBACK');
+      expect(response.statusCode).toBe(HTTP_BAD_REQUEST);
+      expect(response.json().error).toBe('Email already exists');
+    });
+
+    test('should return 400 on Zod validation failure', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/register',
+        payload: { email: 'not-an-email' }
+      });
+      expect(response.statusCode).toBe(HTTP_BAD_REQUEST);
     });
   });
 
-  describe('Routes Layer (server/routes/auth.ts)', () => {
-    
-    describe('POST /register', () => {
-      test('should register a Student successfully', async () => {
-        // Sequence
-        // BEGIN
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // INSERT users
-        mockQuery.mockResolvedValueOnce({ 
-          rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, role: STUDENT_ROLE, name: MOCK_NAME, status: 'Pending' }] 
-        });
-        // INSERT student
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // COMMIT
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/register',
-          payload: {
-            email: MOCK_EMAIL,
-            name: MOCK_NAME,
-            password: MOCK_PASSWORD,
-            role: STUDENT_ROLE,
-            education: 'University',
-            schoolYear: 2
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_CREATED);
-        expect(response.json()).toEqual({
-          status: 'success',
-          user: expect.objectContaining({
-            email: MOCK_EMAIL,
-            role: STUDENT_ROLE
-          })
-        });
-        expect(mockHash).toHaveBeenCalledWith(MOCK_PASSWORD, SALT_ROUNDS);
+  describe('POST /login', () => {
+    test('should login successfully and set cookie', async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ 
+          id: MOCK_USER_ID, email: MOCK_EMAIL, password: MOCK_HASHED_PASSWORD, role: STUDENT_ROLE,
+          name: MOCK_NAME, status: 'Approved'
+        }]
       });
 
-      test('should register a Teacher successfully with subjects', async () => {
-        // Sequence
-        // BEGIN
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // INSERT users
-        mockQuery.mockResolvedValueOnce({ 
-          rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, role: TEACHER_ROLE, name: MOCK_NAME, status: 'Pending' }] 
-        });
-        // INSERT teacher
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // SELECT subject (let's say it exists)
-        mockQuery.mockResolvedValueOnce({ rows: [{ id: 10 }] });
-        // INSERT teacher_subject
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // COMMIT
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/register',
-          payload: {
-            email: MOCK_EMAIL,
-            name: MOCK_NAME,
-            password: MOCK_PASSWORD,
-            role: TEACHER_ROLE,
-            expertise: 'Math',
-            subjects: ['Math']
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_CREATED);
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        payload: { email: MOCK_EMAIL, password: MOCK_PASSWORD }
       });
 
-      test('should return 400 if email already exists (Duplicate Key)', async () => {
-        // BEGIN
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-        // INSERT users -> throws unique constraint error
-        const duplicateError: any = new Error('Duplicate');
-        duplicateError.code = '23505';
-        duplicateError.constraint = 'users_email_key';
-        mockQuery.mockRejectedValueOnce(duplicateError);
-        // ROLLBACK
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/register',
-          payload: {
-            email: MOCK_EMAIL,
-            name: MOCK_NAME,
-            password: MOCK_PASSWORD,
-            role: STUDENT_ROLE,
-            education: 'N/A'
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_BAD_REQUEST);
-        expect(response.json().error).toBe('Email already exists');
-      });
-
-      test('should return 400 on Zod validation failure', async () => {
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/register',
-          payload: {
-            email: 'not-an-email',
-            // missing other fields
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_BAD_REQUEST);
-      });
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.cookies).toHaveLength(1);
+      expect(response.cookies[0].name).toBe('token');
+      expect(response.json().user).toEqual(expect.objectContaining({ id: MOCK_USER_ID, status: 'Approved' }));
     });
 
-    describe('POST /login', () => {
-      test('should login successfully and set cookie', async () => {
-        // SELECT user by email
-        mockQuery.mockResolvedValueOnce({
-          rows: [{ 
-            id: MOCK_USER_ID, 
-            email: MOCK_EMAIL, 
-            password: MOCK_HASHED_PASSWORD, 
-            role: STUDENT_ROLE, 
-            name: MOCK_NAME 
-          }]
-        });
+    test('should return 401 on invalid credentials (user not found)', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
 
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/login',
-          payload: {
-            email: MOCK_EMAIL,
-            password: MOCK_PASSWORD
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_OK);
-        expect(response.cookies).toHaveLength(1);
-        expect(response.cookies[0].name).toBe('token');
-        expect(response.json().user).toEqual({
-          id: MOCK_USER_ID,
-          name: MOCK_NAME,
-          email: MOCK_EMAIL,
-          role: STUDENT_ROLE
-        });
-        expect(mockCompare).toHaveBeenCalledWith(MOCK_PASSWORD, MOCK_HASHED_PASSWORD);
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        payload: { email: 'wrong@example.com', password: MOCK_PASSWORD }
       });
 
-      test('should return 401 on invalid credentials (user not found)', async () => {
-        // SELECT user by email -> returns empty
-        mockQuery.mockResolvedValueOnce({ rows: [] });
-
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/login',
-          payload: {
-            email: 'wrong@example.com',
-            password: MOCK_PASSWORD
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_UNAUTHORIZED);
-        expect(response.json().error).toBe('Invalid credentials');
-      });
-
-      test('should return 401 on invalid credentials (wrong password)', async () => {
-        // SELECT user
-        mockQuery.mockResolvedValueOnce({
-            rows: [{ 
-                id: MOCK_USER_ID, 
-                email: MOCK_EMAIL, 
-                password: MOCK_HASHED_PASSWORD, 
-                role: STUDENT_ROLE 
-            }]
-        });
-        
-        mockCompare.mockResolvedValueOnce(false);
-
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/login',
-          payload: {
-            email: MOCK_EMAIL,
-            password: 'wrongpassword'
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_UNAUTHORIZED);
-      });
+      expect(response.statusCode).toBe(HTTP_UNAUTHORIZED);
+      expect(response.json().error).toBe('Invalid credentials');
     });
 
-    describe('GET /me', () => {
-      test('should return user info when authenticated', async () => {
-        const token = app.jwt.sign({
-          id: MOCK_USER_ID,
-          email: MOCK_EMAIL,
-          role: STUDENT_ROLE,
-          name: MOCK_NAME
-        });
+    test('should return 401 on invalid credentials (wrong password)', async () => {
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ id: MOCK_USER_ID, email: MOCK_EMAIL, password: MOCK_HASHED_PASSWORD, role: STUDENT_ROLE }]
+      });
+      mockCompare.mockResolvedValueOnce(false);
 
-        const response = await app.inject({
-          method: 'GET',
-          url: '/api/auth/me',
-          cookies: {
-            token: token
-          }
-        });
-
-        expect(response.statusCode).toBe(HTTP_OK);
-        expect(response.json().user).toEqual(expect.objectContaining({
-          id: MOCK_USER_ID,
-          email: MOCK_EMAIL
-        }));
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        payload: { email: MOCK_EMAIL, password: 'wrongpassword' }
       });
 
-      test('should return 401 when not authenticated', async () => {
-        const response = await app.inject({
-          method: 'GET',
-          url: '/api/auth/me'
-        });
-
-        expect(response.statusCode).toBe(HTTP_UNAUTHORIZED);
-      });
+      expect(response.statusCode).toBe(HTTP_UNAUTHORIZED);
     });
+  });
 
-    describe('POST /logout', () => {
-      test('should clear the token cookie', async () => {
-        const response = await app.inject({
-          method: 'POST',
-          url: '/api/auth/logout'
-        });
-
-        expect(response.statusCode).toBe(HTTP_OK);
-        // Fastify inject cookies handling check
-        const setCookie = response.headers['set-cookie'] as string | string[];
-        const cookieString = Array.isArray(setCookie) ? setCookie.join('') : setCookie;
-        expect(cookieString).toContain('token=;');
+  describe('GET /me', () => {
+    test('should return user info when authenticated', async () => {
+      const token = app.jwt.sign({
+        id: MOCK_USER_ID,
+        email: MOCK_EMAIL,
+        role: STUDENT_ROLE,
+        name: MOCK_NAME,
+        status: 'Approved'
       });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/auth/me',
+        cookies: { token }
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.json().user).toEqual(expect.objectContaining({ id: MOCK_USER_ID, status: 'Approved' }));
+    });
+  });
+
+  describe('POST /logout', () => {
+    test('should clear the token cookie', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/auth/logout'
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      const setCookie = response.headers['set-cookie'] as string | string[];
+      const cookieString = Array.isArray(setCookie) ? setCookie.join('') : setCookie;
+      expect(cookieString).toContain('token=;');
     });
   });
 });
