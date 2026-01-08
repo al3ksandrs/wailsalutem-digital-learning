@@ -16,6 +16,7 @@ const StudentConnections: React.FC = () => {
     }
 
     interface Connection {
+        id: number;
         name: string;
         image: string;
         subjects: string[];
@@ -23,6 +24,7 @@ const StudentConnections: React.FC = () => {
 
     const students: Connection[] = [
         {
+            id: 1,
             name: "Jan Hooiberg",
             image: Jan,
             subjects: ["Natuurkunde", "Wiskunde"],

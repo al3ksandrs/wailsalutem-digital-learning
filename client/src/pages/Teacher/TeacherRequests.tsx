@@ -16,6 +16,7 @@ const TeacherRequests: React.FC = () => {
     }
 
     interface Request {
+        id: number;
         name: string,
         image: string,
         subject: string,
@@ -27,6 +28,7 @@ const TeacherRequests: React.FC = () => {
     // Mock Data
     const requests: Request[] = [
         {
+            id: 1,
             name: "Rob",
             image: Rob,
             subject: "Wiskunde",
@@ -35,6 +37,7 @@ const TeacherRequests: React.FC = () => {
             time: "13:00 - 14:00",
         },
         {
+            id: 2,
             name: "Rob",
             image: Rob,
             subject: "Scheikunde",

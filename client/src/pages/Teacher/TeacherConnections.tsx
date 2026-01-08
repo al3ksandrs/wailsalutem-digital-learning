@@ -13,12 +13,14 @@ const TeacherConnections: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Connection {
+        id: number;
         name: string;
         image: string;
     }
 
     const connections: Connection[] = [
         {
+            id: 1,
             name: "Rob",
             image: Rob,
         },
