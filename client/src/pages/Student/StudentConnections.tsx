@@ -37,7 +37,7 @@ const StudentConnections: React.FC = () => {
                 leftContent={
                     <div className="student-left-panel">
                         <div className="panel-box">
-                            <MainInfoPanel pending={3} matches={12} connections={27} />
+                            <MainInfoPanel pending={3} matches={2} connections={1} />
 
                             <WSButton
                                 label="Kalender"

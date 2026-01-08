@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ScreenLayout from '../../components/ScreenLayout';
 import MainInfoPanel from '../../components/MainInfoPanel';
 import '../../css/student-main.css';
@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 
 const StudentMainPage: React.FC = () => {
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     interface Match {
         name: string;
@@ -45,7 +44,7 @@ const StudentMainPage: React.FC = () => {
             leftContent={
                 <div className="student-left-panel">
                     <div className="panel-box">
-                        <MainInfoPanel pending={3} matches={12} connections={27} />
+                        <MainInfoPanel pending={3} matches={2} connections={1} />
 
                         <WSButton
                             label="Kalender"
