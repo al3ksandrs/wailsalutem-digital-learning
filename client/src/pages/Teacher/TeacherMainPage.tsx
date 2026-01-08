@@ -32,7 +32,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
 const TeacherMainPage: React.FC = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAvailabilitySubmitted, setNewAvailability] = useState(false);
+    const [isAvailabilitySubmitted, setIsAvailabilitySubmitted] = useState<boolean>(false);
 
     interface DayAvailability {
         active: boolean;
@@ -112,11 +112,9 @@ const TeacherMainPage: React.FC = () => {
                         {!isAvailabilitySubmitted && (
                             <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
                         )}
-                        {isAvailabilitySubmitted && (
-                            students.map((student) => (
-                                <Connection key={student.name} {...student} />
-                            ))
-                        )}
+                        {isAvailabilitySubmitted && students.map(student => (
+                            <Connection key={student.id} {...student} />
+                        ))}
 
                     </div>
 
@@ -124,7 +122,6 @@ const TeacherMainPage: React.FC = () => {
                         title="Beschikbaarheid opgeven"
                         isOpen={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
-
                     >
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="availability-section">
@@ -153,7 +150,7 @@ const TeacherMainPage: React.FC = () => {
                                     type="submit"
                                     size="normal"
                                     onClick={() => {
-                                        setNewAvailability(true);
+                                        setIsAvailabilitySubmitted(true);
                                         setIsModalOpen(false);
                                     }}
                                 />

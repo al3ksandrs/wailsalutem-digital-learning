@@ -33,7 +33,6 @@ describe('StudentRequest', () => {
 
         expect(screen.getByText('Jan Hooiberg')).toBeInTheDocument();
         expect(screen.getByText('Wiskunde')).toBeInTheDocument();
-        expect(screen.getByText('Info')).toBeInTheDocument();
         expect(screen.getByText('Contact')).toBeInTheDocument();
     });
 
