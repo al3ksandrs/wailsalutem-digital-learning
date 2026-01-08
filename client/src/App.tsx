@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import ResetPassword from './pages/ResetPassword';
 import RegisterPage from './pages/Registration/RegisterPage'
@@ -21,7 +21,12 @@ import TeacherRequests from './pages/Teacher/TeacherRequests';
 import WSButton from './components/WSButton';
 
 function PagesWithHeader() {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function logout(){
+    navigate('/')
+  }
 
   return (
     <>
@@ -39,6 +44,7 @@ function PagesWithHeader() {
               label="Uitloggen"
               type="submit"
               size="normal"
+              onClick={logout}
             />
           </div>
       </Modal>
