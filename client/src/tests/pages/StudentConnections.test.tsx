@@ -25,7 +25,11 @@ describe('StudentRequest', () => {
 
     test('renders data', () => {
 
-        render(<StudentConnections />);
+        render(
+            <MemoryRouter>
+                <StudentConnections />
+            </MemoryRouter>
+        );
 
         expect(screen.getByText('Jan Hooiberg')).toBeInTheDocument();
         expect(screen.getByText('Wiskunde')).toBeInTheDocument();

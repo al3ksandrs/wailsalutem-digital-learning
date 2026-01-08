@@ -24,8 +24,11 @@ describe('StudentRequest', () => {
     });
 
     test('renders data', () => {
-
-        render(<StudentRequests />);
+        render(
+            <MemoryRouter>
+                <StudentRequests />
+            </MemoryRouter>
+        );
 
         expect(screen.getByText('Scheikunde')).toBeInTheDocument();
         expect(screen.getByText('Wiskunde')).toBeInTheDocument();
