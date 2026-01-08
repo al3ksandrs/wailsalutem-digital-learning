@@ -6,7 +6,9 @@ import WSButton from '../../components/WSButton';
 import '../../css/authentication-screens.css';
 import Modal from '../../components/Modal';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
+import Anon from '../../assets/images/Anon.png'
 import { useNavigate } from 'react-router-dom';
+import Connection from '../../components/Connection';
 
 export type DayOfWeek =
     | "Ma"
@@ -30,6 +32,7 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
 const TeacherMainPage: React.FC = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAvailabilitySubmitted, setNewAvailability] = useState(false);
 
     interface DayAvailability {
         active: boolean;
@@ -46,6 +49,28 @@ const TeacherMainPage: React.FC = () => {
             return acc;
         }, {} as WeeklyAvailability)
     );
+
+    interface Connection {
+        id: number;
+        name: string;
+        image: string;
+        subjects: string[];
+    }
+
+    const students: Connection[] = [
+        {
+            id: 1,
+            name: "Student 1",
+            image: Anon,
+            subjects: ["Natuurkunde"],
+        },
+        {
+            id: 2,
+            name: "Student 2",
+            image: Anon,
+            subjects: ["Wiskunde"],
+        },
+    ];
 
     function toCalendar() {
         navigate('/kalender');
@@ -69,22 +94,30 @@ const TeacherMainPage: React.FC = () => {
                             onClick={toCalendar}
                         />
 
-                        <WSButton
-                            label="Beschikbaarheid"
-                            type="submit"
-                            fullWidth={true}
-                            size="normal"
-                            onClick={() => setIsModalOpen(true)}
-                        />
+                        {!isAvailabilitySubmitted && (
+                            <WSButton
+                                label="Beschikbaarheid"
+                                type="button"
+                                fullWidth={true}
+                                size="normal"
+                                onClick={() => setIsModalOpen(true)}
+                            />
+                        )}
                     </div>
                 </div>
             }
             rightContent={
                 <div className="student-page-placeholder has-text-centered">
                     <div className="container" style={{ maxWidth: 700 }}>
-                        <p>Er is nog geen beschikbaarheid opgegeven.</p>
+                        {!isAvailabilitySubmitted && (
+                            <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
+                        )}
+                        {isAvailabilitySubmitted && (
+                            students.map((student) => (
+                                <Connection key={student.name} {...student} />
+                            ))
+                        )}
 
-                        <p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p>
                     </div>
 
                     <Modal
@@ -119,6 +152,10 @@ const TeacherMainPage: React.FC = () => {
                                     label="Verstuur"
                                     type="submit"
                                     size="normal"
+                                    onClick={() => {
+                                        setNewAvailability(true);
+                                        setIsModalOpen(false);
+                                    }}
                                 />
                             </div>
 
