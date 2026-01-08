@@ -9,6 +9,18 @@ vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
 }));
 
+const { mockNavigate } = vi.hoisted(() => ({
+    mockNavigate: vi.fn(),
+}));
+
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual<any>('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+    };
+});
+
 describe('TeacherMainPage', () => {
     test('renders layout with greeting', () => {
         render(
@@ -75,5 +87,16 @@ describe('TeacherMainPage', () => {
         fireEvent.click(screen.getByText('Beschikbaarheid'));
         expect(screen.getByText('Ma')).toBeInTheDocument();
         expect(screen.getByText('Verstuur')).toBeInTheDocument();
+    });
+
+    test('navigate to calendar', () => {
+        render(
+            <MemoryRouter>
+                <TeacherMainPage />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByText('Kalender'));
+        expect(mockNavigate).toHaveBeenCalledWith('/kalender');
     });
 });
