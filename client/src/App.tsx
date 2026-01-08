@@ -18,6 +18,7 @@ import Header from './components/Header';
 import { useState } from 'react';
 import Modal from './components/Modal';
 import TeacherRequests from './pages/Teacher/TeacherRequests';
+import WSButton from './components/WSButton';
 
 function PagesWithHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,13 @@ function PagesWithHeader() {
         title="Weet je zeker dat je wilt uitloggen?"
       >
         <p>Als je uitlogt, wordt je sessie beëindigd.</p>
+          <div className="pt-5 has-text-centered">
+            <WSButton
+              label="Uitloggen"
+              type="submit"
+              size="normal"
+            />
+          </div>
       </Modal>
     </>
   );
