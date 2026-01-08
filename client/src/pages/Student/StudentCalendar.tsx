@@ -45,7 +45,7 @@ export default function Calendar() {
     };
 
     const handleEventClick = (clickInfo: EventClickArg) => {
-        if (window.confirm(`Delete event '${clickInfo.event.title}'?`)) {
+        if (globalThis.confirm(`Delete event '${clickInfo.event.title}'?`)) {
             setEvents(events.filter(event => event.id !== clickInfo.event.id));
         }
     };
