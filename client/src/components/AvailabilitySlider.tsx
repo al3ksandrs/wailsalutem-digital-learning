@@ -4,18 +4,23 @@ import '../css/availability-slider.css';
 
 interface AvailabilitySliderProps {
   day: string;
+  active: boolean;
   value?: number[];
   onChange?: (value: number[]) => void;
+  onActiveChange?: (active: boolean) => void;
 }
-
 const AvailabilitySlider: React.FC<AvailabilitySliderProps> = ({
   day,
+  active,
   value = [9, 17],
-  onChange
+  onChange,
+  onActiveChange,
 }) => {
   const [range, setRange] = useState<number[]>(value);
 
   const handleChange = (_event: Event, newValue: number | number[]) => {
+    if (!active) return;
+
     const val = newValue as number[];
     setRange(val);
     onChange?.(val);
@@ -29,8 +34,22 @@ const AvailabilitySlider: React.FC<AvailabilitySliderProps> = ({
   };
 
   return (
-    <div className="availability-slider-container">
-      <div className="day-label">{day}</div>
+    <div
+      className={`availability-slider-container ${
+        active ? "" : "is-inactive"
+      }`}
+    >
+      <div className="day-label">
+        <label className="checkbox">
+          <input
+            type="checkbox"
+            checked={active}
+            onChange={(e) => onActiveChange?.(e.target.checked)}
+          />
+          &nbsp;{day}
+        </label>
+      </div>
+
       <div className="slider-wrapper">
         <Slider
           className="availability-slider"
@@ -41,7 +60,9 @@ const AvailabilitySlider: React.FC<AvailabilitySliderProps> = ({
           min={8}
           max={20}
           step={0.25}
+          disabled={!active}
         />
+
         <div className="selected-time">
           {formatTimeLabel(range[0])} - {formatTimeLabel(range[1])}
         </div>

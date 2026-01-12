@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../components/Logo';
-import InputField from '../components/InputField';
-import WSButton from '../components/WSButton';
-import ExpandableList from '../components/ExpandableList';
-import '../css/authentication-screens.css';
+import Logo from '../../components/Logo';
+import InputField from '../../components/InputField';
+import WSButton from '../../components/WSButton';
+import ExpandableList from '../../components/ExpandableList';
+import '../../css/authentication-screens.css';
 
 interface ExpertiseItem {
     id: number;
@@ -48,11 +48,11 @@ const RegisterTeacherPart2: React.FC = () => {
 
     const handleNext = () => {
         console.log('Form Data:', expertiseList);
-        navigate('/student');
+        navigate('/register-teacher-3');
     };
 
     const handleBack = () => {
-        navigate('/');
+        navigate('/register');
     };
 
     return (
@@ -74,7 +74,7 @@ const RegisterTeacherPart2: React.FC = () => {
                             getItemKey={(item) => item.id}
                             onAdd={handleAdd}
                             onRemove={handleRemove}
-                            // we should probably adjust this to be dynamic later, based on amount of expertises to select from
+                            // todo adjust this to be dynamic, based on amount of expertises to select from
                             maxItems={10}
                             renderItem={(item, index) => (
                                 <InputField

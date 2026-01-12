@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, test, expect, vi } from 'vitest';
-import '@testing-library/jest-dom';
-import RegisterTeacherPart2 from '../../pages/RegisterTeacherPart2';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
+import RegisterTeacherPart2 from '../../pages/Registration/RegisterTeacherPart2';
 
-const { mockNavigate } = vi.hoisted(() => {
-    return { mockNavigate: vi.fn() };
-});
+// Mocks the navigation hook.
+const { mockNavigate } = vi.hoisted(() => ({
+    mockNavigate: vi.fn(),
+}));
 
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual<any>('react-router-dom');
@@ -17,54 +17,107 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('RegisterTeacherPart2', () => {
-    test('renders initial expertise items', () => {
-        render(
-            <MemoryRouter>
-                <RegisterTeacherPart2 />
-            </MemoryRouter>
-        );
-        expect(screen.getAllByDisplayValue('HBO')).toHaveLength(1);
-        expect(screen.getAllByDisplayValue('Universiteit')).toHaveLength(1);
+    beforeEach(() => {
+        vi.clearAllMocks();
+        // Spies on console.log to cover the line inside handleNext.
+        vi.spyOn(console, 'log').mockImplementation(() => {});
     });
 
-    test('adds a new expertise line', () => {
+    test('should render the initial expertise items correctly', () => {
+        // ARRANGE
         render(
             <MemoryRouter>
                 <RegisterTeacherPart2 />
             </MemoryRouter>
         );
 
-        const addButton = screen.getByLabelText('Add new item');
+        // ASSERT
+        // Checks the default state of the expertise list.
+        expect(screen.getByDisplayValue('HBO')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('Universiteit')).toBeInTheDocument();
+    });
+
+    test('should add a new expertise line when the add button is clicked', () => {
+        // ARRANGE
+        render(
+            <MemoryRouter>
+                <RegisterTeacherPart2 />
+            </MemoryRouter>
+        );
+        const addButton = screen.getByLabelText(/Add new item/i);
+
+        // ACT
         fireEvent.click(addButton);
 
+        // ASSERT
+        // Initial 2 items + 1 new = 3 selects.
         const selects = screen.getAllByRole('combobox');
-        expect(selects.length).toBe(3); 
+        expect(selects).toHaveLength(3);
     });
 
-    test('removes an expertise line', () => {
+    test('should update the value of an expertise item when changed', () => {
+        // ARRANGE
         render(
             <MemoryRouter>
                 <RegisterTeacherPart2 />
             </MemoryRouter>
         );
+        const firstSelect = screen.getByDisplayValue('HBO');
 
-        const removeButtons = screen.getAllByLabelText('Remove item');
+        // ACT
+        fireEvent.change(firstSelect, { target: { value: 'VMBO' } });
+
+        // ASSERT
+        expect(firstSelect).toHaveValue('VMBO');
+    });
+
+    test('should remove an expertise item when the remove button is clicked', () => {
+        // ARRANGE
+        render(
+            <MemoryRouter>
+                <RegisterTeacherPart2 />
+            </MemoryRouter>
+        );
+        const removeButtons = screen.getAllByLabelText(/Remove item/i);
+
+        // ACT
         fireEvent.click(removeButtons[0]);
 
+        // ASSERT
         expect(screen.queryByDisplayValue('HBO')).not.toBeInTheDocument();
         expect(screen.getByDisplayValue('Universiteit')).toBeInTheDocument();
     });
 
-    test('navigates on next', () => {
+    test('should log data and navigate to part 3 on next click', () => {
+        // ARRANGE
         render(
             <MemoryRouter>
                 <RegisterTeacherPart2 />
             </MemoryRouter>
         );
+        const nextBtn = screen.getByText(/Volgende stap/i);
 
-        const nextBtn = screen.getByText('Volgende stap');
+        // ACT
         fireEvent.click(nextBtn);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/student');
+        // ASSERT
+        expect(console.log).toHaveBeenCalledWith('Form Data:', expect.any(Array));
+        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-3');
+    });
+
+    test('should navigate back to the main register page on back click', () => {
+        // ARRANGE
+        render(
+            <MemoryRouter>
+                <RegisterTeacherPart2 />
+            </MemoryRouter>
+        );
+        const backBtn = screen.getByText(/Terug/i);
+
+        // ACT
+        fireEvent.click(backBtn);
+
+        // ASSERT
+        expect(mockNavigate).toHaveBeenCalledWith('/register');
     });
 });

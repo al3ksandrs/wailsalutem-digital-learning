@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
-import StudentMainPage from '../../pages/Student/StudentMainPage';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
+import TeacherMainPage from '../../pages/Teacher/TeacherMainPage';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
@@ -21,14 +21,14 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
-describe('StudentMainPage', () => {
+describe('TeacherMainPage', () => {
     test('renders layout with greeting', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <TeacherMainPage />
             </MemoryRouter>
         );
-        expect(screen.getByText('Goedenavond, Hendrik')).toBeInTheDocument();
+        expect(screen.getByText('Goedenavond, Jan')).toBeInTheDocument();
 
         const titles = screen.getAllByText('Voorgestelde matches');
         expect(titles.length).toBeGreaterThan(0);
@@ -38,10 +38,10 @@ describe('StudentMainPage', () => {
     test('opens logout modal when logout button is clicked', () => {
         render(
             <RoleProvider>
-                <MemoryRouter initialEntries={["/student"]}>
+                <MemoryRouter initialEntries={["/docent"]}>
                     <Routes>
                         <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                            <Route path="/docent" element={<TeacherMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -57,10 +57,10 @@ describe('StudentMainPage', () => {
     test('closes logout modal', () => {
         render(
             <RoleProvider>
-                <MemoryRouter initialEntries={["/student"]}>
+                <MemoryRouter initialEntries={["/docent"]}>
                     <Routes>
                         <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                            <Route path="/docent" element={<TeacherMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -77,10 +77,22 @@ describe('StudentMainPage', () => {
         expect(screen.queryByText('Weet je zeker dat je wilt uitloggen?')).not.toBeInTheDocument();
     });
 
+    test('opens availability modal when clicked', () => {
+        render(
+            <MemoryRouter>
+                <TeacherMainPage />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByText('Beschikbaarheid'));
+        expect(screen.getByText('Ma')).toBeInTheDocument();
+        expect(screen.getByText('Verstuur')).toBeInTheDocument();
+    });
+
     test('navigate to calendar', () => {
         render(
             <MemoryRouter>
-                <StudentMainPage />
+                <TeacherMainPage />
             </MemoryRouter>
         );
 

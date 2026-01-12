@@ -1,0 +1,36 @@
+.fc {
+  font-size: 0.85rem;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 1rem
+}
+
+.fc-timegrid-slot {
+  height: 3rem;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: #e5e7eb;
+}
+
+.fc-col-header-cell {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.fc-timegrid-axis {
+  background: #fafafa;
+}
+
+.fc-scrollgrid {
+  border: none;
+}
+
+.calendar-wrapper {
+  height: 100%;
+}
+
+.fc .fc-day-today {
+  background-color: #ffeefb !important;
+}

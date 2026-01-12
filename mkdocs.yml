@@ -8,6 +8,9 @@ nav:
   - Documentation:
     - Cooperation agreement: documentation/cooperation-agreement.md
     - Teckstack: documentation/techstack.md
+    - Retrospective:
+      - Retrospective 1: documentation/retrospective/retrospective1.md
+      - Retrospective 2: documentation/retrospective/retrospective2.md 
     - UML's:
       - Class Diagram: documentation/uml-diagram.md
       - Use Case Diagram: documentation/use-case-diagram.md

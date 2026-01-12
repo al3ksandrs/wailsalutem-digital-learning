@@ -5,10 +5,9 @@ import AvailabilitySlider from '../../components/AvailabilitySlider';
 describe('AvailabilitySlider', () => {
     test('renders day label and time range', () => {
         render(
-            <AvailabilitySlider 
-                day="Maandag" 
-                value={[9, 17]} 
-            />
+            <AvailabilitySlider
+                day="Maandag"
+                value={[9, 17]} active={false} />
         );
 
         expect(screen.getByText('Maandag')).toBeInTheDocument();
@@ -19,10 +18,9 @@ describe('AvailabilitySlider', () => {
     test('formats fractional times correctly', () => {
         // 9.5 -> 9:30
         render(
-            <AvailabilitySlider 
-                day="Dinsdag" 
-                value={[9.5, 17.25]} 
-            />
+            <AvailabilitySlider
+                day="Dinsdag"
+                value={[9.5, 17.25]} active={false} />
         );
         // 17.25 * 60 = 15 mins
         expect(screen.getByText('9:30 - 17:15')).toBeInTheDocument();
@@ -30,8 +28,14 @@ describe('AvailabilitySlider', () => {
 
     test('renders the slider element', () => {
         // we look for the slider role or class provided by MUI
-        render(<AvailabilitySlider day="Woensdag" />);
+        render(<AvailabilitySlider day="Woensdag" active={false} />);
         const sliders = screen.getAllByRole('slider');
         expect(sliders.length).toBeGreaterThan(0);
+    });
+
+    test('checkbox is checked if active', () => {
+        render(<AvailabilitySlider day="Tuesday" active={true} />);
+        const checkbox = screen.getByRole('checkbox');
+        expect(checkbox).toBeChecked();
     });
 });
