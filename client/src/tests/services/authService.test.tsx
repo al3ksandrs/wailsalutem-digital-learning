@@ -9,6 +9,10 @@ const TEST_EMAIL = 'test@example.com';
 const TEST_PASSWORD = 'password123';
 const TEACHER_ROLE = 'Teacher';
 const STUDENT_ROLE = 'Student';
+const USER_ID = 1;
+const TEACHER_ID = 2;
+const STUDENT_ID = 3;
+const UNAUTHORIZED_STATUS = 401;
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -33,7 +37,7 @@ describe('authService', () => {
     });
 
     test('useLogin performs login successfully', async () => {
-        const mockUser = { id: 1, email: TEST_EMAIL, role: Role.Student };
+        const mockUser = { id: USER_ID, email: TEST_EMAIL, role: Role.Student };
         (globalThis.fetch as any).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ user: mockUser }),
@@ -51,8 +55,23 @@ describe('authService', () => {
         }));
     });
 
+    test('useLogin handles invalid credentials', async () => {
+        const errorMessage = 'Invalid credentials';
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: false,
+            json: async () => ({ error: errorMessage }),
+        });
+
+        const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
+
+        result.current.mutate({ email: TEST_EMAIL, password: TEST_PASSWORD });
+
+        await waitFor(() => expect(result.current.isError).toBe(true));
+        expect(result.current.error).toEqual(new Error(errorMessage));
+    });
+
     test('useRegisterTeacher registers a teacher successfully', async () => {
-        const mockTeacher = { id: 2, email: TEST_EMAIL, role: Role.Teacher, status: UserStatus.Pending };
+        const mockTeacher = { id: TEACHER_ID, email: TEST_EMAIL, role: Role.Teacher, status: UserStatus.Pending };
         (globalThis.fetch as any).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ user: mockTeacher }),
@@ -79,7 +98,7 @@ describe('authService', () => {
     });
 
     test('useRegisterStudent registers a student successfully', async () => {
-        const mockStudent = { id: 3, email: TEST_EMAIL, role: Role.Student };
+        const mockStudent = { id: STUDENT_ID, email: TEST_EMAIL, role: Role.Student };
         (globalThis.fetch as any).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ user: mockStudent }),
@@ -117,7 +136,7 @@ describe('authService', () => {
     });
 
     test('useAuthSession fetches current user', async () => {
-        const mockUser = { id: 1, name: 'Session User' };
+        const mockUser = { id: USER_ID, name: 'Session User' };
         (globalThis.fetch as any).mockResolvedValueOnce({
             ok: true,
             json: async () => ({ user: mockUser }),
@@ -128,5 +147,17 @@ describe('authService', () => {
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
         expect(result.current.data).toEqual(mockUser);
         expect(globalThis.fetch).toHaveBeenCalledWith(`${API_URL}/me`, expect.objectContaining({ method: 'GET' }));
+    });
+
+    test('useAuthSession handles unauthenticated state', async () => {
+        (globalThis.fetch as any).mockResolvedValueOnce({
+            ok: false,
+            status: UNAUTHORIZED_STATUS,
+        });
+
+        const { result } = renderHook(() => useAuthSession(), { wrapper: createWrapper() });
+
+        await waitFor(() => expect(result.current.isError).toBe(true));
+        expect(result.current.error).toBeDefined();
     });
 });
