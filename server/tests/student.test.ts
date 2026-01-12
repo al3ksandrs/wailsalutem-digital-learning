@@ -18,9 +18,7 @@ const mockConnect = jest.fn<() => Promise<any>>();
 jest.unstable_mockModule('@fastify/postgres', () => ({
   default: Object.assign(
     async (fastify: any) => {
-      fastify.decorate('pg', {
-        connect: mockConnect,
-      });
+      fastify.decorate('pg', { connect: mockConnect });
     },
     { [Symbol.for('skip-override')]: true }
   )
@@ -83,7 +81,7 @@ describe('Student Module', () => {
     });
 
     test('createHelpRequest inserts and returns request', async () => {
-      const row = { id: 99, student_id: MOCK_STUDENT_ID, subject_id: MOCK_SUBJECT_ID };
+      const row = { id: 99, student_id: MOCK_STUDENT_ID, subject_id: MOCK_SUBJECT_ID, description: 'Help needed' };
       mockQuery.mockResolvedValueOnce({ rows: [row] });
 
       const result = await studentDB.createHelpRequest(mockClient, {
@@ -121,17 +119,38 @@ describe('Student Module', () => {
 
       expect(result).toBe(true);
     });
+
+    test('getMyRequests without subjectId', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      const result = await studentDB.getMyRequests(mockClient, MOCK_STUDENT_ID);
+
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.stringContaining('WHERE hr.student_id = $1'),
+        [MOCK_STUDENT_ID]
+      );
+      expect(result).toEqual([]);
+    });
+
+    test('getMyRequests with subjectId', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+
+      const result = await studentDB.getMyRequests(mockClient, MOCK_STUDENT_ID, MOCK_SUBJECT_ID);
+
+      expect(mockQuery).toHaveBeenCalledWith(
+        expect.stringContaining('AND hr.subject_id = $2'),
+        [MOCK_STUDENT_ID, MOCK_SUBJECT_ID]
+      );
+      expect(result).toEqual([]);
+    });
   });
+
 
   describe('Routes Layer (server/routes/student.ts)', () => {
     const getAuthCookie = (overrides?: any) =>
-      app.jwt.sign({
-        id: MOCK_STUDENT_ID,
-        role: 'Student',
-        status: 'Approved',
-        ...overrides,
-      });
+      app.jwt.sign({ id: MOCK_STUDENT_ID, role: 'Student', status: 'Approved', ...overrides });
 
+  
     test('GET /student/dashboard returns dashboard data', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [{ status: 'Pending', count: 3 }] });
 
@@ -158,6 +177,46 @@ describe('Student Module', () => {
       expect(response.json().length).toBe(1);
     });
 
+    test('GET /student/matches returns matches', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, teacher_id: MOCK_TEACHER_ID, teacher_name: 'Teacher One' }] });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/student/matches',
+        cookies: { token: getAuthCookie() },
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.json()[0].teacher_name).toBe('Teacher One');
+    });
+
+    test('GET /student/my-requests returns requests', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, description: 'Help needed' }] });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/student/my-requests',
+        cookies: { token: getAuthCookie() },
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.json()[0].description).toBe('Help needed');
+    });
+
+    test('GET /student/connections returns connections', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ teacher_id: MOCK_TEACHER_ID, teacher_name: 'Teacher One' }] });
+
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/student/connections',
+        cookies: { token: getAuthCookie() },
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.json()[0].teacher_name).toBe('Teacher One');
+    });
+
+    // POST / PUT / DELETE
     test('POST /student/help-requests creates request', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, description: 'Help needed' }] });
 
@@ -165,7 +224,7 @@ describe('Student Module', () => {
         method: 'POST',
         url: '/api/student/help-requests',
         cookies: { token: getAuthCookie() },
-        payload: { subjectId: MOCK_SUBJECT_ID, description: 'Help needed' },
+        payload: { subjectId: MOCK_SUBJECT_ID, description: 'Help needed', location: 'Online', startTime: '10:00', endTime: '11:00' },
       });
 
       expect(response.statusCode).toBe(HTTP_CREATED);
@@ -181,6 +240,20 @@ describe('Student Module', () => {
       });
 
       expect(response.statusCode).toBe(HTTP_BAD_REQUEST);
+    });
+
+    test('PUT /student/help-requests/:id updates request successfully', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, description: 'Updated' }] });
+
+      const response = await app.inject({
+        method: 'PUT',
+        url: '/api/student/help-requests/1',
+        cookies: { token: getAuthCookie() },
+        payload: { subjectId: MOCK_SUBJECT_ID, description: 'Updated', location: 'Online', startTime: '10:00', endTime: '11:00' },
+      });
+
+      expect(response.statusCode).toBe(HTTP_OK);
+      expect(response.json().description).toBe('Updated');
     });
 
     test('PUT /student/help-requests/:id returns 404 if not editable', async () => {
@@ -209,7 +282,19 @@ describe('Student Module', () => {
       expect(response.json().success).toBe(true);
     });
 
+    test('DELETE /student/help-requests/:id returns 404 if not found', async () => {
+      mockQuery.mockResolvedValueOnce({ rowCount: 0 });
 
+      const response = await app.inject({
+        method: 'DELETE',
+        url: '/api/student/help-requests/1',
+        cookies: { token: getAuthCookie() },
+      });
+
+      expect(response.statusCode).toBe(HTTP_NOT_FOUND);
+    });
+
+    // Auth errors
     test('GET /student/dashboard returns 401 if no token', async () => {
       const response = await app.inject({ method: 'GET', url: '/api/student/dashboard' });
       expect(response.statusCode).toBe(401);
@@ -218,14 +303,19 @@ describe('Student Module', () => {
 
     test('GET /student/dashboard returns 403 if wrong role', async () => {
       const token = getAuthCookie({ role: 'Teacher' });
-      const response = await app.inject({
-        method: 'GET',
-        url: '/api/student/dashboard',
-        cookies: { token },
-      });
-
+      const response = await app.inject({ method: 'GET', url: '/api/student/dashboard', cookies: { token } });
       expect(response.statusCode).toBe(403);
       expect(response.json().error).toContain('Forbidden');
+    });
+
+    // DB errors
+    ['dashboard', 'pending-requests', 'matches', 'connections', 'my-requests'].forEach((endpoint) => {
+      test(`GET /student/${endpoint} returns 500 on DB error`, async () => {
+        mockQuery.mockRejectedValueOnce(new Error('DB down'));
+        const response = await app.inject({ method: 'GET', url: `/api/student/${endpoint}`, cookies: { token: getAuthCookie() } });
+        expect(response.statusCode).toBe(500);
+        expect(response.json().error).toBeDefined();
+      });
     });
   });
 });
