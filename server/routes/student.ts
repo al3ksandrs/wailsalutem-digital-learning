@@ -4,6 +4,8 @@ import {
   getStudentDashboard,
   getPendingRequests,
   getMatches,
+  getConnections,
+  getMyRequests,
   createHelpRequest,
   updateHelpRequest,
   deleteHelpRequest,
@@ -28,7 +30,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Pending request
+  // Pending requests
   fastify.get('/student/pending-requests', async (request, reply) => {
     const studentId = request.user.id;
     const client = await fastify.pg.connect();
@@ -58,7 +60,40 @@ export async function studentRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Create a new help request
+  // Connections = unique teachers from accepted help requests
+  fastify.get('/student/connections', async (request, reply) => {
+    const studentId = request.user.id;
+    const client = await fastify.pg.connect();
+    try {
+      const data = await getConnections(client, studentId);
+      return reply.send(data);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch connections' });
+    } finally {
+      client.release();
+    }
+  });
+
+  // My requests
+  fastify.get('/student/my-requests', async (request, reply) => {
+    const studentId = request.user.id;
+    const subjectId = (request.query as any)?.subjectId
+      ? Number((request.query as any).subjectId)
+      : undefined;
+    const client = await fastify.pg.connect();
+    try {
+      const data = await getMyRequests(client, studentId, subjectId);
+      return reply.send(data);
+    } catch (err) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch requests' });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Create new help request
   fastify.post('/student/help-requests', async (request, reply) => {
     const studentId = request.user.id;
     const body = request.body as any;
