@@ -20,11 +20,15 @@ const LoginPage = () => {
 
   const handleToggle = (tab: 'login' | 'register') => {
     if (tab === 'register') {
-      navigate('/register-teacher-2');
+      navigate('/register');
     } else {
       setActiveTab(tab);
     }
   };
+
+  function handlePasswordReset() {
+    navigate('/resetpassword');
+  }
 
   return (
     <div className="page-wrapper bg-auth">
@@ -64,6 +68,17 @@ const LoginPage = () => {
               fullWidth={true}
               size="normal"
             />
+
+            <div className='has-text-centered'>
+              <button
+                type="button"
+                className="mt-2 link-button"
+                onClick={handlePasswordReset}
+              >
+                Wachtwoord vergeten?
+              </button>
+            </div>
+
           </form>
         </div>
       </div>
