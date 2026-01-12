@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ScreenLayout from "../../components/ScreenLayout";
-import MainInfoPanel from "../../components/MainInfoPanel";
-import WSButton from "../../components/WSButton";
-import Modal from "../../components/Modal";
-import InputField from "../../components/InputField";
-import AvailabilitySlider from "../../components/AvailabilitySlider";
-import Request from "../../components/Request"; // your request card component
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ScreenLayout from '../../components/ScreenLayout';
+import MainInfoPanel from '../../components/MainInfoPanel';
+import WSButton from '../../components/WSButton';
+import Modal from '../../components/Modal';
+import InputField from '../../components/InputField';
+import AvailabilitySlider from '../../components/AvailabilitySlider';
+import Request from '../../components/Request';
 
 export type DayOfWeek =
-    | "Ma"
-    | "Di"
-    | "Wo"
-    | "Do"
-    | "Vr"
-    | "Za"
-    | "Zo";
+  | "Ma"
+  | "Di"
+  | "Wo"
+  | "Do"
+  | "Vr"
+  | "Za"
+  | "Zo";
 
 export const DAYS_OF_WEEK: DayOfWeek[] = [
-    "Ma",
-    "Di",
-    "Wo",
-    "Do",
-    "Vr",
-    "Za",
-    "Zo",
+  "Ma",
+  "Di",
+  "Wo",
+  "Do",
+  "Vr",
+  "Za",
+  "Zo",
 ]
 
 interface RequestType {
@@ -113,7 +113,6 @@ const StudentRequests: React.FC = () => {
     }, {} as WeeklyAvailability)
   );
 
-  // Populate form when editing
   useEffect(() => {
     if (currentRequest) {
       setFormData({
@@ -122,7 +121,6 @@ const StudentRequests: React.FC = () => {
         location: currentRequest.location,
         extraInfo: currentRequest.extraInfo || "",
       });
-      // Optionally: populate availability if you save it per request
     } else {
       setFormData({ subject: "", level: "", location: "", extraInfo: "" });
       setAvailability(
@@ -146,18 +144,16 @@ const StudentRequests: React.FC = () => {
 
   const handleSubmit = () => {
     if (currentRequest) {
-      // Edit
       setRequests((prev) =>
         prev.map((r) =>
           r.id === currentRequest.id ? { ...r, ...formData } : r
         )
       );
     } else {
-      // Create
       const newRequest: RequestType = {
         id: Date.now(),
         image: "",
-        time: "12:00 - 13:00", // you can generate or select this
+        time: "12:00 - 13:00",
         ...formData,
       };
       setRequests((prev) => [...prev, newRequest]);
