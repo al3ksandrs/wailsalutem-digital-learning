@@ -75,7 +75,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // My requests, optionally filtered by subject
+  // My requests
   fastify.get('/student/my-requests', async (request, reply) => {
     const studentId = request.user.id;
     const subjectId = (request.query as any)?.subjectId
@@ -93,7 +93,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
     }
   });
 
-  // Create a new help request
+  // Create new help request
   fastify.post('/student/help-requests', async (request, reply) => {
     const studentId = request.user.id;
     const body = request.body as any;
