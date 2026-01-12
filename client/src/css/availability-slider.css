@@ -31,6 +31,15 @@
   flex: 1;
 }
 
+.availability-slider-container.is-inactive {
+  opacity: 0.5;
+}
+
+.availability-slider-container.is-inactive
+.selected-time {
+  font-style: italic;
+}
+
 .availability-slider .MuiSlider-thumb {
   width: 16px;
   height: 16px;
