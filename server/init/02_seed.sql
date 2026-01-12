@@ -1,18 +1,21 @@
--- 1. USERS
+-- 1. USERS, we use hashed passwords that are all actually 'test'
 -- ==========================================
 INSERT INTO users (id, name, email, password, role, status) VALUES 
 -- Teachers
-(1, 'test', 'test@teacher.com', 'test', 'Teacher', 'Approved'),
-(2, 'Alan Turing', 'alan@teacher.com', 'password123', 'Teacher', 'Approved'),
-(3, 'Maya de Vries', 'maya@teacher.com', 'password123', 'Teacher', 'Pending'),
+(1, 'test', 'test@teacher.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Teacher', 'Approved'),
+(2, 'Alan Turing', 'alan@teacher.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Teacher', 'Approved'),
+(3, 'Maya de Vries', 'maya@teacher.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Teacher', 'Pending'),
 
 -- Students
-(4, 'test', 'test@student.com', 'test', 'Student', 'Approved'),
-(5, 'John Pork', 'john@student.com', 'password123', 'Student', 'Approved'),
-(6, 'Nieuwe Leerling', 'nieuw@student.com', 'password123', 'Student', 'Pending'),
+(4, 'test', 'test@student.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Student', 'Approved'),
+(5, 'John Pork', 'john@student.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Student', 'Approved'),
+(6, 'Nieuwe Leerling', 'nieuw@student.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Student', 'Pending'),
 
 -- Admins
-(7, 'admin', 'admin@test.com', 'password123', 'Admin', 'Approved');
+(7, 'admin', 'admin@test.com', '$2b$10$yRFVwtXdUTtepKO8vY0CzO3y6QB.jPMPYYqyyTZZnx2QFZXKpnMZO', 'Admin', 'Approved');
+
+-- Updates id to latest value
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 -- 2. PROFILES
 -- ==========================================
@@ -49,6 +52,9 @@ INSERT INTO teacher_subject (teacher_id, subject_id) VALUES
 (1, 1), (1, 2), (1, 3),
 (2, 1), (2, 7),
 (3, 4), (3, 5), (3, 6);
+
+-- Updates id to latest value
+SELECT setval('subject_id_seq', (SELECT MAX(id) FROM subject));
 
 -- 5. AVAILABILITY
 -- ==========================================
