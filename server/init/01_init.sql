@@ -12,7 +12,8 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role roles NOT NULL,
-    status user_status DEFAULT 'Pending'
+    status user_status DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE student (
@@ -64,7 +65,8 @@ CREATE TABLE help_request (
     location TEXT,
     assignedTeacher INT REFERENCES teacher(user_id) ON DELETE SET NULL,
     startTime TIMESTAMP,
-    endTime TIMESTAMP
+    endTime TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE messages (

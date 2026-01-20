@@ -19,13 +19,13 @@ import '../../css/admin-dashboard.css';
 
 // note to jesse: mock data voor nu als het je niet meer lukt om manual matching werkend te krijgen
 const MOCK_PENDING_MATCHES = [
-  { id: 101, student: "John Doe", teacher: "Jane Smith", subject: "Mathematics", date: "2023-10-25" },
-  { id: 102, student: "Alice Johnson", teacher: "Robert Brown", subject: "Physics", date: "2023-10-26" },
+  { id: 101, student: "John Doe", teacher: "Jane Smith", subject: "Mathematics", date: "2026-01-20" },
+  { id: 102, student: "Alice Johnson", teacher: "Robert Brown", subject: "Physics", date: "2026-01-19" },
 ];
 
 const MOCK_ACCEPTED_MATCHES = [
-  { id: 201, student: "Michael Lee", teacher: "Sarah Connor", subject: "History", date: "2023-09-15" },
-  { id: 202, student: "Emily Davis", teacher: "James Wilson", subject: "Chemistry", date: "2023-09-20" },
+  { id: 201, student: "Michael Lee", teacher: "Sarah Connor", subject: "History", date: "2025-12-15" },
+  { id: 202, student: "Emily Davis", teacher: "James Wilson", subject: "Chemistry", date: "2026-01-10" },
 ];
 
 const AdminDashboard: React.FC = () => {
@@ -182,8 +182,24 @@ const AdminDashboard: React.FC = () => {
     return result;
   }, [allUsers, userSearchTerm, userSortConfig]);
 
+  // Helper to calculate percentage growth based on monthly new users
+  const getGrowthText = (total: number, newThisMonth: number) => {
+    if (!total || total === 0) return "No data";
+    if (!newThisMonth || newThisMonth === 0) return "No change this month";
+    
+    // Calculates previous month total to get accurate growth percentage
+    const previousTotal = total - newThisMonth;
+    if (previousTotal <= 0) return `+100% this month`; // grew from 0 to X
+    
+    const percentage = Math.round((newThisMonth / previousTotal) * 100);
+    return `+${percentage}% this month`;
+  };
+
 
   if (isLoadingStats || isLoadingTeachers || isLoadingUsers) return <div className="admin-loading">Loading dashboard...</div>;
+
+  // Casts stats to any to access new properties safely
+  const s = stats as any;
 
   return (
     <div className="admin-dashboard">
@@ -195,33 +211,33 @@ const AdminDashboard: React.FC = () => {
       <div className="admin-stats">
         <StatsCard 
           title="Total students" 
-          value={stats?.totalStudents || 0} 
+          value={s?.totalStudents || 0} 
           icon="👨‍🎓" 
-          trend="+12% this month"
-          trendDirection="up"
+          trend={getGrowthText(s?.totalStudents, s?.newStudentsMonth)}
+          trendDirection={s?.newStudentsMonth > 0 ? "up" : "neutral"}
         />
         <StatsCard 
           title="Total teachers" 
-          value={stats?.totalTeachers || 0} 
+          value={s?.totalTeachers || 0} 
           icon="👨‍🏫" 
-          trend="+5% this month"
-          trendDirection="up"
+          trend={getGrowthText(s?.totalTeachers, s?.newTeachersMonth)}
+          trendDirection={s?.newTeachersMonth > 0 ? "up" : "neutral"}
         />
         <StatsCard 
           title="Pending approvals" 
-          value={stats?.pendingTeachers || 0} 
+          value={s?.pendingTeachers || 0} 
           icon="⏳" 
-          color={(stats?.pendingTeachers || 0) > 0 ? 'orange' : 'blue'}
-          trend={stats?.pendingTeachers ? "(Action required)" : "All caught up"}
-          trendDirection={stats?.pendingTeachers ? "down" : "neutral"}
+          color={(s?.pendingTeachers || 0) > 0 ? 'orange' : 'blue'}
+          trend={s?.pendingTeachers ? "(Action required)" : "All caught up"}
+          trendDirection={s?.pendingTeachers ? "down" : "neutral"}
         />
         <StatsCard 
             title="Pending Matches"
-            value={stats?.pendingMatches || 0}
+            value={s?.pendingMatches || 0}
             icon="🤝"
-            color={(stats?.pendingMatches || 0) > 0 ? 'orange' : 'purple'}
-            trend={(stats?.pendingMatches || 0) > 0 ? "(Action required)" : "No new requests"}
-            trendDirection={(stats?.pendingMatches || 0) > 0 ? "down" : "neutral"}
+            color={(s?.pendingMatches || 0) > 0 ? 'orange' : 'purple'}
+            trend={s?.pendingMatches ? "(Action required)" : "No new requests"}
+            trendDirection={s?.pendingMatches ? "down" : "neutral"}
         />
       </div>
 

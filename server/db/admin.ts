@@ -81,10 +81,17 @@ export async function getDashboardStats(client: PoolClient) {
   const query = `
     SELECT
       (SELECT count(*)::int FROM users WHERE role = 'Student') as "totalStudents",
+      (SELECT count(*)::int FROM users WHERE role = 'Student' AND created_at >= NOW() - INTERVAL '30 days') as "newStudentsMonth",
+      
       (SELECT count(*)::int FROM users WHERE role = 'Teacher') as "totalTeachers",
+      (SELECT count(*)::int FROM users WHERE role = 'Teacher' AND created_at >= NOW() - INTERVAL '30 days') as "newTeachersMonth",
+      
       (SELECT count(*)::int FROM users WHERE role = 'Teacher' AND status = 'Pending') as "pendingTeachers",
+      
       (SELECT count(*)::int FROM subject) as "totalSubjects",
-      (SELECT count(*)::int FROM help_request WHERE status = 'Pending') as "pendingMatches"
+      
+      (SELECT count(*)::int FROM help_request WHERE status = 'Pending') as "pendingMatches",
+      (SELECT count(*)::int FROM help_request WHERE created_at >= NOW() - INTERVAL '30 days') as "newRequestsMonth"
   `;
   const result = await client.query(query);
   return result.rows[0];
