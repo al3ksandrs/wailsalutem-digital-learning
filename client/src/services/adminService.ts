@@ -4,6 +4,7 @@ import { type UserProfile } from '../../../common/types';
 const USERS_KEY = 'adminUsers';
 const STATS_KEY = 'adminStats';
 const PENDING_TEACHERS_KEY = 'adminPendingTeachers';
+const OPEN_REQUESTS_KEY = 'adminOpenRequests';
 
 const API_URL = 'http://localhost:3000/api/admin';
 
@@ -16,8 +17,19 @@ export interface DashboardStats {
   totalTeachers: number;
   pendingTeachers: number;
   totalSubjects: number;
+  pendingMatches: number;
 }
 
+export interface AdminHelpRequest {
+  id: number;
+  student_name: string;
+  subject_name: string;
+  description: string;
+  location?: string;
+  status: string;
+}
+
+// Fetch functions
 const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
   const query = role ? `?role=${role}` : '';
   const response = await fetch(`${API_URL}/users${query}`, {
@@ -90,6 +102,24 @@ const getPendingTeachers = async (): Promise<UserProfile[]> => {
   });
   if (!response.ok) throw new Error('Failed to fetch pending teachers');
   return response.json();
+};
+
+const getOpenHelpRequests = async (): Promise<AdminHelpRequest[]> => {
+  const response = await fetch(`${API_URL}/requests/open`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch open requests');
+  return response.json();
+};
+
+const assignTeacher = async ({ requestId, teacherId }: { requestId: number; teacherId: number }): Promise<void> => {
+  const response = await fetch(`${API_URL}/requests/${requestId}/assign`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ teacherId }),
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to assign teacher');
 };
 
 // React query hooks
@@ -165,5 +195,23 @@ export const useGetPendingTeachers = () => {
   return useQuery({
     queryKey: [PENDING_TEACHERS_KEY],
     queryFn: getPendingTeachers,
+  });
+};
+
+export const useGetOpenHelpRequests = () => {
+  return useQuery({
+    queryKey: [OPEN_REQUESTS_KEY],
+    queryFn: getOpenHelpRequests,
+  });
+};
+
+export const useAssignTeacher = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: assignTeacher,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [OPEN_REQUESTS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
+    },
   });
 };

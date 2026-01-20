@@ -83,18 +83,53 @@ export async function getDashboardStats(client: PoolClient) {
       (SELECT count(*)::int FROM users WHERE role = 'Student') as "totalStudents",
       (SELECT count(*)::int FROM users WHERE role = 'Teacher') as "totalTeachers",
       (SELECT count(*)::int FROM users WHERE role = 'Teacher' AND status = 'Pending') as "pendingTeachers",
-      (SELECT count(*)::int FROM subject) as "totalSubjects"
+      (SELECT count(*)::int FROM subject) as "totalSubjects",
+      (SELECT count(*)::int FROM help_request WHERE status = 'Pending') as "pendingMatches"
   `;
   const result = await client.query(query);
   return result.rows[0];
 }
 
 export async function getPendingTeachers(client: PoolClient) {
+  // JOIN with teacher table to get expertise, bio, etc
   const result = await client.query(
-    `SELECT id, name, email, role, status 
-     FROM users 
-     WHERE role = 'Teacher' AND status = 'Pending'
-     ORDER BY name ASC`
+    `SELECT u.id, u.name, u.email, u.role, u.status, t.expertise, t.bio, t.location
+     FROM users u
+     JOIN teacher t ON u.id = t.user_id
+     WHERE u.role = 'Teacher' AND u.status = 'Pending'
+     ORDER BY u.name ASC`
   );
   return result.rows;
+}
+
+export async function getOpenHelpRequests(client: PoolClient) {
+  // Fetches requests that are still Pending
+  const query = `
+    SELECT
+      hr.id,
+      hr.description,
+      hr.status,
+      hr.location,
+      u.name as student_name,
+      s.name as subject_name
+    FROM help_request hr
+    JOIN users u ON hr.student_id = u.id
+    LEFT JOIN subject s ON hr.subject_id = s.id
+    WHERE hr.status = 'Pending'
+    ORDER BY hr.id ASC
+  `;
+  const result = await client.query(query);
+  return result.rows;
+}
+
+export async function assignTeacherToRequest(client: PoolClient, requestId: number, teacherId: number) {
+  // Updates the assignedTeacher and sets status to Accepted
+  const result = await client.query(
+    `UPDATE help_request
+     SET "assignedTeacher" = $1, status = 'Accepted'
+     WHERE id = $2
+     RETURNING *`,
+    [teacherId, requestId]
+  );
+  return result.rows[0];
 }

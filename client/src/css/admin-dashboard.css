@@ -79,6 +79,11 @@
   border-bottom: 1px solid #eee;
 }
 
+.search-box-container {
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+}
+
 /* --- Table Styling --- */
 .admin-table {
   width: 100%;
@@ -108,6 +113,14 @@
   gap: 0.5rem;
 }
 
+.truncate-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: help;
+}
+
 .action-btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -115,6 +128,13 @@
   cursor: pointer;
   font-size: 0.875rem;
   transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn .codicon {
+    color: inherit !important;
 }
 
 .action-btn:hover {
@@ -154,8 +174,9 @@
 .role-teacher { background-color: #e8f5e9; color: #388e3c; }
 .role-admin { background-color: #f3e5f5; color: #7b1fa2; }
 
-.status-active { background-color: #d4edda; color: #155724; }
-.status-inactive { background-color: #f8d7da; color: #721c24; }
+.status-active, .status-approved { background-color: #d4edda; color: #155724; }
+.status-inactive, .status-blocked { background-color: #f8d7da; color: #721c24; }
+.status-pending { background-color: #fff3cd; color: #856404; }
 
 .admin-loading,
 .admin-error {

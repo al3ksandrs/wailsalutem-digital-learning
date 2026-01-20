@@ -9,6 +9,8 @@ import {
   updateUserStatus,
   getDashboardStats,
   getPendingTeachers,
+  getOpenHelpRequests,
+  assignTeacherToRequest,
 } from '../db/admin.ts';
 
 export async function adminRoutes(fastify: FastifyInstance) {
@@ -143,12 +145,45 @@ export async function adminRoutes(fastify: FastifyInstance) {
     const client = await fastify.pg.connect();
     try {
       const userId = Number((request.params as { id: string }).id);
-      const updated = await updateUserStatus(client, userId, 'Active'); 
+      const updated = await updateUserStatus(client, userId, 'Active');
       if (!updated) return reply.code(404).send({ error: 'Teacher not found' });
       return reply.send({ message: 'Teacher verified successfully', user: updated });
     } catch (err: any) {
       request.log.error(err);
       return reply.code(500).send({ error: 'Failed to verify teacher', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Gets open help requests
+  fastify.get('/admin/requests/open', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const requests = await getOpenHelpRequests(client);
+      return reply.send(requests);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch open requests', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Assigns teacher to request
+  fastify.post('/admin/requests/:id/assign', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const requestId = Number((request.params as { id: string }).id);
+      const { teacherId } = request.body as { teacherId: number };
+
+      const updated = await assignTeacherToRequest(client, requestId, teacherId);
+      if (!updated) return reply.code(404).send({ error: 'Request not found' });
+
+      return reply.send(updated);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to assign teacher', details: err.message });
     } finally {
       client.release();
     }

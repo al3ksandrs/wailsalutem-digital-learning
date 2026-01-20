@@ -5,7 +5,10 @@ import {
   useUpdateUserStatus,
   useGetAllUsers,
   useUpdateUser,
-  useDeleteUser
+  useDeleteUser,
+  useGetOpenHelpRequests,
+  useAssignTeacher,
+  type AdminHelpRequest
 } from '../../services/adminService';
 import { type UserProfile, UserStatus, type Teacher } from '../../../../common/types';
 import StatsCard from '../../components/StatsCard';
@@ -26,7 +29,8 @@ const MOCK_ACCEPTED_MATCHES = [
 ];
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'pending_teachers' | 'user_management' | 'pending_matches' | 'accepted_matches'>('pending_teachers');
+  const [activeTab, setActiveTab] = useState<'user_management' | 'help_requests' | 'pending_teachers' | 'pending_matches' | 'accepted_matches'>('user_management');
+
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [userSortConfig, setUserSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -39,13 +43,24 @@ const AdminDashboard: React.FC = () => {
     status: '' as UserStatus
   });
 
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [requestToAssign, setRequestToAssign] = useState<AdminHelpRequest | null>(null);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<number | ''>('');
+
   const { data: stats, isLoading: isLoadingStats } = useGetDashboardStats();
   const { data: pendingTeachers, isLoading: isLoadingTeachers } = useGetPendingTeachers();
   const { data: allUsers, isLoading: isLoadingUsers } = useGetAllUsers();
+  const { data: openRequests } = useGetOpenHelpRequests();
   
+  const { data: allTeachers } = useGetAllUsers('Teacher');
+  const availableTeachers = useMemo(() => {
+    return allTeachers?.filter(t => t.status === 'Approved') || [];
+  }, [allTeachers]);
+
   const updateUserStatusMutation = useUpdateUserStatus();
   const updateUserMutation = useUpdateUser();
   const deleteUserMutation = useDeleteUser();
+  const assignTeacherMutation = useAssignTeacher();
 
   const handleApproveTeacher = (teacherId: number) => {
     updateUserStatusMutation.mutate({ id: teacherId, status: UserStatus.Approved });
@@ -101,6 +116,27 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleAssignClick = (req: AdminHelpRequest) => {
+    setRequestToAssign(req);
+    setSelectedTeacherId('');
+    setIsAssignModalOpen(true);
+  };
+
+  const confirmAssignTeacher = () => {
+    if (requestToAssign && selectedTeacherId) {
+        assignTeacherMutation.mutate({
+            requestId: requestToAssign.id,
+            teacherId: Number(selectedTeacherId)
+        }, {
+            onSuccess: () => {
+                setIsAssignModalOpen(false);
+                setRequestToAssign(null);
+                setSelectedTeacherId('');
+            }
+        });
+    }
+  };
+
   // Sorting & filtering logic
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -132,7 +168,6 @@ const AdminDashboard: React.FC = () => {
         let aValue: any = a[userSortConfig.key as keyof UserProfile];
         let bValue: any = b[userSortConfig.key as keyof UserProfile];
 
-        // Handles nested or specific fields like 'role' which might not be on the base User interface directly in some contexts
         if (userSortConfig.key === 'role') {
             aValue = (a as any).role;
             bValue = (b as any).role;
@@ -177,31 +212,37 @@ const AdminDashboard: React.FC = () => {
           value={stats?.pendingTeachers || 0} 
           icon="⏳" 
           color={(stats?.pendingTeachers || 0) > 0 ? 'orange' : 'blue'}
-          trend={stats?.pendingTeachers ? "(Action Required)" : "All caught up"}
+          trend={stats?.pendingTeachers ? "(Action required)" : "All caught up"}
           trendDirection={stats?.pendingTeachers ? "down" : "neutral"}
         />
         <StatsCard 
             title="Pending Matches"
-            value={MOCK_PENDING_MATCHES.length || 0} 
+            value={stats?.pendingMatches || 0}
             icon="🤝"
-            color={(MOCK_PENDING_MATCHES.length || 0) > 0 ? 'orange' : 'purple'}
-            trend={(MOCK_PENDING_MATCHES.length || 0) > 0 ? "(Action Required)" : "No new requests"}
-            trendDirection={(MOCK_PENDING_MATCHES.length || 0) > 0 ? "down" : "neutral"}
+            color={(stats?.pendingMatches || 0) > 0 ? 'orange' : 'purple'}
+            trend={(stats?.pendingMatches || 0) > 0 ? "(Action required)" : "No new requests"}
+            trendDirection={(stats?.pendingMatches || 0) > 0 ? "down" : "neutral"}
         />
       </div>
 
       <div className="admin-tabs">
         <button 
-          className={`admin-tab-btn ${activeTab === 'pending_teachers' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pending_teachers')}
-        >
-          Pending teacher registrations
-        </button>
-        <button 
           className={`admin-tab-btn ${activeTab === 'user_management' ? 'active' : ''}`}
           onClick={() => setActiveTab('user_management')}
         >
           User management
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'help_requests' ? 'active' : ''}`}
+          onClick={() => setActiveTab('help_requests')}
+        >
+          Help requests
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'pending_teachers' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending_teachers')}
+        >
+          Pending teacher registrations
         </button>
         <button 
           className={`admin-tab-btn ${activeTab === 'pending_matches' ? 'active' : ''}`}
@@ -218,69 +259,20 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="admin-content">
-        
-        {/* --- Tab: Pending teachers --- */}
-        {activeTab === 'pending_teachers' && (
-          <div className="section-container">
-            <h2>Pending teacher registrations</h2>
-            {!pendingTeachers || pendingTeachers.length === 0 ? (
-              <p className="no-data">No pending approvals.</p>
-            ) : (
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Expertise</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingTeachers.map((teacher: UserProfile) => (
-                    <tr key={teacher.id}>
-                      <td>{teacher.name}</td>
-                      <td>{teacher.email}</td>
-                      <td>{(teacher as Teacher).expertise || 'N/A'}</td>
-                      <td>{teacher.createdAt ? new Date(teacher.createdAt).toLocaleDateString() : 'N/A'}</td>
-                      <td className="actions-cell">
-                        <WSButton 
-                          label="Approve"
-                          size="small"
-                          className="action-btn approve-btn"
-                          onClick={() => handleApproveTeacher(teacher.id)}
-                          disabled={updateUserStatusMutation.isPending}
-                        />
-                        <WSButton 
-                          label="Reject"
-                          size="small"
-                          className="action-btn reject-btn"
-                          onClick={() => handleRejectTeacher(teacher.id)}
-                          disabled={updateUserStatusMutation.isPending}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )}
 
-        {/* --- Tab: User management --- */}
+        {/* --- Tab: User Management --- */}
         {activeTab === 'user_management' && (
           <div className="section-container">
-            <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h2>User management</h2>
-                <div className="search-box">
-                    <input 
-                        type="text" 
-                        placeholder="Search users..." 
-                        value={userSearchTerm}
-                        onChange={(e) => setUserSearchTerm(e.target.value)}
-                        style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ddd', width: '250px' }}
-                    />
-                </div>
+            <h2>User management</h2>
+            
+            <div className="search-box-container">
+                <input 
+                    type="text" 
+                    placeholder="Search users..." 
+                    value={userSearchTerm}
+                    onChange={(e) => setUserSearchTerm(e.target.value)}
+                    style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ddd', width: '300px' }}
+                />
             </div>
             
             <table className="admin-table">
@@ -318,13 +310,15 @@ const AdminDashboard: React.FC = () => {
                     </td>
                     <td className="actions-cell">
                       <WSButton 
-                        label="Edit"
+                        icon={<span className="codicon codicon-edit"></span>}
+                        title="Edit User"
                         size="small"
                         className="action-btn edit-btn"
                         onClick={() => handleEditClick(user)}
                       />
                       <WSButton 
-                        label="Delete"
+                        icon={<span className="codicon codicon-trash"></span>}
+                        title="Delete User"
                         size="small"
                         className="action-btn delete-btn"
                         onClick={() => handleDeleteClick(user)}
@@ -341,6 +335,101 @@ const AdminDashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* --- Tab: Help requests --- */}
+        {activeTab === 'help_requests' && (
+            <div className="section-container">
+                <h2>Open help requests</h2>
+                {!openRequests || openRequests.length === 0 ? (
+                    <p className="no-data">No open help requests.</p>
+                ) : (
+                    <table className="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Description</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {openRequests.map(req => (
+                                <tr key={req.id}>
+                                    <td>{req.student_name}</td>
+                                    <td>{req.subject_name || 'N/A'}</td>
+                                    <td className="truncate-cell" title={req.description}>{req.description}</td>
+                                    <td>{req.location || 'Online'}</td>
+                                    <td className="actions-cell">
+                                        <WSButton
+                                            label="Assign teacher"
+                                            size="small"
+                                            className="action-btn approve-btn"
+                                            onClick={() => handleAssignClick(req)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        )}
+        
+        {/* --- Tab: Pending teachers --- */}
+        {activeTab === 'pending_teachers' && (
+          <div className="section-container">
+            <h2>Pending teacher registrations</h2>
+            {!pendingTeachers || pendingTeachers.length === 0 ? (
+              <p className="no-data">No pending approvals.</p>
+            ) : (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Expertise</th>
+                    <th>Bio</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingTeachers.map((teacher: UserProfile) => {
+                    const t = teacher as Teacher;
+                    return (
+                      <tr key={teacher.id}>
+                        <td>{t.name}</td>
+                        <td>{t.email}</td>
+                        <td>{t.expertise || 'N/A'}</td>
+                        <td className="truncate-cell" title={t.bio}>{t.bio || 'N/A'}</td>
+                        <td>{t.location || 'N/A'}</td>
+                        <td className="actions-cell">
+                          <WSButton 
+                            icon={<span className="codicon codicon-check"></span>}
+                            title="Approve"
+                            size="small"
+                            className="action-btn approve-btn"
+                            onClick={() => handleApproveTeacher(t.id)}
+                            disabled={updateUserStatusMutation.isPending}
+                          />
+                          <WSButton 
+                            icon={<span className="codicon codicon-close"></span>}
+                            title="Reject"
+                            size="small"
+                            className="action-btn reject-btn"
+                            onClick={() => handleRejectTeacher(t.id)}
+                            disabled={updateUserStatusMutation.isPending}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
         )}
 
@@ -366,8 +455,18 @@ const AdminDashboard: React.FC = () => {
                     <td>{match.subject}</td>
                     <td>{match.date}</td>
                     <td className="actions-cell">
-                      <WSButton label="Approve" size="small" className="action-btn approve-btn" />
-                      <WSButton label="Reject" size="small" className="action-btn reject-btn" />
+                      <WSButton 
+                        icon={<span className="codicon codicon-check"></span>}
+                        title="Approve Match"
+                        size="small" 
+                        className="action-btn approve-btn" 
+                      />
+                      <WSButton 
+                        icon={<span className="codicon codicon-close"></span>}
+                        title="Reject Match"
+                        size="small" 
+                        className="action-btn reject-btn" 
+                      />
                     </td>
                   </tr>
                 ))}
@@ -491,6 +590,47 @@ const AdminDashboard: React.FC = () => {
             />
           </div>
         </form>
+      </Modal>
+
+      {/* --- Assign teacher modal --- */}
+      <Modal
+          isOpen={isAssignModalOpen}
+          onClose={() => setIsAssignModalOpen(false)}
+          title="Assign Teacher"
+      >
+          <div style={{ padding: '1rem 0', minWidth: '350px' }}>
+              <p>Assign a teacher to <strong>{requestToAssign?.student_name}</strong>'s request for <strong>{requestToAssign?.subject_name}</strong>.</p>
+              
+              <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                  <label htmlFor="teacher-select" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Select Teacher</label>
+                  <select
+                      id="teacher-select"
+                      value={selectedTeacherId}
+                      onChange={(e) => setSelectedTeacherId(Number(e.target.value))}
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: '6px', border: '1px solid #ddd', fontSize: '1rem' }}
+                  >
+                      <option value="">-- Choose a teacher --</option>
+                      {availableTeachers.map(t => (
+                          <option key={t.id} value={t.id}>
+                              {t.name} ({t.email})
+                          </option>
+                      ))}
+                  </select>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'flex-end' }}>
+                  <WSButton 
+                      label="Cancel" 
+                      onClick={() => setIsAssignModalOpen(false)} 
+                  />
+                  <WSButton 
+                      label="Confirm Assignment" 
+                      className="approve-btn"
+                      onClick={confirmAssignTeacher}
+                      disabled={assignTeacherMutation.isPending || !selectedTeacherId}
+                  />
+              </div>
+          </div>
       </Modal>
 
     </div>
