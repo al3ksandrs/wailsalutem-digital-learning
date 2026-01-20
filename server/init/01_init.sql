@@ -62,7 +62,7 @@ CREATE TABLE help_request (
     description TEXT,
     status request_status DEFAULT 'Pending',
     location TEXT,
-    assignedTeacher INT REFERENCES teacher(user_id),
+    assignedTeacher INT REFERENCES teacher(user_id) ON DELETE SET NULL,
     startTime TIMESTAMP,
     endTime TIMESTAMP
 );

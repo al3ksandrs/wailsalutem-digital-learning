@@ -2,11 +2,21 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { type UserProfile } from '../../../common/types';
 
 const USERS_KEY = 'adminUsers';
+const STATS_KEY = 'adminStats';
+const PENDING_TEACHERS_KEY = 'adminPendingTeachers';
+
 const API_URL = 'http://localhost:3000/api/admin';
 
 type CreateUserParams = Omit<UserProfile, 'id'> & { password: string };
 type UpdateUserParams = { id: number; data: Partial<UserProfile> & { status?: string } };
 type UpdateStatusParams = { id: number; status: string };
+
+export interface DashboardStats {
+  totalStudents: number;
+  totalTeachers: number;
+  pendingTeachers: number;
+  totalSubjects: number;
+}
 
 const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
   const query = role ? `?role=${role}` : '';
@@ -66,6 +76,22 @@ const updateUserStatus = async ({ id, status }: UpdateStatusParams): Promise<Use
   return response.json();
 };
 
+const getDashboardStats = async (): Promise<DashboardStats> => {
+  const response = await fetch(`${API_URL}/stats`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch dashboard stats');
+  return response.json();
+};
+
+const getPendingTeachers = async (): Promise<UserProfile[]> => {
+  const response = await fetch(`${API_URL}/teachers/pending`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch pending teachers');
+  return response.json();
+};
+
 // React query hooks
 export const useGetAllUsers = (role?: string) => {
   return useQuery({
@@ -88,6 +114,7 @@ export const useCreateUser = () => {
     mutationFn: createUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
     },
   });
 };
@@ -109,6 +136,7 @@ export const useDeleteUser = () => {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
     },
   });
 };
@@ -120,6 +148,22 @@ export const useUpdateUserStatus = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
       queryClient.setQueryData([USERS_KEY, data.id], data);
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [PENDING_TEACHERS_KEY] });
     },
+  });
+};
+
+export const useGetDashboardStats = () => {
+  return useQuery({
+    queryKey: [STATS_KEY],
+    queryFn: getDashboardStats,
+  });
+};
+
+export const useGetPendingTeachers = () => {
+  return useQuery({
+    queryKey: [PENDING_TEACHERS_KEY],
+    queryFn: getPendingTeachers,
   });
 };

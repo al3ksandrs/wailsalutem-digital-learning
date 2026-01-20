@@ -19,6 +19,7 @@ import { useState } from 'react';
 import Modal from './components/Modal';
 import TeacherRequests from './pages/Teacher/TeacherRequests';
 import WSButton from './components/WSButton';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 
 function PagesWithHeader() {
   const navigate = useNavigate();
@@ -66,6 +67,8 @@ function App() {
       <Route path="/register-teacher-3" element={<RegisterTeacherPart3 />} />
       <Route path="/register-teacher-4" element={<RegisterTeacherPart4 />} />
       <Route path="/register-teacher-waiting" element={<RegisterTeacherWaiting />} />
+
+      <Route path="/admin" element={<AdminDashboard />} />
 
       <Route element={<PagesWithHeader />}>
         <Route path="/student" element={<StudentMainPage />} />

@@ -1,0 +1,500 @@
+import React, { useState, useMemo } from 'react';
+import { 
+  useGetDashboardStats, 
+  useGetPendingTeachers, 
+  useUpdateUserStatus,
+  useGetAllUsers,
+  useUpdateUser,
+  useDeleteUser
+} from '../../services/adminService';
+import { type UserProfile, UserStatus, type Teacher } from '../../../../common/types';
+import StatsCard from '../../components/StatsCard';
+import WSButton from '../../components/WSButton';
+import Modal from '../../components/Modal';
+import LogoutButton from '../../components/LogoutButton';
+import '../../css/admin-dashboard.css';
+
+// note to jesse: mock data voor nu als het je niet meer lukt om manual matching werkend te krijgen
+const MOCK_PENDING_MATCHES = [
+  { id: 101, student: "John Doe", teacher: "Jane Smith", subject: "Mathematics", date: "2023-10-25" },
+  { id: 102, student: "Alice Johnson", teacher: "Robert Brown", subject: "Physics", date: "2023-10-26" },
+];
+
+const MOCK_ACCEPTED_MATCHES = [
+  { id: 201, student: "Michael Lee", teacher: "Sarah Connor", subject: "History", date: "2023-09-15" },
+  { id: 202, student: "Emily Davis", teacher: "James Wilson", subject: "Chemistry", date: "2023-09-20" },
+];
+
+const AdminDashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'pending_teachers' | 'user_management' | 'pending_matches' | 'accepted_matches'>('pending_teachers');
+  const [userSearchTerm, setUserSearchTerm] = useState('');
+  const [userSortConfig, setUserSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<UserProfile | null>(null);
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+    status: '' as UserStatus
+  });
+
+  const { data: stats, isLoading: isLoadingStats } = useGetDashboardStats();
+  const { data: pendingTeachers, isLoading: isLoadingTeachers } = useGetPendingTeachers();
+  const { data: allUsers, isLoading: isLoadingUsers } = useGetAllUsers();
+  
+  const updateUserStatusMutation = useUpdateUserStatus();
+  const updateUserMutation = useUpdateUser();
+  const deleteUserMutation = useDeleteUser();
+
+  const handleApproveTeacher = (teacherId: number) => {
+    updateUserStatusMutation.mutate({ id: teacherId, status: UserStatus.Approved });
+  };
+
+  const handleRejectTeacher = (teacherId: number) => {
+    if (!confirm('Are you sure you want to reject this teacher?')) return;
+    updateUserStatusMutation.mutate({ id: teacherId, status: UserStatus.Blocked }); 
+  };
+
+  const handleEditClick = (user: UserProfile) => {
+    setUserToEdit(user);
+    setEditFormData({
+      name: user.name,
+      email: user.email,
+      status: user.status
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteClick = (user: UserProfile) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDeleteUser = () => {
+    if (userToDelete) {
+      deleteUserMutation.mutate(userToDelete.id, {
+        onSuccess: () => {
+          setIsDeleteModalOpen(false);
+          setUserToDelete(null);
+        }
+      });
+    }
+  };
+
+  const submitEditUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userToEdit) {
+      updateUserMutation.mutate({
+        id: userToEdit.id,
+        data: {
+          name: editFormData.name,
+          email: editFormData.email,
+          status: editFormData.status
+        }
+      }, {
+        onSuccess: () => {
+          setIsEditModalOpen(false);
+          setUserToEdit(null);
+        }
+      });
+    }
+  };
+
+  // Sorting & filtering logic
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (userSortConfig?.key === key && userSortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setUserSortConfig({ key, direction });
+  };
+
+  const filteredAndSortedUsers = useMemo(() => {
+    if (!allUsers) return [];
+    
+    let result = [...allUsers];
+
+    // Filter
+    if (userSearchTerm) {
+      const lowerTerm = userSearchTerm.toLowerCase();
+      result = result.filter(user => 
+        user.name.toLowerCase().includes(lowerTerm) ||
+        user.email.toLowerCase().includes(lowerTerm) ||
+        (user as any).role?.toLowerCase().includes(lowerTerm) ||
+        user.status.toLowerCase().includes(lowerTerm)
+      );
+    }
+
+    // Sort
+    if (userSortConfig) {
+      result.sort((a, b) => {
+        let aValue: any = a[userSortConfig.key as keyof UserProfile];
+        let bValue: any = b[userSortConfig.key as keyof UserProfile];
+
+        // Handles nested or specific fields like 'role' which might not be on the base User interface directly in some contexts
+        if (userSortConfig.key === 'role') {
+            aValue = (a as any).role;
+            bValue = (b as any).role;
+        }
+
+        if (aValue < bValue) return userSortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return userSortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return result;
+  }, [allUsers, userSearchTerm, userSortConfig]);
+
+
+  if (isLoadingStats || isLoadingTeachers || isLoadingUsers) return <div className="admin-loading">Loading dashboard...</div>;
+
+  return (
+    <div className="admin-dashboard">
+      <div className="admin-header">
+        <h1>Admin Dashboard</h1>
+        <LogoutButton />
+      </div>
+
+      <div className="admin-stats">
+        <StatsCard 
+          title="Total students" 
+          value={stats?.totalStudents || 0} 
+          icon="👨‍🎓" 
+          trend="+12% this month"
+          trendDirection="up"
+        />
+        <StatsCard 
+          title="Total teachers" 
+          value={stats?.totalTeachers || 0} 
+          icon="👨‍🏫" 
+          trend="+5% this month"
+          trendDirection="up"
+        />
+        <StatsCard 
+          title="Pending approvals" 
+          value={stats?.pendingTeachers || 0} 
+          icon="⏳" 
+          color={(stats?.pendingTeachers || 0) > 0 ? 'orange' : 'blue'}
+          trend={stats?.pendingTeachers ? "(Action Required)" : "All caught up"}
+          trendDirection={stats?.pendingTeachers ? "down" : "neutral"}
+        />
+        <StatsCard 
+            title="Pending Matches"
+            value={MOCK_PENDING_MATCHES.length || 0} 
+            icon="🤝"
+            color={(MOCK_PENDING_MATCHES.length || 0) > 0 ? 'orange' : 'purple'}
+            trend={(MOCK_PENDING_MATCHES.length || 0) > 0 ? "(Action Required)" : "No new requests"}
+            trendDirection={(MOCK_PENDING_MATCHES.length || 0) > 0 ? "down" : "neutral"}
+        />
+      </div>
+
+      <div className="admin-tabs">
+        <button 
+          className={`admin-tab-btn ${activeTab === 'pending_teachers' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending_teachers')}
+        >
+          Pending teacher registrations
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'user_management' ? 'active' : ''}`}
+          onClick={() => setActiveTab('user_management')}
+        >
+          User management
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'pending_matches' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending_matches')}
+        >
+          Pending matches
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'accepted_matches' ? 'active' : ''}`}
+          onClick={() => setActiveTab('accepted_matches')}
+        >
+          Accepted matches
+        </button>
+      </div>
+
+      <div className="admin-content">
+        
+        {/* --- Tab: Pending teachers --- */}
+        {activeTab === 'pending_teachers' && (
+          <div className="section-container">
+            <h2>Pending teacher registrations</h2>
+            {!pendingTeachers || pendingTeachers.length === 0 ? (
+              <p className="no-data">No pending approvals.</p>
+            ) : (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Expertise</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingTeachers.map((teacher: UserProfile) => (
+                    <tr key={teacher.id}>
+                      <td>{teacher.name}</td>
+                      <td>{teacher.email}</td>
+                      <td>{(teacher as Teacher).expertise || 'N/A'}</td>
+                      <td>{teacher.createdAt ? new Date(teacher.createdAt).toLocaleDateString() : 'N/A'}</td>
+                      <td className="actions-cell">
+                        <WSButton 
+                          label="Approve"
+                          size="small"
+                          className="action-btn approve-btn"
+                          onClick={() => handleApproveTeacher(teacher.id)}
+                          disabled={updateUserStatusMutation.isPending}
+                        />
+                        <WSButton 
+                          label="Reject"
+                          size="small"
+                          className="action-btn reject-btn"
+                          onClick={() => handleRejectTeacher(teacher.id)}
+                          disabled={updateUserStatusMutation.isPending}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
+        {/* --- Tab: User management --- */}
+        {activeTab === 'user_management' && (
+          <div className="section-container">
+            <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h2>User management</h2>
+                <div className="search-box">
+                    <input 
+                        type="text" 
+                        placeholder="Search users..." 
+                        value={userSearchTerm}
+                        onChange={(e) => setUserSearchTerm(e.target.value)}
+                        style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ddd', width: '250px' }}
+                    />
+                </div>
+            </div>
+            
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
+                    Name {userSortConfig?.key === 'name' && (userSortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th onClick={() => handleSort('email')} style={{ cursor: 'pointer' }}>
+                    Email {userSortConfig?.key === 'email' && (userSortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th onClick={() => handleSort('role')} style={{ cursor: 'pointer' }}>
+                    Role {userSortConfig?.key === 'role' && (userSortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th onClick={() => handleSort('status')} style={{ cursor: 'pointer' }}>
+                    Status {userSortConfig?.key === 'status' && (userSortConfig.direction === 'asc' ? '↑' : '↓')}
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAndSortedUsers.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <span className={`role-badge role-${(user as any).role?.toLowerCase() || 'student'}`}>
+                        {(user as any).role || 'Unknown'}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge status-${user.status.toLowerCase()}`}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className="actions-cell">
+                      <WSButton 
+                        label="Edit"
+                        size="small"
+                        className="action-btn edit-btn"
+                        onClick={() => handleEditClick(user)}
+                      />
+                      <WSButton 
+                        label="Delete"
+                        size="small"
+                        className="action-btn delete-btn"
+                        onClick={() => handleDeleteClick(user)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+                {filteredAndSortedUsers.length === 0 && (
+                    <tr>
+                        <td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                            No users found matching "{userSearchTerm}"
+                        </td>
+                    </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* --- Tab: Pending matches --- */}
+        {activeTab === 'pending_matches' && (
+          <div className="section-container">
+            <h2>Pending matches</h2>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Teacher</th>
+                  <th>Subject</th>
+                  <th>Requested Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MOCK_PENDING_MATCHES.map(match => (
+                  <tr key={match.id}>
+                    <td>{match.student}</td>
+                    <td>{match.teacher}</td>
+                    <td>{match.subject}</td>
+                    <td>{match.date}</td>
+                    <td className="actions-cell">
+                      <WSButton label="Approve" size="small" className="action-btn approve-btn" />
+                      <WSButton label="Reject" size="small" className="action-btn reject-btn" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* --- Tab: Accepted matches --- */}
+        {activeTab === 'accepted_matches' && (
+          <div className="section-container">
+            <h2>Accepted matches</h2>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Teacher</th>
+                  <th>Subject</th>
+                  <th>Date Accepted</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MOCK_ACCEPTED_MATCHES.map(match => (
+                  <tr key={match.id}>
+                    <td>{match.student}</td>
+                    <td>{match.teacher}</td>
+                    <td>{match.subject}</td>
+                    <td>{match.date}</td>
+                    <td><span className="status-badge status-active">Active</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* --- Delete confirmation modal --- */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Confirm User Deletion"
+      >
+        <div style={{ padding: '1rem 0' }}>
+          <p>Are you sure you want to delete user <strong>{userToDelete?.name}</strong>?</p>
+          <p style={{ fontSize: '0.9rem', color: '#dc3545', marginTop: '0.5rem' }}>
+            This action cannot be undone.
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', justifyContent: 'flex-end' }}>
+            <WSButton 
+              label="Cancel" 
+              onClick={() => setIsDeleteModalOpen(false)} 
+            />
+            <WSButton 
+              label="Delete" 
+              className="delete-btn" 
+              onClick={confirmDeleteUser}
+              disabled={deleteUserMutation.isPending}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* --- Edit user modal --- */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit User"
+      >
+        <form onSubmit={submitEditUser} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '300px' }}>
+          <div className="form-group">
+            <label htmlFor="edit-name" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Name</label>
+            <input 
+              id="edit-name"
+              type="text" 
+              value={editFormData.name} 
+              onChange={e => setEditFormData({...editFormData, name: e.target.value})}
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ddd' }}
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="edit-email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Email</label>
+            <input 
+              id="edit-email"
+              type="email" 
+              value={editFormData.email} 
+              onChange={e => setEditFormData({...editFormData, email: e.target.value})}
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ddd' }}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="edit-status" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Status</label>
+            <select 
+              id="edit-status"
+              value={editFormData.status}
+              onChange={e => setEditFormData({...editFormData, status: e.target.value as UserStatus})}
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              <option value={UserStatus.Approved}>Approved</option>
+              <option value={UserStatus.Pending}>Pending</option>
+              <option value={UserStatus.Blocked}>Blocked</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
+            <WSButton 
+              label="Cancel" 
+              type="button"
+              onClick={() => setIsEditModalOpen(false)} 
+            />
+            <WSButton 
+              label="Save Changes" 
+              type="submit"
+              className="approve-btn"
+              disabled={updateUserMutation.isPending}
+            />
+          </div>
+        </form>
+      </Modal>
+
+    </div>
+  );
+};
+
+export default AdminDashboard;

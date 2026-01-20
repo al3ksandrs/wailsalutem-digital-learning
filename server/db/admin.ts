@@ -76,3 +76,25 @@ export async function updateUserStatus(client: PoolClient, userId: number, statu
   );
   return result.rows[0] ?? null;
 }
+
+export async function getDashboardStats(client: PoolClient) {
+  const query = `
+    SELECT
+      (SELECT count(*)::int FROM users WHERE role = 'Student') as "totalStudents",
+      (SELECT count(*)::int FROM users WHERE role = 'Teacher') as "totalTeachers",
+      (SELECT count(*)::int FROM users WHERE role = 'Teacher' AND status = 'Pending') as "pendingTeachers",
+      (SELECT count(*)::int FROM subject) as "totalSubjects"
+  `;
+  const result = await client.query(query);
+  return result.rows[0];
+}
+
+export async function getPendingTeachers(client: PoolClient) {
+  const result = await client.query(
+    `SELECT id, name, email, role, status 
+     FROM users 
+     WHERE role = 'Teacher' AND status = 'Pending'
+     ORDER BY name ASC`
+  );
+  return result.rows;
+}
