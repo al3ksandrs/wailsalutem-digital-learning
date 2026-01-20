@@ -126,7 +126,7 @@ export async function assignTeacherToRequest(client: PoolClient, requestId: numb
   // Updates the assignedTeacher and sets status to Accepted
   const result = await client.query(
     `UPDATE help_request
-     SET "assignedTeacher" = $1, status = 'Accepted'
+     SET assignedTeacher = $1, status = 'Accepted'
      WHERE id = $2
      RETURNING *`,
     [teacherId, requestId]
