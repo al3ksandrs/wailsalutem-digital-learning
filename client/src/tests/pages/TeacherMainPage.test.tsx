@@ -46,7 +46,6 @@ vi.mock('../../components/MatchCard', () => ({
 }));
 
 describe('TeacherMainPage', () => {
-    const mockNavigate = vi.fn();
 
     it('renders main layout and panels', () => {
         render(<TeacherMainPage />, { wrapper: MemoryRouter });
