@@ -1,0 +1,125 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { type UserProfile } from '../../../common/types';
+
+const USERS_KEY = 'adminUsers';
+const API_URL = 'http://localhost:3000/api/admin';
+
+type CreateUserParams = Omit<UserProfile, 'id'> & { password: string };
+type UpdateUserParams = { id: number; data: Partial<UserProfile> & { status?: string } };
+type UpdateStatusParams = { id: number; status: string };
+
+const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
+  const query = role ? `?role=${role}` : '';
+  const response = await fetch(`${API_URL}/users${query}`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch users');
+  return response.json();
+};
+
+const getUserById = async (id: number): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch user');
+  return response.json();
+};
+
+const createUser = async (user: CreateUserParams): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/users`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user),
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to create user');
+  return response.json();
+};
+
+const updateUser = async ({ id, data }: UpdateUserParams): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to update user');
+  return response.json();
+};
+
+const deleteUser = async (id: number): Promise<void> => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to delete user');
+};
+
+const updateUserStatus = async ({ id, status }: UpdateStatusParams): Promise<UserProfile> => {
+  const response = await fetch(`${API_URL}/users/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to update status');
+  return response.json();
+};
+
+// React query hooks
+export const useGetAllUsers = (role?: string) => {
+  return useQuery({
+    queryKey: [USERS_KEY, role],
+    queryFn: () => getAllUsers(role),
+  });
+};
+
+export const useGetUserById = (id: number) => {
+  return useQuery({
+    queryKey: [USERS_KEY, id],
+    queryFn: () => getUserById(id),
+    enabled: !!id,
+  });
+};
+
+export const useCreateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+    },
+  });
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateUser,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+      queryClient.setQueryData([USERS_KEY, data.id], data);
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+    },
+  });
+};
+
+export const useUpdateUserStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateUserStatus,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [USERS_KEY] });
+      queryClient.setQueryData([USERS_KEY, data.id], data);
+    },
+  });
+};
