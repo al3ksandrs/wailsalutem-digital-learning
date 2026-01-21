@@ -3,6 +3,7 @@ import Logo from '../components/Logo';
 import InputField from '../components/InputField';
 import WSButton from '../components/WSButton';
 import '../css/authentication-screens.css';
+import { Link } from 'react-router-dom';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -32,7 +33,11 @@ const ForgotPasswordPage = () => {
               fullWidth={true}
               size="normal"
             />
-            
+
+            <div className='has-text-centered mt-4' >
+              <Link to={"/"}>Terug naar login</Link>
+            </div>
+
           </form>
         </div>
       </div>

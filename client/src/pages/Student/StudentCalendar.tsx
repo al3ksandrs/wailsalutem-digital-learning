@@ -1,14 +1,14 @@
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import nlLocale from "@fullcalendar/core/locales/nl";
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import nlLocale from '@fullcalendar/core/locales/nl';
 import '../../css/calendar.css';
-import { useState } from "react";
-import type { DateSelectArg, EventClickArg } from "@fullcalendar/core/index.js";
-import Modal from "../../components/Modal";
-import InputField from "../../components/InputField";
-import WSButton from "../../components/WSButton";
+import { useState } from 'react';
+import type { DateSelectArg, EventClickArg } from '@fullcalendar/core/index.js';
+import Modal from '../../components/Modal';
+import InputField from '../../components/InputField';
+import WSButton from '../../components/WSButton';
 
 interface CalendarEvent {
     id: string;
@@ -102,4 +102,3 @@ export default function Calendar() {
         </>
     );
 }
-

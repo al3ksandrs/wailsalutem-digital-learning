@@ -88,7 +88,7 @@ function App() {
         <Route path="/kalender" element={<StudentCalendar />} />
         <Route path="/docent" element={<TeacherMainPage />} />
         <Route path="/studentverzoeken" element={<TeacherRequests />} />
-        <Route path="/mijnstudenten" element={<TeacherConnections />} /> 
+        <Route path="/mijnstudenten" element={<TeacherConnections />} />
       </Route>
     </Routes>
   );

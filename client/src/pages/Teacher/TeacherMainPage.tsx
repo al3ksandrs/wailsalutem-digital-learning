@@ -8,7 +8,7 @@ import Modal from '../../components/Modal';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
 import Anon from '../../assets/images/anon.png'
 import { useNavigate } from 'react-router-dom';
-import Connection from '../../components/Connection';
+import MatchCard from '../../components/MatchCard';
 
 export type DayOfWeek =
     | "Ma"
@@ -50,22 +50,19 @@ const TeacherMainPage: React.FC = () => {
         }, {} as WeeklyAvailability)
     );
 
-    interface Connection {
-        id: number;
+    interface Match {
         name: string;
         image: string;
         subjects: string[];
     }
 
-    const students: Connection[] = [
+    const students: Match[] = [
         {
-            id: 1,
             name: "Student 1",
             image: Anon,
             subjects: ["Natuurkunde"],
         },
         {
-            id: 2,
             name: "Student 2",
             image: Anon,
             subjects: ["Wiskunde"],
@@ -107,13 +104,13 @@ const TeacherMainPage: React.FC = () => {
                 </div>
             }
             rightContent={
-                <div className="student-page-placeholder has-text-centered">
-                    <div className="container" style={{ maxWidth: 700 }}>
+                <>
+                    <div className="panel-box" style={{ maxWidth: 700 }}>
                         {!isAvailabilitySubmitted && (
                             <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
                         )}
                         {isAvailabilitySubmitted && students.map(student => (
-                            <Connection key={student.id} {...student} />
+                            <MatchCard key={student.name} {...student} />
                         ))}
 
                     </div>
@@ -131,19 +128,14 @@ const TeacherMainPage: React.FC = () => {
                                         key={day}
                                         active={availability[day].active}
                                         value={availability[day].range}
-                                        onChange={(range) =>
-                                            setAvailability((prev) => ({
-                                                ...prev,
-                                                [day]: { ...prev[day], range },
-                                            }))
-                                        }
-                                        onActiveChange={(active) =>
-                                            setAvailability((prev) => ({
-                                                ...prev,
-                                                [day]: { ...prev[day], active },
-                                            }))
-                                        }
-                                    />
+                                        onChange={(range) => setAvailability((prev) => ({
+                                            ...prev,
+                                            [day]: { ...prev[day], range },
+                                        }))}
+                                        onActiveChange={(active) => setAvailability((prev) => ({
+                                            ...prev,
+                                            [day]: { ...prev[day], active },
+                                        }))} />
                                 ))}
                                 <WSButton
                                     label="Verstuur"
@@ -152,13 +144,11 @@ const TeacherMainPage: React.FC = () => {
                                     onClick={() => {
                                         setIsAvailabilitySubmitted(true);
                                         setIsModalOpen(false);
-                                    }}
-                                />
+                                    }} />
                             </div>
 
                         </form>
-                    </Modal>
-                </div>
+                    </Modal></>
             }
 
         />

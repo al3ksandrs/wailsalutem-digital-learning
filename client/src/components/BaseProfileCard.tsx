@@ -1,4 +1,5 @@
 import WSButton from "./WSButton";
+import '../css/baseprofilecard.css';
 
 interface BaseProfileCardProps {
   id: number;
@@ -33,7 +34,7 @@ const BaseProfileCard: React.FC<BaseProfileCardProps> = ({
           </div>
 
           <div className="column">
-            <p className="has-text-weight-semibold is-size-5 has-text-black">
+            <p className="has-text-weight-semibold is-size-5 has-text-black mb-2">
               {name}
             </p>
             <p className="is-size-6 has-text-grey-dark">
@@ -69,33 +70,43 @@ const BaseProfileCard: React.FC<BaseProfileCardProps> = ({
     )
   }
   return (
-    <div className="box" style={{ background: "#f5f5f5" }}>
-      <div className="level is-mobile">
-        <div className="level-left">
-          <figure className="image is-64x64 mr-4">
+    <div className="box" style={{ background: "#f5f5f5", borderRadius: "12px" }}>
+      <div className="columns is-vcentered is-mobile is-multiline">
+
+        <div className="column is-narrow">
+          <figure className="image is-64x64">
             <img src={image} alt={name} />
           </figure>
+        </div>
 
-          <div>
-            <p className="has-text-black">{name}</p>
+        <div className="column">
+          <p className="has-text-black has-text-weight-semibold">
+            {name}
+          </p>
 
-            <div className="tags mt-2">
-              {subjects.map((subject) => (
-                <span
-                  key={subject}
-                  className="tag has-text-black has-background-white"
-                >
-                  {subject}
-                </span>
-              ))}
-            </div>
+          <div className="tags mt-2">
+            {subjects.map(subject => (
+              <span
+                key={subject}
+                className="tag has-text-black has-background-white"
+              >
+                {subject}
+              </span>
+            ))}
           </div>
         </div>
 
-        {children && <div className="level-right">{children}</div>}
+        {children && (
+          <div className="column is-12-mobile is-narrow-tablet">
+            <div className="is-fullwidth-mobile">
+              {children}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
+
 };
 
 export default BaseProfileCard;

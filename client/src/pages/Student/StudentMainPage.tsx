@@ -57,12 +57,10 @@ const StudentMainPage: React.FC = () => {
                 </div>
             }
             rightContent={
-                <div className="student-page-placeholder">
-                    <div className="container" style={{ maxWidth: 700 }}>
-                        {matches.map((match) => (
-                            <MatchCard key={match.name} {...match} />
-                        ))}
-                    </div>
+                <div className="panel-box" style={{ maxWidth: 700 }}>
+                    {matches.map((match) => (
+                        <MatchCard key={match.name} {...match} />
+                    ))}
                 </div>
             }
         />
