@@ -1,90 +1,211 @@
+// RegisterPage.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { describe, test, expect, vi, beforeEach } from 'vitest';
-import '@testing-library/jest-dom';
-import RegisterPart1 from '../../pages/Registration/RegisterPage';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import RegisterPage from 'client/src/pages/Registration/RegisterPage.tsx';
+import { useNavigate } from 'react-router-dom';
 
-const { mockNavigate } = vi.hoisted(() => ({
-    mockNavigate: vi.fn(),
+// =============================================================================
+// MOCKS
+// =============================================================================
+
+// Mock react-router-dom to spy on navigation
+vi.mock('react-router-dom', () => ({
+    useNavigate: vi.fn(),
 }));
 
-vi.mock('react-router-dom', async () => {
-    const actual = await vi.importActual<any>('react-router-dom');
-    return { ...actual, useNavigate: () => mockNavigate };
-});
+// Mock child components to isolate RegisterPage logic.
+// We make them simple HTML elements to easily interact with them in tests.
+vi.mock('../../components/Logo', () => ({
+    default: () => <div data-testid="logo">Logo</div>
+}));
 
-describe('RegisterPart1', () => {
+vi.mock('../../components/LoginRegisterToggle', () => ({
+    default: ({ onToggle }: { onToggle: (tab: string) => void }) => (
+        <button onClick={() => onToggle('login')} data-testid="toggle-login">
+            Switch to Login
+        </button>
+    )
+}));
+
+vi.mock('../../components/WSButton', () => ({
+    default: ({ label, onClick, type }: any) => (
+        <button onClick={onClick} type={type}>
+            {label}
+        </button>
+    )
+}));
+
+// We mock InputField to ensure we can easily select inputs by their label
+// and trigger onChange events that bubble up to the parent.
+vi.mock('../../components/InputField', () => ({
+    default: ({ label, onChange, value, options }: any) => {
+        if (options) {
+            return (
+                <label>
+                    {label}
+                    <select data-testid={`select-${label}`} onChange={onChange} value={value}>
+                        {options.map((opt: any) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
+                </label>
+            );
+        }
+        return (
+            <label>
+                {label}
+                <input 
+                    data-testid={`input-${label}`} 
+                    onChange={onChange} 
+                    value={value} 
+                />
+            </label>
+        );
+    }
+}));
+
+// =============================================================================
+// TESTS
+// =============================================================================
+
+describe('RegisterPage Component', () => {
+    const navigateMock = vi.fn();
+
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.spyOn(window, 'alert').mockImplementation(() => {});
+        (useNavigate as any).mockReturnValue(navigateMock);
     });
 
-    test('renders correctly and allows input changes', () => {
+    it('should render all form fields correctly', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterPart1 /></MemoryRouter>);
-        const nameInput = screen.getByPlaceholderText(/e.g. Anouk Janssen/i);
+        render(<RegisterPage />);
+
+        // ASSERT
+        expect(screen.getByTestId('logo')).toBeInTheDocument();
+        expect(screen.getByTestId('select-I am a')).toBeInTheDocument();
+        expect(screen.getByTestId('input-Full Name')).toBeInTheDocument();
+        expect(screen.getByTestId('input-Email')).toBeInTheDocument();
+        expect(screen.getByTestId('input-Password')).toBeInTheDocument();
+        expect(screen.getByTestId('input-Confirm Password')).toBeInTheDocument();
+        expect(screen.getByText('Register')).toBeInTheDocument();
+    });
+
+    it('should show validation errors when submitting empty form', () => {
+        // ARRANGE
+        render(<RegisterPage />);
+        const registerButton = screen.getByText('Register');
+
+        // ACT
+        fireEvent.click(registerButton);
+
+        // ASSERT
+        expect(screen.getByText('Full Name is required.')).toBeInTheDocument();
+        expect(screen.getByText('Email address is required.')).toBeInTheDocument();
+        expect(screen.getByText('Password is required.')).toBeInTheDocument();
+    });
+
+    it('should show validation error for invalid email and password complexity', () => {
+        // ARRANGE
+        render(<RegisterPage />);
+        const nameInput = screen.getByTestId('input-Full Name');
+        const emailInput = screen.getByTestId('input-Email');
+        const passwordInput = screen.getByTestId('input-Password');
+        const registerButton = screen.getByText('Register');
+
+        // ACT
+        fireEvent.change(nameInput, { target: { value: 'John Doe' } });
+        fireEvent.change(emailInput, { target: { value: 'invalid-email' } }); // Invalid email
+        fireEvent.change(passwordInput, { target: { value: 'weak' } }); // Weak password
+        fireEvent.click(registerButton);
+
+        // ASSERT
+        expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument();
+        // The validator returns a specific error for length or complexity
+        expect(screen.getByText(/Password must be at least 8 characters long/)).toBeInTheDocument();
+        expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it('should show validation error when passwords do not match', () => {
+        // ARRANGE
+        render(<RegisterPage />);
+        const nameInput = screen.getByTestId('input-Full Name');
+        const emailInput = screen.getByTestId('input-Email');
+        const passwordInput = screen.getByTestId('input-Password');
+        const confirmInput = screen.getByTestId('input-Confirm Password');
+        const registerButton = screen.getByText('Register');
+
+        // ACT
+        fireEvent.change(nameInput, { target: { value: 'John Doe' } });
+        fireEvent.change(emailInput, { target: { value: 'john@example.com' } });
+        fireEvent.change(passwordInput, { target: { value: 'StrongPass123' } });
+        fireEvent.change(confirmInput, { target: { value: 'Mismatch123' } });
+        fireEvent.click(registerButton);
+
+        // ASSERT
+        expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
+        expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it('should navigate to student registration page on successful student input', () => {
+        // ARRANGE
+        render(<RegisterPage />);
+        const nameInput = screen.getByTestId('input-Full Name');
+        const emailInput = screen.getByTestId('input-Email');
+        const passwordInput = screen.getByTestId('input-Password');
+        const confirmInput = screen.getByTestId('input-Confirm Password');
+        const roleSelect = screen.getByTestId('select-I am a');
+        const registerButton = screen.getByText('Register');
+
+        // ACT
+        // Ensure Role is Student
+        fireEvent.change(roleSelect, { target: { value: 'Student / Parent' } });
+        fireEvent.change(nameInput, { target: { value: 'Student Name' } });
+        fireEvent.change(emailInput, { target: { value: 'student@example.com' } });
+        fireEvent.change(passwordInput, { target: { value: 'StrongPass123' } });
+        fireEvent.change(confirmInput, { target: { value: 'StrongPass123' } });
         
-        // ACT
-        fireEvent.change(nameInput, { target: { value: 'Test User' } });
+        fireEvent.click(registerButton);
 
         // ASSERT
-        expect(nameInput).toHaveValue('Test User');
+        expect(navigateMock).toHaveBeenCalledTimes(1);
+        expect(navigateMock).toHaveBeenCalledWith('/register-student-2');
     });
 
-    test('shows alert if fields are missing (Validation Branch)', () => {
+    it('should navigate to teacher registration page on successful teacher input', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterPart1 /></MemoryRouter>);
-        const registerBtn = screen.getByRole('button', { name: /Register/i });
-
-        // ACT - Submit without filling fields
-        fireEvent.click(registerBtn);
-
-        // ASSERT
-        expect(window.alert).toHaveBeenCalledWith("Please fill in all fields correctly.");
-    });
-
-    test('shows alert if passwords do not match (Logic Branch)', () => {
-        // ARRANGE
-        render(<MemoryRouter><RegisterPart1 /></MemoryRouter>);
-        const passwords = screen.getAllByPlaceholderText('**********');
+        render(<RegisterPage />);
+        const nameInput = screen.getByTestId('input-Full Name');
+        const emailInput = screen.getByTestId('input-Email');
+        const passwordInput = screen.getByTestId('input-Password');
+        const confirmInput = screen.getByTestId('input-Confirm Password');
+        const roleSelect = screen.getByTestId('select-I am a');
+        const registerButton = screen.getByText('Register');
 
         // ACT
-        fireEvent.change(screen.getByPlaceholderText(/e.g. name@example.com/i), { target: { value: 't@t.com' } });
-        fireEvent.change(passwords[0], { target: { value: 'password123' } });
-        fireEvent.change(passwords[1], { target: { value: 'different' } });
-        fireEvent.click(screen.getByRole('button', { name: /Register/i }));
-
-        // ASSERT
-        expect(window.alert).toHaveBeenCalledWith("Please fill in all fields correctly.");
-    });
-
-    test('navigates to teacher-2 when Teacher role is selected (Role Branch)', () => {
-        // ARRANGE
-        render(<MemoryRouter><RegisterPart1 /></MemoryRouter>);
-
-        // ACT
-        // Changes role to Teacher
-        fireEvent.change(screen.getByDisplayValue(/Student/i), { target: { value: 'Teacher' } });
+        // Change Role to Teacher
+        fireEvent.change(roleSelect, { target: { value: 'Teacher' } });
         
-        // Fills valid data
-        fireEvent.change(screen.getByPlaceholderText(/e.g. name@example.com/i), { target: { value: 't@t.com' } });
-        const p = screen.getAllByPlaceholderText('**********');
-        fireEvent.change(p[0], { target: { value: '123' } });
-        fireEvent.change(p[1], { target: { value: '123' } });
-        fireEvent.click(screen.getByRole('button', { name: /Register/i }));
+        fireEvent.change(nameInput, { target: { value: 'Teacher Name' } });
+        fireEvent.change(emailInput, { target: { value: 'teacher@example.com' } });
+        fireEvent.change(passwordInput, { target: { value: 'StrongPass123' } });
+        fireEvent.change(confirmInput, { target: { value: 'StrongPass123' } });
+        
+        fireEvent.click(registerButton);
 
         // ASSERT
-        expect(mockNavigate).toHaveBeenCalledWith('/register-teacher-2');
+        expect(navigateMock).toHaveBeenCalledTimes(1);
+        expect(navigateMock).toHaveBeenCalledWith('/register-teacher-2');
     });
 
-    test('redirects to home when login toggle is clicked', () => {
+    it('should redirect to login page when toggle is clicked', () => {
         // ARRANGE
-        render(<MemoryRouter><RegisterPart1 /></MemoryRouter>);
+        render(<RegisterPage />);
+        const toggleButton = screen.getByTestId('toggle-login');
 
         // ACT
-        fireEvent.click(screen.getByText(/Inloggen/i));
+        fireEvent.click(toggleButton);
 
         // ASSERT
-        expect(mockNavigate).toHaveBeenCalledWith('/');
+        expect(navigateMock).toHaveBeenCalledWith('/');
     });
 });
