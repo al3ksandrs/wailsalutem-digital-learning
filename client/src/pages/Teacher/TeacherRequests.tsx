@@ -72,7 +72,7 @@ const TeacherRequests: React.FC = () => {
                     <div className="student-page-placeholder">
                         <div className="container overflow" style={{ maxHeight: 450, overflow: "auto" }}>
                             {requests.map((request) => (
-                                <Request type={'open'} key={request.name} {...request} />
+                                <Request type={'open'} key={request.id} {...request} />
                             ))}
                         </div>
                     </div>

@@ -17,7 +17,8 @@ describe('authGuard', () => {
         return Promise.resolve(jwtResolve);
       }),
       user,
-      log: { error: jest.fn() },
+      log: { error: jest.fn(), warn: jest.fn() },
+      cookies: { token: 'mock_token' }
     } as unknown as FastifyRequest;
   };
 

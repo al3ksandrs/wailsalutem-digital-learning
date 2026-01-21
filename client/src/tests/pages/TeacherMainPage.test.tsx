@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
 import TeacherMainPage from '../../pages/Teacher/TeacherMainPage';
@@ -21,9 +22,21 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+});
+
+const renderWithProviders = (ui: React.ReactNode) => {
+    return render(
+        <QueryClientProvider client={queryClient}>
+            {ui}
+        </QueryClientProvider>
+    );
+};
+
 describe('TeacherMainPage', () => {
     test('renders layout with greeting', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <TeacherMainPage />
             </MemoryRouter>
@@ -36,12 +49,12 @@ describe('TeacherMainPage', () => {
     });
 
     test('opens logout modal when logout button is clicked', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/docent"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/docent" element={<TeacherMainPage />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="docent" element={<TeacherMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -55,12 +68,12 @@ describe('TeacherMainPage', () => {
     });
 
     test('closes logout modal', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/docent"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/docent" element={<TeacherMainPage />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="docent" element={<TeacherMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -78,7 +91,7 @@ describe('TeacherMainPage', () => {
     });
 
     test('opens availability modal when clicked', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <TeacherMainPage />
             </MemoryRouter>
@@ -90,7 +103,7 @@ describe('TeacherMainPage', () => {
     });
 
     test('navigate to calendar', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <TeacherMainPage />
             </MemoryRouter>

@@ -3,18 +3,27 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Header from '../../components/Header';
 import { RoleProvider } from '../../navigation/role.config';
 
-const renderWithRouter = (component: React.ReactNode) => {
-  return render(<BrowserRouter>{component}</BrowserRouter>);
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+});
+
+const renderWithRouterAndQuery = (component: React.ReactNode) => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+        <BrowserRouter>{component}</BrowserRouter>
+    </QueryClientProvider>
+  );
 };
 
 describe('Header', () => {
   const mockLogout = vi.fn();
 
   test('renders logo, tabs, notifications, and logout button', () => {
-    renderWithRouter(<RoleProvider><Header onLogout={mockLogout} /></RoleProvider>);
+    renderWithRouterAndQuery(<RoleProvider><Header onLogout={mockLogout} /></RoleProvider>);
 
     // Logo
     expect(screen.getByAltText('Logo')).toBeInTheDocument();
@@ -34,7 +43,7 @@ describe('Header', () => {
   });
 
   test('calls onLogout when logout button is clicked', () => {
-    renderWithRouter(<RoleProvider><Header onLogout={mockLogout}/></RoleProvider>);
+    renderWithRouterAndQuery(<RoleProvider><Header onLogout={mockLogout}/></RoleProvider>);
 
     const logoutButton = screen.getByRole('button', { name: /logout/i });
     fireEvent.click(logoutButton);
@@ -43,7 +52,7 @@ describe('Header', () => {
   });
 
   test('notification bell opens dropdown on click', () => {
-    renderWithRouter(<RoleProvider><Header /></RoleProvider>);
+    renderWithRouterAndQuery(<RoleProvider><Header /></RoleProvider>);
 
     // Click the first bell (desktop or mobile)
     const notificationButtons = screen.getAllByLabelText(/Notifications/i);

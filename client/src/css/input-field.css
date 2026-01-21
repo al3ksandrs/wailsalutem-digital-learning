@@ -86,12 +86,6 @@
   font-weight: 500;
 }
 
-span.codicon.codicon-check {
-  font-size: 1.2rem;
-  color: black;
-  font-weight: bold;
-}
-
 .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -103,6 +97,10 @@ span.codicon.codicon-check {
 
 .checkbox-wrapper:hover .checkbox-indicator {
   opacity: 0.8;
+}
+
+span.codicon.codicon-check:hover {
+  font-weight: bold;
 }
 
 .checkbox-native-input {

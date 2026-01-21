@@ -11,4 +11,7 @@ export const NAVIGATION_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: " Mijn Verzoeken", path: "/studentverzoeken" },
     { label: "Mijn Connecties", path: "/mijnstudenten" },
   ],
+  admin: [
+    { label: "Dashboard", path: "/admin" },
+  ],
 };
