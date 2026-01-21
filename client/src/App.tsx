@@ -24,7 +24,7 @@ function PagesWithHeader() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function logout(){
+  function logout() {
     navigate('/')
   }
 
@@ -39,14 +39,14 @@ function PagesWithHeader() {
         title="Weet je zeker dat je wilt uitloggen?"
       >
         <p>Als je uitlogt, wordt je sessie beëindigd.</p>
-          <div className="pt-5 has-text-centered">
-            <WSButton
-              label="Uitloggen"
-              type="submit"
-              size="normal"
-              onClick={logout}
-            />
-          </div>
+        <div className="pt-5 has-text-centered">
+          <WSButton
+            label="Uitloggen"
+            type="submit"
+            size="normal"
+            onClick={logout}
+          />
+        </div>
       </Modal>
     </>
   );
@@ -74,7 +74,7 @@ function App() {
         <Route path="/kalender" element={<StudentCalendar />} />
         <Route path="/docent" element={<TeacherMainPage />} />
         <Route path="/studentverzoeken" element={<TeacherRequests />} />
-        <Route path="/mijnstudenten" element={<TeacherConnections />} /> 
+        <Route path="/mijnstudenten" element={<TeacherConnections />} />
       </Route>
     </Routes>
   );

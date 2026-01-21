@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
 
             {/* MOBILE LEFT: Hamburger */}
             <div className="mobile-left">
-                <HamburgerMenu />
+                <HamburgerMenu onLogout={onLogout} />
             </div>
 
             {/* DESKTOP LEFT: Logo + tabs */}

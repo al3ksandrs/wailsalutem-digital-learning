@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useRole } from '../navigation/role.config';
+import { NAVIGATION_BY_ROLE } from '../navigation/navigation.config';
 import '../css/hamburger-menu.css';
+import LogoutButton from './LogoutButton';
 
-const HamburgerMenu: React.FC = () => {
+interface HamburgerMenuProps {
+  onLogout?: () => void;
+}
+
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ onLogout }) => {
   const [open, setOpen] = useState(false);
+  const { role } = useRole();
+  const navigation = NAVIGATION_BY_ROLE[role];
+
+  const handleLogout = () => {
+    setOpen(false);
+    onLogout?.();
+  };
 
   return (
     <>
@@ -13,7 +28,7 @@ const HamburgerMenu: React.FC = () => {
         onClick={() => setOpen(true)}
         aria-label="Open menu"
       >
-        <i className="codicon codicon-menu" aria-hidden="true"></i>
+        <i className="codicon codicon-menu" />
       </button>
 
       {/* Overlay */}
@@ -30,27 +45,32 @@ const HamburgerMenu: React.FC = () => {
         <div className="menu-top-row">
           <div className="menu-top">
             <div className="menu-section-title">Navigation</div>
-            <div className="menu-item">Dashboard</div>
-            <div className="menu-item">Mijn matches</div>
-            <div className="menu-item">Berichten</div>
-            <div className="menu-item">Beschikbaarheid</div>
+
+            {navigation.map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="menu-item"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
-          {/* Close button */}
           <button
             type="button"
             className="menu-close-btn"
             onClick={() => setOpen(false)}
             aria-label="Close menu"
           >
-            x
+            ×
           </button>
         </div>
 
         <div className="menu-bottom">
           <div className="menu-section-title">Account</div>
-          <div className="menu-item">Instellingen</div>
-          <div className="menu-item">Uitloggen</div>
+          <LogoutButton onClick={handleLogout} />
         </div>
       </div>
     </>

@@ -8,7 +8,7 @@ import Modal from '../../components/Modal';
 import AvailabilitySlider from '../../components/AvailabilitySlider';
 import Anon from '../../assets/images/anon.png'
 import { useNavigate } from 'react-router-dom';
-import Connection from '../../components/Connection';
+import MatchCard from '../../components/MatchCard';
 
 export type DayOfWeek =
     | "Ma"
@@ -50,22 +50,19 @@ const TeacherMainPage: React.FC = () => {
         }, {} as WeeklyAvailability)
     );
 
-    interface Connection {
-        id: number;
+    interface Match {
         name: string;
         image: string;
         subjects: string[];
     }
 
-    const students: Connection[] = [
+    const students: Match[] = [
         {
-            id: 1,
             name: "Student 1",
             image: Anon,
             subjects: ["Natuurkunde"],
         },
         {
-            id: 2,
             name: "Student 2",
             image: Anon,
             subjects: ["Wiskunde"],
@@ -107,19 +104,22 @@ const TeacherMainPage: React.FC = () => {
                 </div>
             }
             rightContent={
-                <><div className="panel-box has-text-centered" style={{ maxWidth: 700 }}>
-                    {!isAvailabilitySubmitted && (
-                        <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
-                    )}
-                    {isAvailabilitySubmitted && students.map(student => (
-                        <Connection key={student.id} {...student} />
-                    ))}
+                <>
+                    <div className="panel-box" style={{ maxWidth: 700 }}>
+                        {!isAvailabilitySubmitted && (
+                            <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
+                        )}
+                        {isAvailabilitySubmitted && students.map(student => (
+                            <MatchCard key={student.name} {...student} />
+                        ))}
 
-                </div><Modal
-                    title="Beschikbaarheid opgeven"
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                >
+                    </div>
+
+                    <Modal
+                        title="Beschikbaarheid opgeven"
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                    >
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="availability-section">
                                 {DAYS_OF_WEEK.map((day) => (
