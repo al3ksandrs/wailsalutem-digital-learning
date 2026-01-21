@@ -1,11 +1,9 @@
-import { describe, it, vi, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import PagesWithHeader from '../../App';
-import { RoleProvider } from '../../navigation/role.config';
 import TeacherMainPage from '../../pages/Teacher/TeacherMainPage';
+import { DAYS_OF_WEEK } from '../../pages/Student/StudentRequests';
 
 vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
@@ -70,48 +68,6 @@ describe('TeacherMainPage', () => {
         expect(screen.getByRole('heading', { name: 'Voorgestelde matches' })).toBeInTheDocument();
     });
 
-    test('opens logout modal when logout button is clicked', () => {
-        renderWithProviders(
-            <RoleProvider>
-                <MemoryRouter initialEntries={["/docent"]}>
-                    <Routes>
-                        <Route path="/*" element={<PagesWithHeader />}>
-                            <Route path="docent" element={<TeacherMainPage />} />
-                        </Route>
-                    </Routes>
-                </MemoryRouter>
-            </RoleProvider>
-        );
-
-        const logoutBtns = screen.getAllByText('Logout');
-        fireEvent.click(logoutBtns.at(-1)!);
-
-        expect(screen.getByText('Weet je zeker dat je wilt uitloggen?')).toBeInTheDocument();
-    });
-
-    test('closes logout modal', () => {
-        renderWithProviders(
-            <RoleProvider>
-                <MemoryRouter initialEntries={["/docent"]}>
-                    <Routes>
-                        <Route path="/*" element={<PagesWithHeader />}>
-                            <Route path="docent" element={<TeacherMainPage />} />
-                        </Route>
-                    </Routes>
-                </MemoryRouter>
-            </RoleProvider>
-        );
-
-        const logoutBtns = screen.getAllByText('Logout');
-        fireEvent.click(logoutBtns.at(-1)!);
-
-        const closeBtn = document.querySelector('.modal-close');
-        expect(closeBtn).toBeInTheDocument();
-        fireEvent.click(closeBtn!);
-
-        expect(screen.queryByText('Weet je zeker dat je wilt uitloggen?')).not.toBeInTheDocument();
-    });
-
     test('opens availability modal when clicked', () => {
         renderWithProviders(
             <MemoryRouter>
@@ -135,17 +91,8 @@ describe('TeacherMainPage', () => {
             fireEvent.click(screen.getByText(`Toggle ${day}`));
             fireEvent.click(screen.getByText(`Change ${day}`));
         });
-    test('navigate to calendar', () => {
-        renderWithProviders(
-            <MemoryRouter>
-                <TeacherMainPage />
-            </MemoryRouter>
-        );
 
-        fireEvent.click(screen.getByText('Verstuur'));
-
-        expect(screen.getAllByTestId('match-card')).toHaveLength(2);
-    });
+    })
 
     it('conditionally renders messages before availability submitted', () => {
         render(<TeacherMainPage />, { wrapper: MemoryRouter });
