@@ -48,7 +48,7 @@ export interface CreateMatchParams {
 }
 
 // Fetch functions
-const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
+export const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
   const query = role ? `?role=${role}` : '';
   const response = await fetch(`${API_URL}/users${query}`, {
     credentials: 'include',
@@ -57,7 +57,7 @@ const getAllUsers = async (role?: string): Promise<UserProfile[]> => {
   return response.json();
 };
 
-const getUserById = async (id: number): Promise<UserProfile> => {
+export const getUserById = async (id: number): Promise<UserProfile> => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     credentials: 'include',
   });
@@ -65,7 +65,7 @@ const getUserById = async (id: number): Promise<UserProfile> => {
   return response.json();
 };
 
-const createUser = async (user: CreateUserParams): Promise<UserProfile> => {
+export const createUser = async (user: CreateUserParams): Promise<UserProfile> => {
   const response = await fetch(`${API_URL}/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -76,7 +76,7 @@ const createUser = async (user: CreateUserParams): Promise<UserProfile> => {
   return response.json();
 };
 
-const updateUser = async ({ id, data }: UpdateUserParams): Promise<UserProfile> => {
+export const updateUser = async ({ id, data }: UpdateUserParams): Promise<UserProfile> => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -87,7 +87,7 @@ const updateUser = async ({ id, data }: UpdateUserParams): Promise<UserProfile> 
   return response.json();
 };
 
-const deleteUser = async (id: number): Promise<void> => {
+export const deleteUser = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: 'DELETE',
     credentials: 'include',
@@ -95,7 +95,7 @@ const deleteUser = async (id: number): Promise<void> => {
   if (!response.ok) throw new Error('Failed to delete user');
 };
 
-const updateUserStatus = async ({ id, status }: UpdateStatusParams): Promise<UserProfile> => {
+export const updateUserStatus = async ({ id, status }: UpdateStatusParams): Promise<UserProfile> => {
   const response = await fetch(`${API_URL}/users/${id}/status`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -106,7 +106,7 @@ const updateUserStatus = async ({ id, status }: UpdateStatusParams): Promise<Use
   return response.json();
 };
 
-const getDashboardStats = async (): Promise<DashboardStats> => {
+export const getDashboardStats = async (): Promise<DashboardStats> => {
   const response = await fetch(`${API_URL}/stats`, {
     credentials: 'include',
   });
@@ -114,7 +114,7 @@ const getDashboardStats = async (): Promise<DashboardStats> => {
   return response.json();
 };
 
-const getPendingTeachers = async (): Promise<UserProfile[]> => {
+export const getPendingTeachers = async (): Promise<UserProfile[]> => {
   const response = await fetch(`${API_URL}/teachers/pending`, {
     credentials: 'include',
   });
@@ -122,7 +122,7 @@ const getPendingTeachers = async (): Promise<UserProfile[]> => {
   return response.json();
 };
 
-const getOpenHelpRequests = async (): Promise<AdminHelpRequest[]> => {
+export const getOpenHelpRequests = async (): Promise<AdminHelpRequest[]> => {
   const response = await fetch(`${API_URL}/requests/open`, {
     credentials: 'include',
   });
@@ -130,7 +130,7 @@ const getOpenHelpRequests = async (): Promise<AdminHelpRequest[]> => {
   return response.json();
 };
 
-const assignTeacher = async ({ requestId, teacherId }: { requestId: number; teacherId: number }): Promise<void> => {
+export const assignTeacher = async ({ requestId, teacherId }: { requestId: number; teacherId: number }): Promise<void> => {
   const response = await fetch(`${API_URL}/requests/${requestId}/assign`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -140,7 +140,7 @@ const assignTeacher = async ({ requestId, teacherId }: { requestId: number; teac
   if (!response.ok) throw new Error('Failed to assign teacher');
 };
 
-const getAcceptedMatches = async (): Promise<MatchData[]> => {
+export const getAcceptedMatches = async (): Promise<MatchData[]> => {
   const response = await fetch(`${API_URL}/matches`, {
     credentials: 'include',
   });
@@ -148,7 +148,7 @@ const getAcceptedMatches = async (): Promise<MatchData[]> => {
   return response.json();
 };
 
-const createManualMatch = async (data: CreateMatchParams): Promise<any> => {
+export const createManualMatch = async (data: CreateMatchParams): Promise<any> => {
   const response = await fetch(`${API_URL}/matches`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -165,7 +165,7 @@ const createManualMatch = async (data: CreateMatchParams): Promise<any> => {
   return response.json();
 };
 
-const deleteMatch = async (requestId: number): Promise<void> => {
+export const deleteMatch = async (requestId: number): Promise<void> => {
   const response = await fetch(`${API_URL}/matches/${requestId}`, {
     method: 'DELETE',
     credentials: 'include',
