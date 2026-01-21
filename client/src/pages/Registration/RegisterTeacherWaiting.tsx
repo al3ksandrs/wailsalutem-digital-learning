@@ -25,14 +25,14 @@ const RegisterTeacherWaiting: React.FC = () => {
                     style={{ minHeight: '400px' }}
                 >
                     <div className="mb-6">
-                        <h2 className="title is-4 mb-4">Thank you for registering</h2>
-                        <p className="subtitle is-6">An admin is working on the request</p>
+                        <h2 className="title is-4 mb-4 has-text-black">Thank you for registering</h2>
+                        <p className="title is-6 has-text-black">An admin is working on the request</p>
                     </div>
 
                     <div className="is-flex is-justify-content-center">
                         <div style={{ width: '200px' }}>
                             <WSButton
-                                label="(Return to homepage (login for now))"
+                                label="(skip to teacher dashboard)"
                                 onClick={handleSkip}
                                 fullWidth={true}
                                 type="button"
