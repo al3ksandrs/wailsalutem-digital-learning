@@ -44,7 +44,8 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
             {/* DESKTOP RIGHT: Notifications + Logout */}
             <div className="topbar-right desktop-right">
                 <Notifications />
-                <LogoutButton onClick={onLogout} />
+                {/* performLogout={false} ensures we just open the modal first */}
+                <LogoutButton onClick={onLogout} performLogout={false} />
             </div>
 
         </header>

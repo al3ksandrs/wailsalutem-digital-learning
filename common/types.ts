@@ -1,8 +1,8 @@
 // ------------------------------------- Enumerations -------------------------------------
 export const UserStatus = {
-    Approved: 'approved',
-    Blocked: 'blocked',
-    Pending: 'pending',
+    Approved: 'Approved',
+    Blocked: 'Blocked',
+    Pending: 'Pending',
 } as const;
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
@@ -20,9 +20,9 @@ export const EducationLevel = {
 export type EducationLevel = (typeof EducationLevel)[keyof typeof EducationLevel];
 
 export const RequestStatus = {
-    Accepted: 'accepted',
-    Pending: 'pending',
-    Rejected: 'rejected',
+    Accepted: 'Accepted',
+    Pending: 'Pending',
+    Rejected: 'Rejected',
 } as const;
 
 export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus];
@@ -40,9 +40,9 @@ export const DayOfWeek = {
 export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
 
 export const Role = {
-    Student: 'student',
-    Teacher: 'teacher',
-    Admin: 'admin',
+    Student: 'Student',
+    Teacher: 'Teacher',
+    Admin: 'Admin',
 } as const;
 
 export type Role = (typeof Role)[keyof typeof Role];

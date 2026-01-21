@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import StudentConnections from '../../pages/Student/StudentConnections';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
@@ -9,9 +10,21 @@ vi.mock('../../components/notifications/NotificationParent', () => ({
     default: () => <div>NotificationsMock</div>
 }));
 
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+});
+
+const renderWithProviders = (ui: React.ReactNode) => {
+    return render(
+        <QueryClientProvider client={queryClient}>
+            {ui}
+        </QueryClientProvider>
+    );
+};
+
 describe('StudentRequest', () => {
     test('renders layout with greeting', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentConnections />
             </MemoryRouter>
@@ -24,8 +37,7 @@ describe('StudentRequest', () => {
     });
 
     test('renders data', () => {
-
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentConnections />
             </MemoryRouter>
@@ -37,12 +49,12 @@ describe('StudentRequest', () => {
     });
 
     test('opens logout modal when logout button is clicked', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/mijnconnecties"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/mijnconnecties" element={<StudentConnections />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="mijnconnecties" element={<StudentConnections />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -56,12 +68,12 @@ describe('StudentRequest', () => {
     });
 
     test('closes logout modal', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/mijnconnecties"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/mijnconnecties" element={<StudentConnections />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="mijnconnecties" element={<StudentConnections />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>

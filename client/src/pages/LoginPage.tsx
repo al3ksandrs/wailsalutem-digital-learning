@@ -4,18 +4,59 @@ import Logo from '../components/Logo';
 import LoginRegisterToggle from '../components/LoginRegisterToggle';
 import InputField from '../components/InputField';
 import WSButton from '../components/WSButton';
+import { useLogin } from '../services/authService';
 import '../css/authentication-screens.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  
+  // Form State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Auth Hook
+  const loginMutation = useLogin();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password });
-    navigate('/student');
+    setErrorMessage(null);
+
+    if (!email || !password) {
+      setErrorMessage("Vul alsjeblieft alle velden in.");
+      return;
+    }
+
+    loginMutation.mutate(
+      { email, password }, 
+      {
+        onSuccess: (user) => {
+          console.log('Login successful:', user);
+          
+          // Role-based redirect Logic
+          if (user.role === 'Admin') {
+            navigate('/admin');
+          } else if (user.role === 'Teacher') {
+            // Checks if teacher is approved
+            if (user.status === 'Pending') {
+              navigate('/register-teacher-waiting');
+            } else {
+              navigate('/docent');
+            }
+          } else if (user.role === 'Student') {
+            navigate('/student');
+          } else {
+            // Fallback
+            navigate('/student');
+          }
+        },
+        onError: (error) => {
+          console.error('Login error:', error);
+          setErrorMessage(error.message || 'Inloggen mislukt. Controleer je gegevens.');
+        }
+      }
+    );
   };
 
   const handleToggle = (tab: 'login' | 'register') => {
@@ -40,6 +81,19 @@ const LoginPage = () => {
             onToggle={handleToggle}
           />
           <form onSubmit={handleLogin}>
+            
+            {/* Error message display */}
+            {errorMessage && (
+              <div style={{ 
+                color: 'var(--error-color, #dc3545)', 
+                marginBottom: '1rem', 
+                textAlign: 'center',
+                fontSize: '0.9em' 
+              }}>
+                {errorMessage}
+              </div>
+            )}
+
             <div className="mb-5">
               <InputField
                 label="Email"
@@ -63,10 +117,11 @@ const LoginPage = () => {
             </div>
 
             <WSButton
-              label="Inloggen"
+              label={loginMutation.isPending ? "Bezig met inloggen..." : "Inloggen"}
               type="submit"
               fullWidth={true}
               size="normal"
+              disabled={loginMutation.isPending}
             />
 
             <div className='has-text-centered'>

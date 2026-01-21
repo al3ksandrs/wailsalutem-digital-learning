@@ -32,6 +32,13 @@ export const buildServer = () => {
   fastify.register(fastifyCors, {
     origin: 'http://localhost:5173',
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  });
+
+  // For signing cookies
+  fastify.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET || 'anothersupersecretstringthatnoonewilleverguessihopefreediddy',
+    hook: 'onRequest',
   });
 
   // JWT
@@ -47,13 +54,6 @@ export const buildServer = () => {
   fastify.register(fastifyPostgres, {
     connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
   });
-
-  // For signing cookies
-  fastify.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET || 'anothersupersecretstringthatnoonewilleverguessihopefreediddy',
-    hook: 'onRequest',
-  });
-
 
   fastify.register(authRoutes, { prefix: '/api/auth' });
   fastify.register(adminRoutes, { prefix: '/api' });
