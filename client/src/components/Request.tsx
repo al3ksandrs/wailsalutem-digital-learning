@@ -6,6 +6,7 @@ export type RequestType =
 
 interface RequestProps {
   id: number;
+  name: string;
   type: RequestType;
   subject: string;
   image: string;
@@ -18,6 +19,7 @@ interface RequestProps {
 
 const Request: React.FC<RequestProps> = ({
   id,
+  name,
   type,
   subject,
   image,
@@ -30,7 +32,7 @@ const Request: React.FC<RequestProps> = ({
 
   if (type === 'open') {
     return (
-      <BaseProfileCard type="Request" id={id} image={image} subjects={[]} level={level} name={""}>
+      <BaseProfileCard type="Request" id={id} image={image} subjects={[]} level={level} name={name}>
         <p className="has-text-weight-semibold has-text-black">
           {subject}
         </p>

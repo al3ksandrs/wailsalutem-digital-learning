@@ -204,12 +204,11 @@ const StudentRequests: React.FC = () => {
             >
               {requests.map((request) => (
                 <Request
-                  type="student"
+                  name={''} type="student"
                   key={request.id}
                   {...request}
                   onEdit={() => openEditModal(request)}
-                  onDelete={() => deleteRequest(request.id)}
-                />
+                  onDelete={() => deleteRequest(request.id)}                />
               ))}
             </div>
         }

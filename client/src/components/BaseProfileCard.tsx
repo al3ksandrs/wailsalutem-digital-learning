@@ -34,7 +34,7 @@ const BaseProfileCard: React.FC<BaseProfileCardProps> = ({
           </div>
 
           <div className="column">
-            <p className="has-text-weight-semibold is-size-5 has-text-black">
+            <p className="has-text-weight-semibold is-size-5 has-text-black mb-2">
               {name}
             </p>
             <p className="is-size-6 has-text-grey-dark">
