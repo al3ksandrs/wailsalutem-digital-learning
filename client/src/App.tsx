@@ -20,13 +20,24 @@ import Modal from './components/Modal';
 import TeacherRequests from './pages/Teacher/TeacherRequests';
 import WSButton from './components/WSButton';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import { useLogout } from './services/authService';
 
 function PagesWithHeader() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const logoutMutation = useLogout();
 
   function logout(){
-    navigate('/')
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        navigate('/');
+        setIsModalOpen(false);
+      },
+      onError: () => {
+        navigate('/');
+        setIsModalOpen(false);
+      }
+    });
   }
 
   return (
@@ -42,7 +53,7 @@ function PagesWithHeader() {
         <p>Als je uitlogt, wordt je sessie beëindigd.</p>
           <div className="pt-5 has-text-centered">
             <WSButton
-              label="Uitloggen"
+              label={logoutMutation.isPending ? "Bezig..." : "Uitloggen"}
               type="submit"
               size="normal"
               onClick={logout}

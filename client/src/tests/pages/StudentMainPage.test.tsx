@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import StudentMainPage from '../../pages/Student/StudentMainPage';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
@@ -21,9 +22,21 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+});
+
+const renderWithProviders = (ui: React.ReactNode) => {
+    return render(
+        <QueryClientProvider client={queryClient}>
+            {ui}
+        </QueryClientProvider>
+    );
+};
+
 describe('StudentMainPage', () => {
     test('renders layout with greeting', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentMainPage />
             </MemoryRouter>
@@ -36,12 +49,12 @@ describe('StudentMainPage', () => {
     });
 
     test('opens logout modal when logout button is clicked', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/student"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="student" element={<StudentMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -55,12 +68,12 @@ describe('StudentMainPage', () => {
     });
 
     test('closes logout modal', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/student"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/student" element={<StudentMainPage />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="student" element={<StudentMainPage />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -78,7 +91,7 @@ describe('StudentMainPage', () => {
     });
 
     test('navigate to calendar', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentMainPage />
             </MemoryRouter>

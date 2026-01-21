@@ -66,7 +66,7 @@ const AdminDashboard: React.FC = () => {
             title="Open Help Requests"
             value={s?.openHelpRequests || 0}
             icon="🙋"
-            color={(s?.openHelpRequests || 0) > 0 ? 'orange' : 'purple'}
+            color={(s?.openHelpRequests || 0) > 0 ? 'orange' : 'blue'}
             trend={s?.openHelpRequests ? "(Action required)" : "No new requests"}
             trendDirection={s?.openHelpRequests ? "down" : "neutral"}
         />

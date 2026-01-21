@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import StudentRequests from '../../pages/Student/StudentRequests';
 import PagesWithHeader from '../../App';
 import { RoleProvider } from '../../navigation/role.config';
@@ -21,9 +22,21 @@ vi.mock('react-router-dom', async () => {
     };
 });
 
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+});
+
+const renderWithProviders = (ui: React.ReactNode) => {
+    return render(
+        <QueryClientProvider client={queryClient}>
+            {ui}
+        </QueryClientProvider>
+    );
+};
+
 describe('StudentRequest', () => {
     test('renders layout with greeting', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentRequests />
             </MemoryRouter>
@@ -36,7 +49,7 @@ describe('StudentRequest', () => {
     });
 
     test('renders data', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentRequests />
             </MemoryRouter>
@@ -53,12 +66,12 @@ describe('StudentRequest', () => {
     });
 
     test('opens logout modal when logout button is clicked', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/mijnverzoeken"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/mijnverzoeken" element={<StudentRequests />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="mijnverzoeken" element={<StudentRequests />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -72,12 +85,12 @@ describe('StudentRequest', () => {
     });
 
     test('closes logout modal', () => {
-        render(
+        renderWithProviders(
             <RoleProvider>
                 <MemoryRouter initialEntries={["/mijnverzoeken"]}>
                     <Routes>
-                        <Route element={<PagesWithHeader />}>
-                            <Route path="/mijnverzoeken" element={<StudentRequests />} />
+                        <Route path="/*" element={<PagesWithHeader />}>
+                            <Route path="mijnverzoeken" element={<StudentRequests />} />
                         </Route>
                     </Routes>
                 </MemoryRouter>
@@ -95,7 +108,7 @@ describe('StudentRequest', () => {
     });
 
     test("opens modal to create a new request", () => {
-        render(<StudentRequests />);
+        renderWithProviders(<StudentRequests />);
 
         const createButton = screen.getByText("Nieuw hulpverzoek");
         fireEvent.click(createButton);
@@ -106,7 +119,7 @@ describe('StudentRequest', () => {
     });
 
     test("creates a new request", () => {
-        render(<StudentRequests />);
+        renderWithProviders(<StudentRequests />);
 
         fireEvent.click(screen.getByText("Nieuw hulpverzoek"));
 
@@ -129,7 +142,7 @@ describe('StudentRequest', () => {
     });
 
     test("open modal to edit request", () => {
-        render(<StudentRequests />);
+        renderWithProviders(<StudentRequests />);
 
         const editButtons = screen.getAllByLabelText("Edit");
         fireEvent.click(editButtons[0]);
@@ -139,7 +152,7 @@ describe('StudentRequest', () => {
     });
 
     test("edits an existing request", () => {
-        render(<StudentRequests />);
+        renderWithProviders(<StudentRequests />);
 
         const editButtons = screen.getAllByLabelText("Edit");
         fireEvent.click(editButtons[0]);
@@ -150,7 +163,7 @@ describe('StudentRequest', () => {
     });
 
     test("deletes a request", () => {
-        render(<StudentRequests />);
+        renderWithProviders(<StudentRequests />);
 
         const deleteButtons = screen.getAllByLabelText("Delete");
         fireEvent.click(deleteButtons[0]);
@@ -158,7 +171,7 @@ describe('StudentRequest', () => {
     });
 
     test('navigate to calendar', () => {
-        render(
+        renderWithProviders(
             <MemoryRouter>
                 <StudentRequests />
             </MemoryRouter>

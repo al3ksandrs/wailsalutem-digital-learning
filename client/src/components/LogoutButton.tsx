@@ -5,13 +5,21 @@ import '../css/logout-button.css';
 
 interface LogoutButtonProps {
     onClick?: () => void;
+    performLogout?: boolean;
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick, performLogout = true }) => {
     const navigate = useNavigate();
     const logoutMutation = useLogout();
 
     const handleLogout = () => {
+        // If we shouldn't perform the actual logout (like just open a modal), 
+        // run the callback and return early.
+        if (!performLogout) {
+            if (onClick) onClick();
+            return;
+        }
+
         logoutMutation.mutate(undefined, {
             onSuccess: () => {
                 // Redirects to login page
@@ -33,11 +41,11 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onClick }) => {
             type="button"
             className="logout-btn"
             onClick={handleLogout}
-            disabled={logoutMutation.isPending}
+            disabled={performLogout && logoutMutation.isPending}
         >
             <div className="codicon codicon-sign-out logout-icon"></div>
             <span className="logout-text">
-                {logoutMutation.isPending ? 'Logging out...' : 'Logout'}
+                {performLogout && logoutMutation.isPending ? 'Logging out...' : 'Logout'}
             </span>
         </button>
     );
