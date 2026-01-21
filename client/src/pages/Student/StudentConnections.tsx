@@ -52,12 +52,10 @@ const StudentConnections: React.FC = () => {
                     </div>
                 }
                 rightContent={
-                    <div className="student-page-placeholder">
-                        <div className="container" style={{ maxWidth: 700 }}>
-                            {students.map((student) => (
-                                <Connection key={student.name} {...student} />
-                            ))}
-                        </div>
+                    <div className="panel-box" style={{ maxWidth: 700 }}>
+                        {students.map((student) => (
+                            <Connection key={student.name} {...student} />
+                        ))}
                     </div>
                 }
             />

@@ -107,22 +107,19 @@ const TeacherMainPage: React.FC = () => {
                 </div>
             }
             rightContent={
-                <div className="student-page-placeholder has-text-centered">
-                    <div className="container" style={{ maxWidth: 700 }}>
-                        {!isAvailabilitySubmitted && (
-                            <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
-                        )}
-                        {isAvailabilitySubmitted && students.map(student => (
-                            <Connection key={student.id} {...student} />
-                        ))}
+                <><div className="panel-box has-text-centered" style={{ maxWidth: 700 }}>
+                    {!isAvailabilitySubmitted && (
+                        <><p>Er is nog geen beschikbaarheid opgegeven.</p><p>Matches worden pas getoond als er aanwezigheid is opgegeven.</p></>
+                    )}
+                    {isAvailabilitySubmitted && students.map(student => (
+                        <Connection key={student.id} {...student} />
+                    ))}
 
-                    </div>
-
-                    <Modal
-                        title="Beschikbaarheid opgeven"
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                    >
+                </div><Modal
+                    title="Beschikbaarheid opgeven"
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                >
                         <form onSubmit={(e) => e.preventDefault()}>
                             <div className="availability-section">
                                 {DAYS_OF_WEEK.map((day) => (
@@ -131,19 +128,14 @@ const TeacherMainPage: React.FC = () => {
                                         key={day}
                                         active={availability[day].active}
                                         value={availability[day].range}
-                                        onChange={(range) =>
-                                            setAvailability((prev) => ({
-                                                ...prev,
-                                                [day]: { ...prev[day], range },
-                                            }))
-                                        }
-                                        onActiveChange={(active) =>
-                                            setAvailability((prev) => ({
-                                                ...prev,
-                                                [day]: { ...prev[day], active },
-                                            }))
-                                        }
-                                    />
+                                        onChange={(range) => setAvailability((prev) => ({
+                                            ...prev,
+                                            [day]: { ...prev[day], range },
+                                        }))}
+                                        onActiveChange={(active) => setAvailability((prev) => ({
+                                            ...prev,
+                                            [day]: { ...prev[day], active },
+                                        }))} />
                                 ))}
                                 <WSButton
                                     label="Verstuur"
@@ -152,13 +144,11 @@ const TeacherMainPage: React.FC = () => {
                                     onClick={() => {
                                         setIsAvailabilitySubmitted(true);
                                         setIsModalOpen(false);
-                                    }}
-                                />
+                                    }} />
                             </div>
 
                         </form>
-                    </Modal>
-                </div>
+                    </Modal></>
             }
 
         />

@@ -198,10 +198,9 @@ const StudentRequests: React.FC = () => {
           </div>
         }
         rightContent={
-          <div className="student-page-placeholder">
             <div
-              className="container overflow"
-              style={{ maxHeight: 450, overflow: "auto" }}
+              className="panel-box"
+              style={{ maxHeight: 450, overflow: "auto", maxWidth: 700 }}
             >
               {requests.map((request) => (
                 <Request
@@ -213,7 +212,6 @@ const StudentRequests: React.FC = () => {
                 />
               ))}
             </div>
-          </div>
         }
       />
 

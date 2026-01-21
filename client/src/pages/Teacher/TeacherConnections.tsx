@@ -51,12 +51,10 @@ const TeacherConnections: React.FC = () => {
                     </div>
                 }
                 rightContent={
-                    <div className="student-page-placeholder">
-                        <div className="container" style={{ maxWidth: 700 }}>
-                            {connections.map((connection) => (
-                                <Connection subjects={[]} key={connection.name} {...connection} />
-                            ))}
-                        </div>
+                    <div className="panel-box" style={{ maxWidth: 700 }}>
+                        {connections.map((connection) => (
+                            <Connection subjects={[]} key={connection.name} {...connection} />
+                        ))}
                     </div>
                 }
             />
