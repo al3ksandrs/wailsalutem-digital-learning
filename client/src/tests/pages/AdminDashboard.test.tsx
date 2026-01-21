@@ -1,50 +1,55 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import AdminDashboard from 'src/pages/Admin/AdminDashboard';
-import * as adminService from '../../services/adminService';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import AdminDashboard from '../../pages/Admin/AdminDashboard';
+import { useGetDashboardStats } from '../../services/adminService';
+
+// Mocks the service module
+vi.mock('../../services/adminService', () => ({
+  useGetDashboardStats: vi.fn(),
+}));
 
 const MOCK_STATS = {
   totalStudents: 100,
   newStudentsMonth: 10,
   totalTeachers: 50,
-  newTeachersMonth: 5,
+  newTeachersMonth: 10,
   pendingTeachers: 3,
   totalSubjects: 10,
   openHelpRequests: 2,
   newRequestsMonth: 4,
 };
 
-vi.mock('../../../services/adminService', () => ({
-  useGetDashboardStats: vi.fn(),
-}));
-
-vi.mock('../../../components/LogoutButton', () => ({
+// Mock child components
+vi.mock('../../components/LogoutButton', () => ({
   default: () => <button data-testid="logout-btn">Logout</button>,
 }));
 
-vi.mock('../../../pages/Admin/tabs/UserManagementTab', () => ({
+vi.mock('../../pages/Admin/tabs/UserManagementTab', () => ({
   UserManagementTab: () => <div data-testid="user-management-tab">User Management Content</div>,
 }));
 
-vi.mock('../../../pages/Admin/tabs/HelpRequestsTab', () => ({
+vi.mock('../../pages/Admin/tabs/HelpRequestsTab', () => ({
   HelpRequestsTab: () => <div data-testid="help-requests-tab">Help Requests Content</div>,
 }));
 
-vi.mock('../../../pages/Admin/tabs/PendingTeachersTab', () => ({
+vi.mock('../../pages/Admin/tabs/PendingTeachersTab', () => ({
   PendingTeachersTab: () => <div data-testid="pending-teachers-tab">Pending Teachers Content</div>,
 }));
 
-vi.mock('../../../pages/Admin/tabs/ManualMatchingTab', () => ({
+vi.mock('../../pages/Admin/tabs/ManualMatchingTab', () => ({
   ManualMatchingTab: () => <div data-testid="manual-matching-tab">Manual Matching Content</div>,
 }));
 
 describe('AdminDashboard', () => {
+  // Casts the imported function to a Mock type for TypeScript support
+  const mockGetStats = useGetDashboardStats as Mock;
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders loading state initially', () => {
-    (adminService.useGetDashboardStats as any).mockReturnValue({
+    mockGetStats.mockReturnValue({
       data: null,
       isLoading: true,
     });
@@ -54,7 +59,7 @@ describe('AdminDashboard', () => {
   });
 
   it('renders dashboard stats and default tab when loaded', () => {
-    (adminService.useGetDashboardStats as any).mockReturnValue({
+    mockGetStats.mockReturnValue({
       data: MOCK_STATS,
       isLoading: false,
     });
@@ -71,19 +76,22 @@ describe('AdminDashboard', () => {
   });
 
   it('calculates and displays growth percentages correctly', () => {
-    (adminService.useGetDashboardStats as any).mockReturnValue({
+    mockGetStats.mockReturnValue({
       data: MOCK_STATS,
       isLoading: false,
     });
 
     render(<AdminDashboard />);
 
-    // Previous total = 100 - 10 = 90. (10/90)*100 = 11%
+    // Students: 10 new, 90 previous -> 11%
     expect(screen.getByText('+11% this month')).toBeInTheDocument();
+    
+    // Teachers: 10 new, 40 previous -> 25%
+    expect(screen.getByText('+25% this month')).toBeInTheDocument();
   });
 
   it('switches tabs correctly', () => {
-    (adminService.useGetDashboardStats as any).mockReturnValue({
+    mockGetStats.mockReturnValue({
       data: MOCK_STATS,
       isLoading: false,
     });
@@ -105,7 +113,7 @@ describe('AdminDashboard', () => {
   });
 
   it('displays action required text for pending items', () => {
-    (adminService.useGetDashboardStats as any).mockReturnValue({
+    mockGetStats.mockReturnValue({
       data: MOCK_STATS, 
       isLoading: false,
     });
