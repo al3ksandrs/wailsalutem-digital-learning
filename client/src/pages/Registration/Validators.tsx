@@ -14,7 +14,7 @@ export const validateEmail = (params: ValidateEmailParams): ValidationResult => 
   // Standard regex for basic email validation.
   //Checks for characters before '@', characters after '@', a dot, and characters after the dot.
   const { email } = params;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/;
 
   if (!email) {
     return { isValid: false, errorMessage: 'Email address is required.' };
