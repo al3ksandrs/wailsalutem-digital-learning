@@ -367,3 +367,79 @@
     margin-left: 0;
   }
 }
+
+.manual-match-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.manual-match-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 200px;
+}
+
+.manual-match-input-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #34495e;
+}
+
+.manual-match-input-group select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  background-color: white;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.manual-match-input-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.manual-match-description {
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.manual-match-assign-btn {
+  margin-bottom: 2px;
+}
+
+.manual-match-error {
+  flex-basis: 100%;
+  color: #dc3545;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.btn-unmatch {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-unmatch:hover {
+  background-color: #ff7875;
+}
+
+.btn-unmatch:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

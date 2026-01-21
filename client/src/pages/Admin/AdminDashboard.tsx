@@ -9,10 +9,10 @@ import { UserManagementTab } from './tabs/UserManagementTab';
 import { HelpRequestsTab } from './tabs/HelpRequestsTab';
 import { PendingTeachersTab } from './tabs/PendingTeachersTab';
 import { PendingMatchesTab } from './tabs/PendingMatchesTab';
-import { AcceptedMatchesTab } from './tabs/AcceptedMatchesTab';
+import { ManualMatchingTab } from './tabs/ManualMatchingTab';
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'user_management' | 'help_requests' | 'pending_teachers' | 'pending_matches' | 'accepted_matches'>('user_management');
+  const [activeTab, setActiveTab] = useState<'user_management' | 'help_requests' | 'pending_teachers' | 'pending_matches' | 'manual_matching'>('user_management');
 
   const { data: stats, isLoading } = useGetDashboardStats();
 
@@ -100,10 +100,10 @@ const AdminDashboard: React.FC = () => {
           Pending matches
         </button>
         <button 
-          className={`admin-tab-btn ${activeTab === 'accepted_matches' ? 'active' : ''}`}
-          onClick={() => setActiveTab('accepted_matches')}
+          className={`admin-tab-btn ${activeTab === 'manual_matching' ? 'active' : ''}`}
+          onClick={() => setActiveTab('manual_matching')}
         >
-          Accepted matches
+          Manual matching
         </button>
       </div>
 
@@ -113,7 +113,7 @@ const AdminDashboard: React.FC = () => {
         {activeTab === 'help_requests' && <HelpRequestsTab />}
         {activeTab === 'pending_teachers' && <PendingTeachersTab />}
         {activeTab === 'pending_matches' && <PendingMatchesTab />}
-        {activeTab === 'accepted_matches' && <AcceptedMatchesTab />}
+        {activeTab === 'manual_matching' && <ManualMatchingTab />}
       </div>
     </div>
   );

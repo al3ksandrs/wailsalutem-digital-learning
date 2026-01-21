@@ -5,6 +5,7 @@ const USERS_KEY = 'adminUsers';
 const STATS_KEY = 'adminStats';
 const PENDING_TEACHERS_KEY = 'adminPendingTeachers';
 const OPEN_REQUESTS_KEY = 'adminOpenRequests';
+const MATCHES_KEY = 'adminMatches';
 
 const API_URL = 'http://localhost:3000/api/admin';
 
@@ -27,6 +28,23 @@ export interface AdminHelpRequest {
   description: string;
   location?: string;
   status: string;
+}
+
+export interface MatchData {
+  id: number;
+  created_at: string;
+  student_id: number;
+  student_name: string;
+  teacher_id: number;
+  teacher_name: string;
+  subject_name: string;
+  status: string;
+}
+
+export interface CreateMatchParams {
+  studentId: number;
+  teacherId: number;
+  subjectId: number;
 }
 
 // Fetch functions
@@ -122,6 +140,39 @@ const assignTeacher = async ({ requestId, teacherId }: { requestId: number; teac
   if (!response.ok) throw new Error('Failed to assign teacher');
 };
 
+const getAcceptedMatches = async (): Promise<MatchData[]> => {
+  const response = await fetch(`${API_URL}/matches`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to fetch matches');
+  return response.json();
+};
+
+const createManualMatch = async (data: CreateMatchParams): Promise<any> => {
+  const response = await fetch(`${API_URL}/matches`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    credentials: 'include',
+  });
+  
+  if (!response.ok) {
+    // Try to parse the specific error message from the server (e.g., "This match already exists")
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create match');
+  }
+  
+  return response.json();
+};
+
+const deleteMatch = async (requestId: number): Promise<void> => {
+  const response = await fetch(`${API_URL}/matches/${requestId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!response.ok) throw new Error('Failed to delete match');
+};
+
 // React query hooks
 export const useGetAllUsers = (role?: string) => {
   return useQuery({
@@ -211,6 +262,35 @@ export const useAssignTeacher = () => {
     mutationFn: assignTeacher,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OPEN_REQUESTS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
+    },
+  });
+};
+
+export const useGetAcceptedMatches = () => {
+  return useQuery({
+    queryKey: [MATCHES_KEY],
+    queryFn: getAcceptedMatches,
+  });
+};
+
+export const useCreateManualMatch = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createManualMatch,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [MATCHES_KEY] });
+      queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
+    },
+  });
+};
+
+export const useDeleteMatch = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteMatch,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [MATCHES_KEY] });
       queryClient.invalidateQueries({ queryKey: [STATS_KEY] });
     },
   });

@@ -11,6 +11,9 @@ import {
   getPendingTeachers,
   getOpenHelpRequests,
   assignTeacherToRequest,
+  getAcceptedMatches,
+  createManualMatch,
+  unassignTeacher
 } from '../db/admin.ts';
 
 export async function adminRoutes(fastify: FastifyInstance) {
@@ -184,6 +187,59 @@ export async function adminRoutes(fastify: FastifyInstance) {
     } catch (err: any) {
       request.log.error(err);
       return reply.code(500).send({ error: 'Failed to assign teacher', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Gets all accepted matches
+  fastify.get('/admin/matches', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const matches = await getAcceptedMatches(client);
+      return reply.send(matches);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch matches', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Creates a manual match
+  fastify.post('/admin/matches', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const { studentId, teacherId, subjectId } = request.body as { studentId: number; teacherId: number; subjectId: number };
+      
+      if (!studentId || !teacherId || !subjectId) {
+        return reply.code(400).send({ error: 'Missing required fields (studentId, teacherId, subjectId)' });
+      }
+
+      const newMatch = await createManualMatch(client, { studentId, teacherId, subjectId });
+      return reply.code(201).send(newMatch);
+    } catch (err: any) {
+      if (err.message === 'DUPLICATE_MATCH') {
+        return reply.code(409).send({ error: 'This match already exists.' });
+      }
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to create match', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Unassigns teacher (Deletes match)
+  fastify.delete('/admin/matches/:id', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const requestId = Number((request.params as { id: string }).id);
+      const updated = await unassignTeacher(client, requestId);
+      if (!updated) return reply.code(404).send({ error: 'Match not found' });
+      return reply.send(updated);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to unassign teacher', details: err.message });
     } finally {
       client.release();
     }
