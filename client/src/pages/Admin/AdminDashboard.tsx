@@ -8,11 +8,10 @@ import '../../css/admin-dashboard.css';
 import { UserManagementTab } from './tabs/UserManagementTab';
 import { HelpRequestsTab } from './tabs/HelpRequestsTab';
 import { PendingTeachersTab } from './tabs/PendingTeachersTab';
-import { PendingMatchesTab } from './tabs/PendingMatchesTab';
 import { ManualMatchingTab } from './tabs/ManualMatchingTab';
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'user_management' | 'help_requests' | 'pending_teachers' | 'pending_matches' | 'manual_matching'>('user_management');
+  const [activeTab, setActiveTab] = useState<'user_management' | 'help_requests' | 'pending_teachers' | 'manual_matching'>('user_management');
 
   const { data: stats, isLoading } = useGetDashboardStats();
 
@@ -56,7 +55,7 @@ const AdminDashboard: React.FC = () => {
           trendDirection={s?.newTeachersMonth > 0 ? "up" : "neutral"}
         />
         <StatsCard 
-          title="Pending approvals" 
+          title="Pending teacher approvals" 
           value={s?.pendingTeachers || 0} 
           icon="⏳" 
           color={(s?.pendingTeachers || 0) > 0 ? 'orange' : 'blue'}
@@ -64,12 +63,12 @@ const AdminDashboard: React.FC = () => {
           trendDirection={s?.pendingTeachers ? "down" : "neutral"}
         />
         <StatsCard 
-            title="Pending Matches"
-            value={s?.pendingMatches || 0}
-            icon="🤝"
-            color={(s?.pendingMatches || 0) > 0 ? 'orange' : 'purple'}
-            trend={s?.pendingMatches ? "(Action required)" : "No new requests"}
-            trendDirection={s?.pendingMatches ? "down" : "neutral"}
+            title="Open Help Requests"
+            value={s?.openHelpRequests || 0}
+            icon="🙋"
+            color={(s?.openHelpRequests || 0) > 0 ? 'orange' : 'purple'}
+            trend={s?.openHelpRequests ? "(Action required)" : "No new requests"}
+            trendDirection={s?.openHelpRequests ? "down" : "neutral"}
         />
       </div>
 
@@ -94,12 +93,6 @@ const AdminDashboard: React.FC = () => {
           Pending teacher registrations
         </button>
         <button 
-          className={`admin-tab-btn ${activeTab === 'pending_matches' ? 'active' : ''}`}
-          onClick={() => setActiveTab('pending_matches')}
-        >
-          Pending matches
-        </button>
-        <button 
           className={`admin-tab-btn ${activeTab === 'manual_matching' ? 'active' : ''}`}
           onClick={() => setActiveTab('manual_matching')}
         >
@@ -112,7 +105,6 @@ const AdminDashboard: React.FC = () => {
         {activeTab === 'user_management' && <UserManagementTab />}
         {activeTab === 'help_requests' && <HelpRequestsTab />}
         {activeTab === 'pending_teachers' && <PendingTeachersTab />}
-        {activeTab === 'pending_matches' && <PendingMatchesTab />}
         {activeTab === 'manual_matching' && <ManualMatchingTab />}
       </div>
     </div>

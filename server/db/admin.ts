@@ -90,7 +90,7 @@ export async function getDashboardStats(client: PoolClient) {
       
       (SELECT count(*)::int FROM subject) as "totalSubjects",
       
-      (SELECT count(*)::int FROM help_request WHERE status = 'Pending') as "pendingMatches",
+      (SELECT count(*)::int FROM help_request WHERE status = 'Pending') as "openHelpRequests",
       (SELECT count(*)::int FROM help_request WHERE created_at >= NOW() - INTERVAL '30 days') as "newRequestsMonth"
   `;
   const result = await client.query(query);

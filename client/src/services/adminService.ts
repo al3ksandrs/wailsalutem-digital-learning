@@ -18,7 +18,7 @@ export interface DashboardStats {
   totalTeachers: number;
   pendingTeachers: number;
   totalSubjects: number;
-  pendingMatches: number;
+  openHelpRequests: number;
 }
 
 export interface AdminHelpRequest {
