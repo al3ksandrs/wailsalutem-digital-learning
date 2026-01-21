@@ -10,6 +10,7 @@ interface WSButtonProps {
   fullWidth?: boolean;
   className?: string;
   disabled?: boolean;
+  title?: string; // hover tooltips
 }
 
 const WSButton: React.FC<WSButtonProps> = ({
@@ -21,6 +22,7 @@ const WSButton: React.FC<WSButtonProps> = ({
   fullWidth = false,
   className = '',
   disabled = false,
+  title,
 }) => {
 
   let sizeClass = '';
@@ -36,6 +38,7 @@ const WSButton: React.FC<WSButtonProps> = ({
       className={`button custom-btn ${sizeClass} ${widthClass} ${className}`}
       onClick={onClick}
       disabled={disabled}
+      title={title}
     >
       {icon && <span className={`icon ${hasText ? 'is-small mr-2' : ''}`}>{icon}</span>}
       {label && <span>{label}</span>}

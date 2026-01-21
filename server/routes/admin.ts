@@ -7,11 +7,14 @@ import {
   updateUser,
   deleteUser,
   updateUserStatus,
+  getDashboardStats,
+  getPendingTeachers,
+  getOpenHelpRequests,
+  assignTeacherToRequest,
 } from '../db/admin.ts';
 
 export async function adminRoutes(fastify: FastifyInstance) {
-  
-  fastify.addHook('onRequest', authGuard('Admin'));
+  fastify.addHook('preHandler', authGuard('Admin'));
 
   // Get all users
   fastify.get('/admin/users', async (request, reply) => {
@@ -104,6 +107,83 @@ export async function adminRoutes(fastify: FastifyInstance) {
     } catch (err: any) {
       request.log.error(err);
       return reply.code(500).send({ error: 'Failed to update user status', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Gets dashboard stats
+  fastify.get('/admin/stats', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const stats = await getDashboardStats(client);
+      return reply.send(stats);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch dashboard stats', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Gets pending teachers
+  fastify.get('/admin/teachers/pending', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const teachers = await getPendingTeachers(client);
+      return reply.send(teachers);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch pending teachers', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Verifies teacher
+  fastify.post('/admin/teachers/:id/verify', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const userId = Number((request.params as { id: string }).id);
+      const updated = await updateUserStatus(client, userId, 'Active');
+      if (!updated) return reply.code(404).send({ error: 'Teacher not found' });
+      return reply.send({ message: 'Teacher verified successfully', user: updated });
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to verify teacher', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Gets open help requests
+  fastify.get('/admin/requests/open', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const requests = await getOpenHelpRequests(client);
+      return reply.send(requests);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to fetch open requests', details: err.message });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Assigns teacher to request
+  fastify.post('/admin/requests/:id/assign', async (request, reply) => {
+    const client = await fastify.pg.connect();
+    try {
+      const requestId = Number((request.params as { id: string }).id);
+      const { teacherId } = request.body as { teacherId: number };
+
+      const updated = await assignTeacherToRequest(client, requestId, teacherId);
+      if (!updated) return reply.code(404).send({ error: 'Request not found' });
+
+      return reply.send(updated);
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({ error: 'Failed to assign teacher', details: err.message });
     } finally {
       client.release();
     }

@@ -3,6 +3,13 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 export const authGuard = (role?: 'Student' | 'Teacher' | 'Admin') => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
+      // Debugging info
+      if (!request.cookies) {
+         request.log.warn('AuthGuard: request.cookies is UNDEFINED. fastify-cookie might not be loaded properly.');
+      } else if (!request.cookies.token) {
+         request.log.warn({ cookies: request.cookies }, 'AuthGuard: No token found in cookies.');
+      }
+
       // JWT verification
       await request.jwtVerify();
       

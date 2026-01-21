@@ -1,5 +1,4 @@
-// types/navigation.ts
-export type UserRole = "student" | "teacher";
+export type UserRole = "student" | "teacher"| 'admin';
 
 export interface NavItem {
   label: string;
