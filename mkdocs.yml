@@ -32,3 +32,5 @@ nav:
     - How to update/work on this wiki: developers/wiki-guidelines.md
     - UI Components: developers/components.md
     - Working with Git: developers/working-with-git.md
+    - Working with Docker: developers/working-with-docker.md
+    - Working with VPS: developers/working-with-vps.md
