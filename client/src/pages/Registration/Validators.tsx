@@ -4,9 +4,16 @@ export type ValidationResult = {
   errorMessage: string;
 };
 
+// Defines parameters for email validation.
+type ValidateEmailParams = {
+  email: string;
+};
+
 // Validates that the email follows standard format (user@domain.com).
-export const validateEmail = (email: string): ValidationResult => {
+export const validateEmail = (params: ValidateEmailParams): ValidationResult => {
   // Standard regex for basic email validation.
+  //Checks for characters before '@', characters after '@', a dot, and characters after the dot.
+  const { email } = params;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!email) {
