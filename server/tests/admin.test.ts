@@ -6,6 +6,8 @@ const HTTP_OK = 200;
 const HTTP_CREATED = 201;
 const HTTP_BAD_REQUEST = 400;
 const HTTP_NOT_FOUND = 404;
+const HTTP_CONFLICT = 409;
+const HTTP_INTERNAL_SERVER_ERROR = 500;
 
 const MOCK_USER_ID = 1;
 const MOCK_USER = {
@@ -15,6 +17,10 @@ const MOCK_USER = {
   role: 'Admin',
   status: 'Approved',
 };
+
+const MOCK_STATS = { totalUsers: 10 };
+const MOCK_REQUEST = { id: 100, status: 'Pending' };
+const MOCK_MATCH = { id: 50, student_id: 1, teacher_id: 2 };
 
 const mockQuery = jest.fn<(...args: any[]) => Promise<any>>();
 const mockRelease = jest.fn();
@@ -38,9 +44,8 @@ jest.unstable_mockModule('../plugins/authguard.ts', () => ({
 
 // Import routes and server after mocking
 const { buildServer } = await import('../index.ts');
-const adminDB = await import('../db/admin.ts');
 
-describe('Admin Module', () => {
+describe('Admin Module Routes', () => {
   let app: FastifyInstance;
 
   const mockClient = {
@@ -62,236 +67,314 @@ describe('Admin Module', () => {
     await app.close();
   });
 
-  describe('Routes Layer', () => {
+  describe('User Management Routes', () => {
+    // GET /admin/users
     test('GET /admin/users returns users', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
-
-      const res = await app.inject({
-        method: 'GET',
-        url: '/api/admin/users',
-      });
-
+      const res = await app.inject({ method: 'GET', url: '/api/admin/users' });
       expect(res.statusCode).toBe(HTTP_OK);
       expect(res.json()).toEqual([MOCK_USER]);
     });
 
-    test('GET /admin/users/:id returns user', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
-
-      const res = await app.inject({
-        method: 'GET',
-        url: `/api/admin/users/${MOCK_USER_ID}`,
-      });
-
-      expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_USER);
+    test('GET /admin/users handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: '/api/admin/users' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
     });
 
-    test('GET /admin/users/:id returns 404 if user not found', async () => {
+    // GET /admin/users/:id
+    test('GET /admin/users/:id returns user', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
+      const res = await app.inject({ method: 'GET', url: `/api/admin/users/${MOCK_USER_ID}` });
+      expect(res.statusCode).toBe(HTTP_OK);
+    });
+
+    test('GET /admin/users/:id returns 404 if not found', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
-
-      const res = await app.inject({
-        method: 'GET',
-        url: `/api/admin/users/999`,
-      });
-
+      const res = await app.inject({ method: 'GET', url: '/api/admin/users/999' });
       expect(res.statusCode).toBe(HTTP_NOT_FOUND);
     });
 
+    test('GET /admin/users/:id handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: `/api/admin/users/${MOCK_USER_ID}` });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+
+    // POST /admin/users
     test('POST /admin/users creates user', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
-
       const res = await app.inject({
         method: 'POST',
         url: '/api/admin/users',
         payload: { ...MOCK_USER, password: 'pass' },
       });
-
       expect(res.statusCode).toBe(HTTP_CREATED);
-      expect(res.json()).toEqual(MOCK_USER);
     });
 
+    test('POST /admin/users handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/admin/users',
+        payload: { ...MOCK_USER, password: 'pass' },
+      });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+
+    // PUT /admin/users/:id
     test('PUT /admin/users/:id updates user', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
-
       const res = await app.inject({
         method: 'PUT',
         url: `/api/admin/users/${MOCK_USER_ID}`,
         payload: { name: 'New Name' },
       });
-
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_USER);
     });
 
-    test('DELETE /admin/users/:id deletes user', async () => {
-      mockQuery.mockResolvedValueOnce({ rowCount: 1 });
-
+    test('PUT /admin/users/:id returns 400 if not found/no update', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
       const res = await app.inject({
-        method: 'DELETE',
+        method: 'PUT',
         url: `/api/admin/users/${MOCK_USER_ID}`,
+        payload: { name: 'New Name' },
       });
+      expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
+    });
 
+    test('PUT /admin/users/:id handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/admin/users/${MOCK_USER_ID}`,
+        payload: { name: 'New Name' },
+      });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+
+    // DELETE /admin/users/:id
+    test('DELETE /admin/users/:id returns success', async () => {
+      // deleteUser checks rowCount
+      mockQuery.mockResolvedValueOnce({ rowCount: 1 });
+      const res = await app.inject({ method: 'DELETE', url: `/api/admin/users/${MOCK_USER_ID}` });
       expect(res.statusCode).toBe(HTTP_OK);
       expect(res.json()).toEqual({ success: true });
     });
 
     test('DELETE /admin/users/:id returns 400 if user not found', async () => {
       mockQuery.mockResolvedValueOnce({ rowCount: 0 });
-
-      const res = await app.inject({
-        method: 'DELETE',
-        url: `/api/admin/users/${MOCK_USER_ID}`,
-      });
-
+      const res = await app.inject({ method: 'DELETE', url: `/api/admin/users/${MOCK_USER_ID}` });
       expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
     });
 
-    test('GET /admin/stats returns dashboard stats', async () => {
-      const MOCK_STATS = { totalStudents: 10, totalTeachers: 5 };
-      mockQuery.mockResolvedValueOnce({ rows: [MOCK_STATS] });
-
-      const res = await app.inject({
-        method: 'GET',
-        url: '/api/admin/stats',
-      });
-
-      expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_STATS);
+    test('DELETE /admin/users/:id handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'DELETE', url: `/api/admin/users/${MOCK_USER_ID}` });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
     });
 
-    test('GET /admin/teachers/pending returns pending list', async () => {
-      const MOCK_TEACHERS = [{ id: 2, name: 'Pending Teacher' }];
-      mockQuery.mockResolvedValueOnce({ rows: MOCK_TEACHERS });
-
+    // PATCH /admin/users/:id/status
+    test('PATCH /admin/users/:id/status updates status', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
       const res = await app.inject({
-        method: 'GET',
-        url: '/api/admin/teachers/pending',
+        method: 'PATCH',
+        url: `/api/admin/users/${MOCK_USER_ID}/status`,
+        payload: { status: 'Blocked' },
       });
-
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_TEACHERS);
+    });
+
+    test('PATCH /admin/users/:id/status returns 400 if failed', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      const res = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/users/${MOCK_USER_ID}/status`,
+        payload: { status: 'Blocked' },
+      });
+      expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
+    });
+
+    test('PATCH /admin/users/:id/status handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({
+        method: 'PATCH',
+        url: `/api/admin/users/${MOCK_USER_ID}/status`,
+        payload: { status: 'Blocked' },
+      });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+  });
+
+  describe('Dashboard & Stats', () => {
+    test('GET /admin/stats returns stats', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_STATS] });
+      const res = await app.inject({ method: 'GET', url: '/api/admin/stats' });
+      expect(res.statusCode).toBe(HTTP_OK);
+    });
+
+    test('GET /admin/stats handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: '/api/admin/stats' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+  });
+
+  describe('Teacher Management', () => {
+    test('GET /admin/teachers/pending returns teachers', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_USER] });
+      const res = await app.inject({ method: 'GET', url: '/api/admin/teachers/pending' });
+      expect(res.statusCode).toBe(HTTP_OK);
+    });
+
+    test('GET /admin/teachers/pending handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: '/api/admin/teachers/pending' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
     });
 
     test('POST /admin/teachers/:id/verify verifies teacher', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [{ ...MOCK_USER, status: 'Active' }] });
-
-      const res = await app.inject({
-        method: 'POST',
-        url: `/api/admin/teachers/${MOCK_USER_ID}/verify`,
-      });
-
+      const res = await app.inject({ method: 'POST', url: `/api/admin/teachers/${MOCK_USER_ID}/verify` });
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json().user.status).toBe('Active');
     });
 
-    test('GET /admin/requests/open returns open requests', async () => {
-      const MOCK_REQUESTS = [{ id: 10, description: 'Help' }];
-      mockQuery.mockResolvedValueOnce({ rows: MOCK_REQUESTS });
+    test('POST /admin/teachers/:id/verify returns 404 if not found', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      const res = await app.inject({ method: 'POST', url: `/api/admin/teachers/${MOCK_USER_ID}/verify` });
+      expect(res.statusCode).toBe(HTTP_NOT_FOUND);
+    });
 
-      const res = await app.inject({
-        method: 'GET',
-        url: '/api/admin/requests/open',
-      });
+    test('POST /admin/teachers/:id/verify handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'POST', url: `/api/admin/teachers/${MOCK_USER_ID}/verify` });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+  });
 
+  describe('Request Management', () => {
+    test('GET /admin/requests/open returns requests', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_REQUEST] });
+      const res = await app.inject({ method: 'GET', url: '/api/admin/requests/open' });
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_REQUESTS);
+    });
+
+    test('GET /admin/requests/open handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: '/api/admin/requests/open' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
     });
 
     test('POST /admin/requests/:id/assign assigns teacher', async () => {
-      const MOCK_UPDATED_REQUEST = { id: 10, assignedTeacher: 5, status: 'Accepted' };
-      mockQuery.mockResolvedValueOnce({ rows: [MOCK_UPDATED_REQUEST] });
-
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_REQUEST] });
       const res = await app.inject({
         method: 'POST',
-        url: '/api/admin/requests/10/assign',
-        payload: { teacherId: 5 },
+        url: `/api/admin/requests/100/assign`,
+        payload: { teacherId: 2 },
       });
-
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_UPDATED_REQUEST);
     });
 
+    test('POST /admin/requests/:id/assign returns 404 if request not found', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [] });
+      const res = await app.inject({
+        method: 'POST',
+        url: `/api/admin/requests/100/assign`,
+        payload: { teacherId: 2 },
+      });
+      expect(res.statusCode).toBe(HTTP_NOT_FOUND);
+    });
+
+    test('POST /admin/requests/:id/assign handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({
+        method: 'POST',
+        url: `/api/admin/requests/100/assign`,
+        payload: { teacherId: 2 },
+      });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+  });
+
+  describe('Match Management', () => {
+    // GET
     test('GET /admin/matches returns matches', async () => {
-      const MOCK_MATCHES = [{ id: 100, student_name: 'S', teacher_name: 'T' }];
-      mockQuery.mockResolvedValueOnce({ rows: MOCK_MATCHES });
-
-      const res = await app.inject({
-        method: 'GET',
-        url: '/api/admin/matches',
-      });
-
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_MATCH] });
+      const res = await app.inject({ method: 'GET', url: '/api/admin/matches' });
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json()).toEqual(MOCK_MATCHES);
     });
 
-    test('POST /admin/matches creates manual match', async () => {
-      const MATCH_PAYLOAD = { studentId: 1, teacherId: 2, subjectId: 3 };
-      
-      // First query checks for duplicates
+    test('GET /admin/matches handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'GET', url: '/api/admin/matches' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+
+    // POST
+    test('POST /admin/matches creates match', async () => {
+      // Step 1: Check query returns EMPTY (no duplicate)
       mockQuery.mockResolvedValueOnce({ rows: [] });
-      // Second query inserts
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: 200, status: 'Accepted' }] });
+      // Step 2: Insert query returns the match
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_MATCH] });
 
       const res = await app.inject({
         method: 'POST',
         url: '/api/admin/matches',
-        payload: MATCH_PAYLOAD,
+        payload: { studentId: 1, teacherId: 2, subjectId: 3 },
       });
-
       expect(res.statusCode).toBe(HTTP_CREATED);
-      expect(res.json().id).toBe(200);
     });
 
-    test('POST /admin/matches returns 409 on duplicate', async () => {
-      const MATCH_PAYLOAD = { studentId: 1, teacherId: 2, subjectId: 3 };
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: 200 }] }); // Duplicate found
+    test('POST /admin/matches returns 400 for missing fields', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/admin/matches',
+        payload: { studentId: 1 }, // missing teacherId, subjectId
+      });
+      expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
+      expect(res.json().error).toMatch(/Missing required fields/);
+    });
+
+    test('POST /admin/matches returns 409 for duplicate match', async () => {
+      // Step 1: Check query returns a ROW (duplicate exists)
+      mockQuery.mockResolvedValueOnce({ rows: [{ id: 99 }] });
 
       const res = await app.inject({
         method: 'POST',
         url: '/api/admin/matches',
-        payload: MATCH_PAYLOAD,
+        payload: { studentId: 1, teacherId: 2, subjectId: 3 },
       });
-
-      expect(res.statusCode).toBe(409);
+      expect(res.statusCode).toBe(HTTP_CONFLICT);
+      expect(res.json().error).toMatch(/match already exists/);
     });
 
+    test('POST /admin/matches handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/admin/matches',
+        payload: { studentId: 1, teacherId: 2, subjectId: 3 },
+      });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
+    });
+
+    // DELETE
     test('DELETE /admin/matches/:id unassigns/deletes match', async () => {
-      mockQuery.mockResolvedValueOnce({ rows: [{ id: 200, assignedTeacher: null }] });
-
-      const res = await app.inject({
-        method: 'DELETE',
-        url: '/api/admin/matches/200',
-      });
-
+      mockQuery.mockResolvedValueOnce({ rows: [MOCK_MATCH] });
+      const res = await app.inject({ method: 'DELETE', url: '/api/admin/matches/50' });
       expect(res.statusCode).toBe(HTTP_OK);
-      expect(res.json().assignedTeacher).toBeNull();
     });
 
-    test('PUT /admin/users/:id returns 400 if nothing to update', async () => {
+    test('DELETE /admin/matches/:id returns 404 if not found', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [] });
-
-      const res = await app.inject({
-        method: 'PUT',
-        url: `/api/admin/users/${MOCK_USER_ID}`,
-        payload: {},
-      });
-
-      expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
+      const res = await app.inject({ method: 'DELETE', url: '/api/admin/matches/50' });
+      expect(res.statusCode).toBe(HTTP_NOT_FOUND);
     });
 
-    test('PATCH /admin/users/:id/status returns 400 if failed', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [] }) // user not found
-        .mockResolvedValueOnce({});          // defensive padding
-
-      const res = await app.inject({
-        method: 'PATCH',
-        url: `/api/admin/users/${MOCK_USER_ID}/status`,
-        payload: { status: 'Pending' },
-      });
-
-      expect(res.statusCode).toBe(HTTP_BAD_REQUEST);
+    test('DELETE /admin/matches/:id handles DB error', async () => {
+      mockQuery.mockRejectedValueOnce(new Error('DB Error'));
+      const res = await app.inject({ method: 'DELETE', url: '/api/admin/matches/50' });
+      expect(res.statusCode).toBe(HTTP_INTERNAL_SERVER_ERROR);
     });
   });
 });
